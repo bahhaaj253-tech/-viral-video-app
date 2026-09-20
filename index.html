@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফ্রি ভিডিও ও মিডিয়া অ্যাপ</title>
   
-  <!-- Monetag SDK Tag (আপনার এডের কোড এখানে বসাতে পারেন) -->
+  <!-- Monetag SDK Tag -->
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
 
   <!-- Telegram WebApp SDK -->
@@ -121,6 +121,14 @@
       position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; border-radius: 50px; padding: 10px 18px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; font-weight: bold; font-size: 14px; z-index: 999;
     }
 
+    /* Admin Delete List Style */
+    .admin-video-item {
+      display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 8px 10px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #334155; font-size: 12px;
+    }
+    .btn-delete {
+      background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;
+    }
+
     input[type="text"], input[type="password"], input[type="file"], select { width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; }
     .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
     .hidden { display: none !important; }
@@ -219,11 +227,11 @@
 
       <!-- 🎬 ডাইরেক্ট ভিডিও লিঙ্ক পোস্ট সেকশন -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 ভিডিও পোস্ট করুন</h4>
+        <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 নতুন ভিডিও পোস্ট করুন</h4>
         <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম">
         
-        <label style="font-size:11px; color:#94a3b8;">ডাইরেক্ট ভিডিও লিঙ্ক (MP4/YouTube/Stream Link):</label>
-        <input type="text" id="newVideoUrl" placeholder="উদাহরণ: https://site.com/video.mp4">
+        <label style="font-size:11px; color:#94a3b8;">ডাইরেক্ট ভিডিও লিঙ্ক (MP4/Catbox/YouTube Link):</label>
+        <input type="text" id="newVideoUrl" placeholder="উদাহরণ: https://files.catbox.moe/xxxxx.mp4">
 
         <select id="videoCategorySelect">
           <option value="viral">ভাইরাল (Viral)</option>
@@ -231,6 +239,14 @@
         </select>
 
         <button class="btn-submit" style="background:#0284c7;" onclick="addVideoByAdmin()">ভিডিও পোস্ট করুন</button>
+      </div>
+
+      <!-- 🗑️ ভিডিও ম্যানেজমেন্ট ও ডিলিট সেকশন -->
+      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
+        <h4 style="margin:0 0 8px 0; color:#ef4444;">🗑️ ভিডিও লিস্ট ও ডিলিট প্যানেল</h4>
+        <div id="admin-video-list" style="max-height: 250px; overflow-y: auto;">
+          <!-- এখানে ডিলিট করার জন্য ভিডিওগুলোর লিস্ট রেন্ডার হবে -->
+        </div>
       </div>
 
       <!-- 📢 নোটিশ আপডেট -->
@@ -298,15 +314,18 @@
       }
     }
 
-    // --- ভিডিও প্লেয়ার স্ট্রাকচার রেন্ডারিং ---
+    // --- ভিডিও প্লেয়ার স্ট্রাকচার ---
     function getEmbedPlayerHtml(id, url) {
       if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        let embedUrl = url;
-        if (!url.includes('embed')) {
-          let vidId = url.split('v=')[1] || url.split('/').pop();
-          embedUrl = `https://www.youtube.com/embed/${vidId}`;
+        let vidId = "";
+        if (url.includes('youtu.be/')) {
+          vidId = url.split('youtu.be/')[1].split('?')[0];
+        } else if (url.includes('v=')) {
+          vidId = url.split('v=')[1].split('&')[0];
+        } else if (url.includes('embed/')) {
+          vidId = url.split('embed/')[1].split('?')[0];
         }
-        return `<iframe id="player-${id}" data-src="${embedUrl}?autoplay=1" style="display:none; width:100%; height:220px; border:none;" allowfullscreen></iframe>`;
+        return `<iframe id="player-${id}" src="https://www.youtube.com/embed/${vidId}?autoplay=1" style="display:none; width:100%; height:220px; border:none;" allow="autoplay" allowfullscreen></iframe>`;
       } else {
         return `<video id="player-${id}" controls style="display:none; width:100%; height:220px; background:#000;"><source src="${url}" type="video/mp4"></video>`;
       }
@@ -354,7 +373,6 @@
           </div>
         `;
 
-        // প্রতি ২টা ভিডিও পরপর Banner Ad
         if ((index + 1) % 2 === 0) {
           container.innerHTML += `
             <div class="ad-banner-box">
@@ -365,21 +383,16 @@
       });
     }
 
-    // --- ভিডিও প্লে লজিক ---
+    // --- প্লে লজিক ---
     function playVideoWithAd(id) {
       const overlay = document.getElementById('overlay-' + id);
-
       const startVideo = () => {
         overlay.style.display = 'none';
         const player = document.getElementById('player-' + id);
         if (player) {
           player.style.display = 'block';
-          if (player.tagName === 'IFRAME') {
-            if (player.dataset.src) {
-              player.src = player.dataset.src;
-            }
-          } else if (player.tagName === 'VIDEO') {
-            player.play();
+          if (player.tagName === 'VIDEO') {
+            player.play().catch(e => console.log("Play error:", e));
           }
         }
       };
@@ -453,6 +466,38 @@
     }
 
     // --- এডমিন প্যানেল লজিক ---
+    function renderAdminVideoList() {
+      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+      const listContainer = document.getElementById('admin-video-list');
+      
+      listContainer.innerHTML = "";
+      if (videos.length === 0) {
+        listContainer.innerHTML = `<p style="color:#94a3b8; font-size:12px;">কোনো ভিডিও নেই!</p>`;
+        return;
+      }
+
+      videos.forEach(v => {
+        listContainer.innerHTML += `
+          <div class="admin-video-item">
+            <span style="color:#f8fafc; font-weight:500;">${v.title.length > 25 ? v.title.substring(0,25) + '...' : v.title}</span>
+            <button class="btn-delete" onclick="deleteVideoByAdmin(${v.id})">🗑️ ডিলিট</button>
+          </div>
+        `;
+      });
+    }
+
+    function deleteVideoByAdmin(id) {
+      if(confirm('আপনি কি নিশ্চিত যে এই ভিডিওটি ডিলিট করতে চান?')) {
+        let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+        videos = videos.filter(v => v.id !== id);
+        localStorage.setItem('app_videos', JSON.stringify(videos));
+        
+        renderAdminVideoList();
+        renderVideos();
+        alert('ভিডিওটি সফলভাবে ডিলিট করা হয়েছে!');
+      }
+    }
+
     function toggleAdSetting(type) {
       if(type === 'direct') adSettings.showDirect = !adSettings.showDirect;
       else if(type === 'popup') adSettings.showPopup = !adSettings.showPopup;
@@ -523,10 +568,11 @@
       videos.unshift({ id: Date.now(), title: title, url: urlInput, category: cat });
       localStorage.setItem('app_videos', JSON.stringify(videos));
       
-      alert('ভিডিও এডমিন থেকে সফলভাবে পোস্ট হয়েছে!');
+      alert('ভিডিও সফলভাবে পোস্ট হয়েছে!');
       document.getElementById('videoTitleInput').value = "";
       document.getElementById('newVideoUrl').value = "";
       
+      renderAdminVideoList();
       renderVideos();
     }
 
@@ -560,6 +606,7 @@
         document.getElementById('adminDirectUrlInput').value = adSettings.directUrl;
         updateAdminFormUI();
         applyAdSettings();
+        renderAdminVideoList();
       } else alert('ভুল পাসওয়ার্ড!');
     }
 
