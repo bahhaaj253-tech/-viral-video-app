@@ -1,617 +1,660 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>প্রাইভেট সিকিউর ভিডিও অ্যাপ</title>
-  <!-- Telegram WebApp SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0f172a;
-      color: #f8fafc;
-      margin: 0;
-      padding: 12px;
-      padding-bottom: 70px;
-      text-align: center;
-    }
-    .header-title { color: #38bdf8; font-size: 20px; margin: 8px 0 5px; font-weight: 800; }
-    .badge-viral { background: linear-gradient(45deg, #ef4444, #f97316); color: white; padding: 3px 10px; font-size: 11px; border-radius: 20px; text-transform: uppercase; font-weight: bold; }
-    
-    /* Announcement Banner */
-    .announcement-bar {
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: bold;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-align: left;
-    }
-
-    /* Image Slider */
-    .slider-card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 14px;
-      padding: 8px;
-      margin-bottom: 15px;
-      overflow: hidden;
-    }
-    .swiper { width: 100%; height: 180px; border-radius: 10px; }
-    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
-    .swiper-pagination-bullet-active { background: #38bdf8 !important; }
-
-    .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); text-align: left; }
-    .price-box { border: 1px solid #38bdf8; border-radius: 10px; padding: 12px; margin: 10px 0; background: #0f172a; display: flex; justify-content: space-between; align-items: center; }
-    .price-box h4 { margin: 0; color: #38bdf8; font-size: 15px; }
-    .price-box p { margin: 3px 0 0; font-size: 12px; color: #94a3b8; }
-    
-    .btn-buy { background: linear-gradient(135deg, #0284c7, #0369a1); color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
-    
-    /* Search Bar & Category Filter */
-    .search-box {
-      width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; margin-bottom: 10px;
-    }
-    .filter-container {
-      display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px;
-    }
-    .filter-btn {
-      background: #334155; color: #cbd5e1; border: none; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap;
-    }
-    .filter-btn.active { background: #0284c7; color: white; font-weight: bold; }
-
-    /* Video Player Wrapper */
-    .video-card {
-      background: #0f172a; border-radius: 10px; padding: 8px; margin-bottom: 12px; border: 1px solid #334155; position: relative;
-    }
-    .video-wrapper {
-      position: relative; width: 100%; height: 200px; border-radius: 8px; overflow: hidden; background: #000;
-    }
-    .video-wrapper iframe { width: 100%; height: 100%; border: none; }
-    .video-overlay {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
-    }
-    .video-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
-    }
-    .fav-btn { color: #f59e0b; cursor: pointer; font-size: 16px; }
-
-    /* Floating WhatsApp Button */
-    .whatsapp-btn {
-      position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; border-radius: 50px; padding: 10px 18px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; font-weight: bold; font-size: 14px; z-index: 999;
-    }
-
-    /* Modal Pop-up */
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-    .modal-box { background: #1e293b; border: 1px solid #38bdf8; border-radius: 16px; padding: 20px; width: 100%; max-width: 350px; text-align: left; }
-    .payment-badge { background: #334155; padding: 8px 12px; border-radius: 8px; margin: 8px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
-    .bkash { color: #e2136e; font-weight: bold; }
-    .nagad { color: #f7921e; font-weight: bold; }
-    .number-highlight { color: #38bdf8; font-family: monospace; font-size: 14px; font-weight: bold; }
-    
-    .btn-copy { background: #0284c7; color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; }
-    input[type="text"], input[type="password"] { width: 100%; padding: 12px; margin: 8px 0 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 14px; }
-    .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; }
-    .btn-close { background: #ef4444; color: white; border: none; width: 100%; padding: 8px; border-radius: 8px; margin-top: 8px; font-size: 13px; cursor: pointer; }
-    .hidden { display: none !important; }
-    
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-    th, td { border: 1px solid #334155; padding: 8px; text-align: left; word-break: break-word; }
-    th { background: #0f172a; color: #38bdf8; }
-    .blocked-screen { background: #450a0a; border: 2px solid #ef4444; color: #fca5a5; padding: 20px; border-radius: 12px; margin-top: 30px; text-align: center; }
-    .timer-badge { background: #10b981; color: white; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
-    .status-active-box { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; padding: 10px; border-radius: 8px; margin-top: 8px; text-align: center; }
-  </style>
-</head>
-<body oncontextmenu="return false;">
-
-  <!-- ১. ইউজার ব্যান স্ক্রিন -->
-  <div id="blocked-view" class="blocked-screen hidden">
-    <h2>⛔ এক্সেস ব্লক করা হয়েছে!</h2>
-    <p>আপনাকে সিকিউরিটি ভায়োলেশনের কারণে ব্লক করা হয়েছে। সাপোর্টে যোগাযোগ করুন।</p>
-  </div>
-
-  <!-- ২. ইউজার ইন্টারফেস -->
-  <div id="user-view">
-    
-    <!-- এনাউন্সমেন্ট ব্যানার -->
-    <div class="announcement-bar" id="announcement-bar">
-      <i class="fa-solid fa-bullhorn"></i>
-      <span id="notice-text">স্বাগতম! নতুন ভিডিও প্রতিদিন আপডেট করা হয়।</span>
-    </div>
-
-    <span class="badge-viral">🔥 Private Viral Platform</span>
-    <h2 class="header-title">প্রাইভেট ভিডিও মিনি অ্যাপ</h2>
-
-    <!-- স্লাইডার ব্যানার -->
-    <div class="slider-card">
-      <div class="swiper mySwiper">
-        <div class="swiper-wrapper" id="slider-wrapper"></div>
-        <div class="swiper-pagination"></div>
-      </div>
-    </div>
-
-    <!-- ইউজার প্রোফাইল ও স্ট্যাটাস -->
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <p style="margin:2px 0; font-size: 14px;">স্বাগতম, <b id="username">ইউজার</b>!</p>
-        <span id="expiry-timer" class="timer-badge hidden">অ্যাক্টিভ</span>
-      </div>
-      <p style="margin:6px 0 0; font-size: 13px;">স্ট্যাটাস: <span id="status" style="color: #ef4444; font-weight: bold;">মেয়াদ শেষ (No Access)</span></p>
-    </div>
-
-    <!-- সাবস্ক্রিপশন প্যাকেজসমূহ -->
-    <div id="subscription-section" class="card">
-      <h3 style="margin-top:0; font-size:16px; color:#38bdf8; text-align:center;">আনলক করতে প্যাকেজ নির্বাচন করুন</h3>
-      
-      <div class="price-box">
-        <div>
-          <h4>১ মাসের এক্সেস</h4>
-          <p>সকল ভিডিও ফিড</p>
-        </div>
-        <button class="btn-buy" onclick="openPaymentModal('১ মাস', 100, 30)">১০০৳</button>
-      </div>
-
-      <div class="price-box">
-        <div>
-          <h4>২ মাসের এক্সেস</h4>
-          <p>পপুলার প্যাকেজ</p>
-        </div>
-        <button class="btn-buy" onclick="openPaymentModal('২ মাস', 180, 60)">১৮০৳</button>
-      </div>
-
-      <div class="price-box">
-        <div>
-          <h4>লাইফটাইম মেম্বারশিপ</h4>
-          <p>অনলিমিটেড এক্সেস</p>
-        </div>
-        <button class="btn-buy" onclick="openPaymentModal('লাইফটাইম', 500, 3650)">৫০০৳</button>
-      </div>
-    </div>
-
-    <!-- প্রিমিয়াম ভিডিও সেকশন -->
-    <div id="video-section" class="card hidden">
-      <div class="status-active-box">
-        <h4 style="margin:0; color:#10b981;">🎉 আপনার অ্যাকাউন্ট সক্রিয় আছে!</h4>
-        <p style="margin:3px 0 0; font-size:12px; color:#cbd5e1;">নিচের ভিডিও ক্যাটাগরি থেকে পছন্দের ভিডিও দেখুন</p>
-      </div>
-      
-      <h3 style="margin: 15px 0 10px; color: #38bdf8; font-size:16px; text-align:center;">🔥 এক্সক্লুসিভ ভিডিও ফিড</h3>
-      
-      <!-- সার্চ বার -->
-      <input type="text" class="search-box" id="searchVideoInput" placeholder="🔍 ভিডিও সার্চ করুন..." onkeyup="filterVideos()">
-
-      <!-- ভিডিও ক্যাটাগরি ফিল্টার -->
-      <div class="filter-container">
-        <button class="filter-btn active" onclick="setCategory('all', this)">সবগুলো</button>
-        <button class="filter-btn" onclick="setCategory('viral', this)">ভাইরাল</button>
-        <button class="filter-btn" onclick="setCategory('trending', this)">ট্রেন্ডিং</button>
-        <button class="filter-btn" onclick="setCategory('favorite', this)">⭐ সেভ করা</button>
-      </div>
-
-      <!-- ভিডিও কনটেইনার -->
-      <div id="video-container"></div>
-    </div>
-  </div>
-
-  <!-- WhatsApp সাপোর্ট বাটন -->
-  <a href="https://wa.me/8801605617380?text=হ্যালো,%20আমার%20অ্যাপ%20হেল্প%20দরকার।" target="_blank" class="whatsapp-btn">
-    <i class="fa-brands fa-whatsapp" style="font-size: 20px;"></i>
-    <span>হেল্প / সাপোর্ট</span>
-  </a>
-
-  <!-- পেমেন্ট পপ-আপ -->
-  <div id="paymentModal" class="modal-overlay">
-    <div class="modal-box">
-      <h3 style="margin-top:0; color:#38bdf8; font-size:18px;">পেমেন্ট করুন</h3>
-      <p style="font-size:13px; color:#cbd5e1; margin-bottom:10px;">প্যাকেজ: <b id="selectedPlan" style="color:#10b981;">-</b></p>
-      
-      <div class="payment-badge">
-        <div><span class="bkash">বিকাশ:</span> <span class="number-highlight">01965291171</span></div>
-        <button class="btn-copy" onclick="copyNumber('01965291171', this)"><i class="fa-regular fa-copy"></i> Copy</button>
-      </div>
-
-      <div class="payment-badge">
-        <div><span class="nagad">নগদ:</span> <span class="number-highlight">01965291171</span></div>
-        <button class="btn-copy" onclick="copyNumber('01965291171', this)"><i class="fa-regular fa-copy"></i> Copy</button>
-      </div>
-
-      <p style="font-size:11px; color:#94a3b8; margin: 10px 0 5px;">📌 টাকা পাঠানোর পর TrxID লিখুন:</p>
-      <input type="text" id="trxIdInput" placeholder="TrxID প্রদান করুন">
-
-      <button class="btn-submit" onclick="submitTrx()">সাবমিট করুন</button>
-      <button class="btn-close" onclick="closeModal('paymentModal')">বন্ধ করুন</button>
-    </div>
-  </div>
-
-  <!-- এডমিন প্যানেল -->
-  <div id="admin-view" class="hidden">
-    <div id="admin-login-box" class="card" style="max-width:350px; margin: 30px auto; text-align:center;">
-      <h3 style="color:#38bdf8; margin-top:0;">👑 এডমিন প্যানেল লগইন</h3>
-      <input type="password" id="adminPassInput" placeholder="এডমিন পাসওয়ার্ড দিন">
-      <button class="btn-submit" onclick="loginAdmin()">লগইন করুন</button>
-    </div>
-
-    <div id="admin-dashboard" class="card hidden">
-      <h3 style="color:#f59e0b; margin-top:0; text-align:center;">👑 মাস্টার এডমিন কন্ট্রোল</h3>
-
-      <!-- নোটিশ আপডেট -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#38bdf8;">📢 নোটিশ আপডেট</h4>
-        <input type="text" id="newNoticeInput" placeholder="নতুন নোটিশ লিখুন" style="margin-bottom:8px;">
-        <button class="btn-submit" style="background:#8b5cf6;" onclick="updateNotice()">নোটিশ পরিবর্তন করুন</button>
-      </div>
-
-      <!-- পাসওয়ার্ড পরিবর্তন -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#38bdf8;">🔑 পাসওয়ার্ড পরিবর্তন</h4>
-        <input type="password" id="newPassInput" placeholder="নতুন পাসওয়ার্ড লিখুন" style="margin-bottom:8px;">
-        <button class="btn-submit" style="background:#f59e0b;" onclick="changeAdminPassword()">আপডেট করুন</button>
-      </div>
-
-      <!-- স্লাইডার ইমেজ -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#38bdf8;">🖼️ স্লাইডার ব্যানার ইমেজ পরিবর্তন</h4>
-        <input type="text" id="newBannerUrl" placeholder="ইমেজের Direct Link দিন" style="margin-bottom:8px;">
-        <button class="btn-submit" style="background:#0284c7; margin-bottom:8px;" onclick="addBannerImage()">যোগ করুন</button>
-        <button class="btn-submit" style="background:#ef4444;" onclick="resetBannerImages()">রিসেট করুন</button>
-      </div>
-
-      <!-- ইউজার ব্যান/আনব্যান -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#ef4444;">🚫 ইউজার ব্যান / আনব্যান</h4>
-        <input type="text" id="banUserIdInput" placeholder="ইউজার Telegram ID দিন" style="margin-bottom:8px;">
-        <div style="display:flex; gap:8px;">
-          <button class="btn-submit" style="background:#ef4444;" onclick="banUserAction(true)">ব্যান করুন</button>
-          <button class="btn-submit" style="background:#10b981;" onclick="banUserAction(false)">আনব্যান করুন</button>
-        </div>
-      </div>
-
-      <!-- নতুন ভিডিও পোস্ট -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 নতুন ভিডিও পোস্ট করুন</h4>
-        <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম" style="margin-bottom:8px;">
-        <input type="text" id="newVideoUrl" placeholder="Bunny / Embed Video Link" style="margin-bottom:8px;">
-        <select id="videoCategorySelect" style="width:100%; padding:10px; border-radius:8px; background:#0f172a; color:white; border:1px solid #475569; margin-bottom:8px;">
-          <option value="viral">ভাইরাল (Viral)</option>
-          <option value="trending">ট্রেন্ডিং (Trending)</option>
-        </select>
-        <button class="btn-submit" style="background:#0284c7;" onclick="addVideoByAdmin()">পোস্ট করুন</button>
-      </div>
-
-      <!-- পেন্ডিং পেমেন্টসমূহ -->
-      <h4 style="margin-bottom:5px;">📩 পেন্ডিং পেমেন্ট রিকোয়েস্ট:</h4>
-      <table>
-        <thead>
-          <tr><th>ইউজার</th><th>প্যাকেজ</th><th>TrxID</th><th>অ্যাকশন</th></tr>
-        </thead>
-        <tbody id="admin-payment-list"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Swiper JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-  <script>
-    // --- সিকিউরিটি প্রটেকশন ---
-    document.addEventListener('keydown', function(e) {
-      if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-        e.preventDefault();
-      }
-    });
-
-    const tg = window.Telegram.WebApp;
-    tg.ready(); tg.expand();
-
-    const userId = tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : 'DEMO_USER_123';
-    const userName = tg.initDataUnsafe?.user?.first_name || 'ইউজার';
-    document.getElementById('username').innerText = userName;
-
-    let currentPlan = "", currentPrice = 0, selectedDays = 30;
-    let swiper = null, currentCategory = 'all';
-    let isAlreadyUnlocked = false;
-
-    // ডিফল্ট ভিডিও লিস্ট
-    const defaultVideos = [
-      { id: 1, title: 'এক্সক্লুসিভ ভাইরাল ক্লিপ ১', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'viral' },
-      { id: 2, title: 'ট্রেন্ডিং শর্ট ভিডিও ২', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'trending' }
-    ];
-
-    // --- ১. ভিডিও লোডার ---
-    function renderVideos() {
-      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
-      const favs = JSON.parse(localStorage.getItem('fav_videos_' + userId) || '[]');
-      const container = document.getElementById('video-container');
-      const searchVal = document.getElementById('searchVideoInput').value.toLowerCase();
-      
-      container.innerHTML = "";
-
-      const filtered = videos.filter(v => {
-        const matchesCategory = (currentCategory === 'all') || 
-                                (currentCategory === 'favorite' && favs.includes(v.id)) || 
-                                (v.category === currentCategory);
-        const matchesSearch = v.title.toLowerCase().includes(searchVal);
-        return matchesCategory && matchesSearch;
-      });
-
-      if(filtered.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">কোনো ভিডিও পাওয়া যায়নি!</p>`;
-        return;
-      }
-
-      filtered.forEach(v => {
-        const isFav = favs.includes(v.id);
-        container.innerHTML += `
-          <div class="video-card">
-            <div class="video-header">
-              <span style="font-size:13px; font-weight:bold; color:#cbd5e1;">${v.title}</span>
-              <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-star fav-btn" onclick="toggleFavorite(${v.id})"></i>
-            </div>
-            <div class="video-wrapper">
-              <iframe src="${v.url}?rel=0&modestbranding=1" allowfullscreen></iframe>
-              <div class="video-overlay"></div>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function toggleFavorite(vid) {
-      let favs = JSON.parse(localStorage.getItem('fav_videos_' + userId) || '[]');
-      if(favs.includes(vid)) {
-        favs = favs.filter(id => id !== vid);
-      } else {
-        favs.push(vid);
-      }
-      localStorage.setItem('fav_videos_' + userId, JSON.stringify(favs));
-      renderVideos();
-    }
-
-    function setCategory(cat, btn) {
-      currentCategory = cat;
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderVideos();
-    }
-
-    function filterVideos() { renderVideos(); }
-
-    // --- ২. অটো স্লাইডার ও নোটিশ ---
-    const defaultBanners = [
-      "https://i.postimg.cc/3Rr152PJ/1789892566921.jpg",
-      "https://i.postimg.cc/kM11ChM4/1789892582192.jpg"
-    ];
-
-    function loadSliderImages() {
-      const savedBanners = JSON.parse(localStorage.getItem('app_banners')) || defaultBanners;
-      const wrapper = document.getElementById('slider-wrapper');
-      wrapper.innerHTML = "";
-      savedBanners.forEach(url => {
-        wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
-      });
-      if(swiper) swiper.destroy();
-      swiper = new Swiper(".mySwiper", { 
-        loop: true, 
-        autoplay: { delay: 3000, disableOnInteraction: false },
-        pagination: { el: '.swiper-pagination', clickable: true }
-      });
-    }
-
-    function loadNotice() {
-      const notice = localStorage.getItem('app_notice') || "স্বাগতম! নতুন ভিডিও প্রতিদিন আপডেট করা হয়।";
-      document.getElementById('notice-text').innerText = notice;
-    }
-
-    // --- ৩. রিয়েল-টাইম সাবস্ক্রিপশন ও ব্যান চেকার ---
-    function checkUserSubscription() {
-      // ব্যান চেকার
-      const bannedUsers = JSON.parse(localStorage.getItem('sys_banned_users') || '[]');
-      if (bannedUsers.includes(String(userId))) {
-        document.getElementById('user-view').classList.add('hidden');
-        document.getElementById('blocked-view').classList.remove('hidden');
-        return;
-      }
-
-      const activePlan = localStorage.getItem('user_sub_active_' + userId);
-      const expiryTime = localStorage.getItem('user_sub_expiry_' + userId);
-
-      if (activePlan && expiryTime) {
-        const now = Date.now();
-        const diff = expiryTime - now;
-
-        if (diff > 0) {
-          if(!isAlreadyUnlocked) {
-            isAlreadyUnlocked = true;
-            document.getElementById('subscription-section').classList.add('hidden');
-            document.getElementById('video-section').classList.remove('hidden');
-            
-            const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
-            const statusElem = document.getElementById('status');
-            statusElem.innerText = activePlan + " (Active)";
-            statusElem.style.color = "#10b981";
-
-            const timerBadge = document.getElementById('expiry-timer');
-            timerBadge.classList.remove('hidden');
-            timerBadge.innerText = `মেয়াদ: ${daysLeft} দিন`;
-            
-            renderVideos();
-          }
-        } else {
-          localStorage.removeItem('user_sub_active_' + userId);
-          localStorage.removeItem('user_sub_expiry_' + userId);
-          isAlreadyUnlocked = false;
-          document.getElementById('subscription-section').classList.remove('hidden');
-          document.getElementById('video-section').classList.add('hidden');
-          document.getElementById('status').innerText = "মেয়াদ শেষ (No Access)";
-          document.getElementById('status').style.color = "#ef4444";
-          document.getElementById('expiry-timer').classList.add('hidden');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Viral Video App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-      }
-    }
 
-    // প্রতি ৩ সেকেন্ড পর পর অ্যাক্টিভেশন ও ব্যান চেক
-    setInterval(checkUserSubscription, 3000);
+        body {
+            background-color: #0f0f12;
+            color: #ffffff;
+            padding-bottom: 30px;
+        }
 
-    // --- ৪. পেমেন্ট ও এডমিন অ্যাকশন ---
-    function openPaymentModal(plan, price, days) {
-      currentPlan = plan; currentPrice = price; selectedDays = days;
-      document.getElementById('selectedPlan').innerText = plan + " (" + price + "৳)";
-      document.getElementById('paymentModal').style.display = "flex";
-    }
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1f1c2c, #928dab);
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    function closeModal(id) { document.getElementById(id).style.display = "none"; }
+        .admin-btn-icon {
+            font-size: 14px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
 
-    function copyNumber(text, btn) {
-      navigator.clipboard.writeText(text);
-      btn.innerText = "Copied!";
-      setTimeout(() => btn.innerText = "Copy", 2000);
-    }
+        /* Notice Ticker */
+        .notice-bar {
+            background: #ff4757;
+            color: white;
+            padding: 8px 12px;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
 
-    function submitTrx() {
-      const trx = document.getElementById('trxIdInput').value.trim();
-      if (!trx) return alert('TrxID প্রদান করুন!');
+        .notice-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 15s linear infinite;
+        }
 
-      const payments = JSON.parse(localStorage.getItem('sys_pending_payments') || '[]');
-      payments.push({ id: Date.now(), user: userName, userId: String(userId), plan: currentPlan, days: selectedDays, trx: trx });
-      localStorage.setItem('sys_pending_payments', JSON.stringify(payments));
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
 
-      alert('রিকোয়েস্ট জমা হয়েছে! এডমিন এপ্রুভ করলেই আপনার এক্সেস আনলক হয়ে যাবে।');
-      closeModal('paymentModal');
-      document.getElementById('trxIdInput').value = "";
-    }
+        /* Banner Slider */
+        .banner-container {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+        }
 
-    function renderAdminPayments() {
-      const payments = JSON.parse(localStorage.getItem('sys_pending_payments') || '[]');
-      const list = document.getElementById('admin-payment-list');
-      list.innerHTML = payments.length === 0 ? "<tr><td colspan='4' style='text-align:center;'>পেন্ডিং রিকোয়েস্ট নেই</td></tr>" : "";
+        .banner-slider {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            background: #1e1e24;
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
 
-      payments.forEach((item, index) => {
-        list.innerHTML += `
-          <tr>
-            <td>${item.user} <br><small>(${item.userId})</small></td>
-            <td>${item.plan}</td>
-            <td><b>${item.trx}</b></td>
-            <td><button style="background:#10b981; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="approvePayment(${index})">Approve</button></td>
-          </tr>
-        `;
-      });
-    }
+        .banner-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            border-radius: 12px;
+        }
 
-    function approvePayment(index) {
-      const payments = JSON.parse(localStorage.getItem('sys_pending_payments') || '[]');
-      const app = payments[index];
-      
-      const expiryDate = Date.now() + (app.days * 24 * 60 * 60 * 1000);
-      localStorage.setItem('user_sub_active_' + app.userId, app.plan);
-      localStorage.setItem('user_sub_expiry_' + app.userId, expiryDate);
+        /* Categories */
+        .category-container {
+            display: flex;
+            gap: 10px;
+            padding: 5px 12px 15px 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
 
-      payments.splice(index, 1);
-      localStorage.setItem('sys_pending_payments', JSON.stringify(payments));
-      alert(`${app.user}-এর এক্সেস সফলভাবে আনলক করা হয়েছে!`);
-      renderAdminPayments();
-      checkUserSubscription();
-    }
+        .category-badge {
+            background: #252530;
+            color: #aaa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid #333;
+        }
 
-    function addVideoByAdmin() {
-      const title = document.getElementById('videoTitleInput').value.trim();
-      const url = document.getElementById('newVideoUrl').value.trim();
-      const cat = document.getElementById('videoCategorySelect').value;
+        .category-badge.active {
+            background: #ff4757;
+            color: #fff;
+            border-color: #ff4757;
+            font-weight: bold;
+        }
 
-      if (!title || !url) return alert('সবগুলো ফিল্ড পূরণ করুন!');
+        /* Video List */
+        .video-grid {
+            padding: 0 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
 
-      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
-      videos.unshift({ id: Date.now(), title: title, url: url, category: cat });
-      localStorage.setItem('app_videos', JSON.stringify(videos));
+        .video-card {
+            background: #181820;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 1px solid #282835;
+        }
 
-      alert('নতুন ভিডিও সফলভাবে যুক্ত করা হয়েছে!');
-      document.getElementById('videoTitleInput').value = "";
-      document.getElementById('newVideoUrl').value = "";
-    }
+        .video-frame-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 ratio */
+            height: 0;
+            background: #000;
+        }
 
-    // --- ৫. অতিরিক্ত এডমিন কন্ট্রোল ফাংশনস ---
-    function updateNotice() {
-      const val = document.getElementById('newNoticeInput').value.trim();
-      if(!val) return alert('নোটিশ প্রদান করুন!');
-      localStorage.setItem('app_notice', val);
-      loadNotice();
-      alert('নোটিশ আপডেট হয়েছে!');
-      document.getElementById('newNoticeInput').value = "";
-    }
+        .video-frame-container iframe, 
+        .video-frame-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
 
-    function changeAdminPassword() {
-      const val = document.getElementById('newPassInput').value.trim();
-      if(!val) return alert('নতুন পাসওয়ার্ড লিখুন!');
-      localStorage.setItem('sys_admin_password', val);
-      alert('এডমিন পাসওয়ার্ড পরিবর্তিত হয়েছে!');
-      document.getElementById('newPassInput').value = "";
-    }
+        .video-details {
+            padding: 12px;
+        }
 
-    function addBannerImage() {
-      const url = document.getElementById('newBannerUrl').value.trim();
-      if(!url) return alert('ইমেজ ইউআরএল দিন!');
-      const banners = JSON.parse(localStorage.getItem('app_banners')) || defaultBanners;
-      banners.push(url);
-      localStorage.setItem('app_banners', JSON.stringify(banners));
-      loadSliderImages();
-      alert('নতুন ব্যানার যুক্ত হয়েছে!');
-      document.getElementById('newBannerUrl').value = "";
-    }
+        .video-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #eee;
+        }
 
-    function resetBannerImages() {
-      localStorage.removeItem('app_banners');
-      loadSliderImages();
-      alert('ব্যানার রিসেট করা হয়েছে!');
-    }
+        .video-meta {
+            font-size: 12px;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+        }
 
-    function banUserAction(isBan) {
-      const targetId = document.getElementById('banUserIdInput').value.trim();
-      if(!targetId) return alert('ইউজার Telegram ID দিন!');
-      let bannedUsers = JSON.parse(localStorage.getItem('sys_banned_users') || '[]');
-      
-      if(isBan) {
-        if(!bannedUsers.includes(targetId)) bannedUsers.push(targetId);
-        alert(`ইউজার ${targetId} ব্যান করা হয়েছে!`);
-      } else {
-        bannedUsers = bannedUsers.filter(id => id !== targetId);
-        alert(`ইউজার ${targetId} আনব্যান করা হয়েছে!`);
-      }
-      localStorage.setItem('sys_banned_users', JSON.stringify(bannedUsers));
-      document.getElementById('banUserIdInput').value = "";
-      checkUserSubscription();
-    }
+        .no-videos {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+            font-size: 14px;
+        }
 
-    // এডমিন পেজ সনাক্তকরণ (URL Query প্যারামিটার: ?admin)
-    if (window.location.search.includes('admin')) {
-      document.getElementById('user-view').classList.add('hidden');
-      document.getElementById('admin-view').classList.remove('hidden');
-    }
+        /* Admin Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px 12px;
+            box-sizing: border-box;
+        }
 
-    function loginAdmin() {
-      const pass = localStorage.getItem('sys_admin_password') || '123456';
-      if (document.getElementById('adminPassInput').value === pass) {
-        document.getElementById('admin-login-box').classList.add('hidden');
-        document.getElementById('admin-dashboard').classList.remove('hidden');
-        renderAdminPayments();
-      } else alert('ভুল পাসওয়ার্ড!');
-    }
+        .modal-content {
+            background: #1e1e28;
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 20px auto;
+            border: 1px solid #333;
+        }
 
-    // প্রাথমিক লোড
-    loadSliderImages();
-    loadNotice();
-    checkUserSubscription();
-  </script>
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            color: #ff4757;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            background: #121218;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ff4757;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .section-divider {
+            margin: 25px 0 15px 0;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+            color: #ff4757;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .item-list-admin {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .admin-item-row {
+            background: #121218;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <span>🎬 Viral Videos</span>
+        <button class="admin-btn-icon" onclick="openAdminModal()">⚙️ Admin</button>
+    </div>
+
+    <!-- Notice Bar -->
+    <div class="notice-bar" id="noticeBar" style="display: none;">
+        <div class="notice-text" id="noticeText">স্বাগতম আমাদের ভিডিও অ্যাপে!</div>
+    </div>
+
+    <!-- Banner Slider -->
+    <div class="banner-container" id="bannerContainer">
+        <div class="banner-slider" id="bannerSlider">
+            <!-- Banners will load here dynamically -->
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="category-container">
+        <div class="category-badge active" onclick="filterCategory('all', this)">সবকটি</div>
+        <div class="category-badge" onclick="filterCategory('viral', this)">🔥 Viral</div>
+        <div class="category-badge" onclick="filterCategory('trending', this)">📈 Trending</div>
+        <div class="category-badge" onclick="filterCategory('exclusive', this)">⭐ Exclusive</div>
+    </div>
+
+    <!-- Video List -->
+    <div class="video-grid" id="videoGrid">
+        <!-- Videos will be injected here -->
+    </div>
+
+    <!-- Admin Password Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">এডমিন লগইন</span>
+                <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>পাসওয়ার্ড দিন:</label>
+                <input type="password" id="adminPasswordInput" class="form-control" placeholder="123456">
+            </div>
+            <button class="btn-submit" onclick="checkAdminPassword()">লগইন করুন</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">⚙️ এডমিন প্যানেল</span>
+                <button class="close-btn" onclick="closeModal('adminModal')">&times;</button>
+            </div>
+
+            <!-- Notice Section -->
+            <div class="section-divider">📢 নোটিশ সেটআপ</div>
+            <div class="form-group">
+                <label>নোটিশ টেক্সট:</label>
+                <input type="text" id="noticeInput" class="form-control" placeholder="এখানে নোটিশ লিখুন...">
+            </div>
+            <button class="btn-submit" onclick="saveNotice()">নোটিশ সেভ করুন</button>
+
+            <!-- Banner Section -->
+            <div class="section-divider">🖼️ ব্যানার এড করুন</div>
+            <div class="form-group">
+                <label>ব্যানার ছবির লিংক (Image URL):</label>
+                <input type="url" id="bannerUrlInput" class="form-control" placeholder="https://i.ibb.co/example.jpg">
+            </div>
+            <button class="btn-submit" onclick="addBanner()">ব্যানার যোগ করুন</button>
+            <div class="item-list-admin" id="adminBannerList"></div>
+
+            <!-- Video Section -->
+            <div class="section-divider">🎬 নতুন ভিডিও যোগ করুন</div>
+            <div class="form-group">
+                <label>ভিডিও টাইটেল:</label>
+                <input type="text" id="videoTitleInput" class="form-control" placeholder="ভিডিওর শিরোনাম">
+            </div>
+            <div class="form-group">
+                <label>ভিডিও লিংক (YouTube / MP4 Embed URL):</label>
+                <input type="url" id="videoUrlInput" class="form-control" placeholder="https://www.youtube.com/embed/... বা .mp4 লিংক">
+            </div>
+            <div class="form-group">
+                <label>ক্যাটাগরি:</label>
+                <select id="videoCategoryInput" class="form-control">
+                    <option value="viral">Viral</option>
+                    <option value="trending">Trending</option>
+                    <option value="exclusive">Exclusive</option>
+                </select>
+            </div>
+            <button class="btn-submit" onclick="addVideo()">ভিডিও পোস্ট করুন</button>
+
+            <div class="section-divider">📋 পোস্ট করা ভিডিও সমুহ</div>
+            <div class="item-list-admin" id="adminVideoList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initial State from LocalStorage
+        let appData = {
+            notice: localStorage.getItem('app_notice') || '',
+            banners: JSON.parse(localStorage.getItem('app_banners')) || [],
+            videos: JSON.parse(localStorage.getItem('app_videos')) || []
+        };
+
+        let currentCategory = 'all';
+
+        window.onload = function() {
+            // Check if URL has ?admin parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('admin')) {
+                openAdminModal();
+            }
+
+            renderNotice();
+            renderBanners();
+            renderVideos();
+
+            startBannerAutoSlide();
+        };
+
+        // Render Notice
+        function renderNotice() {
+            const noticeBar = document.getElementById('noticeBar');
+            const noticeText = document.getElementById('noticeText');
+            if (appData.notice.trim() !== '') {
+                noticeText.innerText = appData.notice;
+                noticeBar.style.display = 'block';
+            } else {
+                noticeBar.style.display = 'none';
+            }
+        }
+
+        // Save Notice
+        function saveNotice() {
+            const val = document.getElementById('noticeInput').value;
+            appData.notice = val;
+            localStorage.setItem('app_notice', val);
+            renderNotice();
+            alert('নোটিশ আপডেট হয়েছে!');
+        }
+
+        // Render Banners (Direct Image URLs)
+        let bannerIndex = 0;
+        let bannerInterval = null;
+
+        function renderBanners() {
+            const slider = document.getElementById('bannerSlider');
+            slider.innerHTML = '';
+
+            if (appData.banners.length === 0) {
+                document.getElementById('bannerContainer').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('bannerContainer').style.display = 'block';
+            const img = document.createElement('img');
+            img.src = appData.banners[bannerIndex % appData.banners.length];
+            img.className = 'banner-img';
+            img.onerror = function() {
+                this.src = 'https://via.placeholder.com/600x200/1e1e24/ffffff?text=Image+Load+Failed';
+            };
+            slider.appendChild(img);
+
+            renderAdminBannerList();
+        }
+
+        function startBannerAutoSlide() {
+            if (bannerInterval) clearInterval(bannerInterval);
+            if (appData.banners.length > 1) {
+                bannerInterval = setInterval(() => {
+                    bannerIndex++;
+                    renderBanners();
+                }, 4000);
+            }
+        }
+
+        // Add Banner
+        function addBanner() {
+            const url = document.getElementById('bannerUrlInput').value.trim();
+            if (!url) {
+                alert('অনুগ্রহ করে সঠিক ছবির ডিরেক্ট লিংক দিন!');
+                return;
+            }
+            appData.banners.push(url);
+            localStorage.setItem('app_banners', JSON.stringify(appData.banners));
+            document.getElementById('bannerUrlInput').value = '';
+            renderBanners();
+            startBannerAutoSlide();
+            alert('ব্যানার ছবি সফলভাবে যোগ হয়েছে!');
+        }
+
+        // Delete Banner
+        function deleteBanner(index) {
+            appData.banners.splice(index, 1);
+            localStorage.setItem('app_banners', JSON.stringify(appData.banners));
+            renderBanners();
+            startBannerAutoSlide();
+        }
+
+        function renderAdminBannerList() {
+            const list = document.getElementById('adminBannerList');
+            list.innerHTML = '';
+            appData.banners.forEach((b, idx) => {
+                const item = document.createElement('div');
+                item.className = 'admin-item-row';
+                item.innerHTML = `
+                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%;">🖼️ ব্যানার ${idx + 1}</span>
+                    <button class="btn-delete" onclick="deleteBanner(${idx})">ডিলিট</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Format Video Embed URL
+        function formatVideoEmbed(url) {
+            if (url.includes('youtube.com/watch?v=')) {
+                let id = url.split('v=')[1].split('&')[0];
+                return `https://www.youtube.com/embed/${id}`;
+            } else if (url.includes('youtu.be/')) {
+                let id = url.split('youtu.be/')[1].split('?')[0];
+                return `https://www.youtube.com/embed/${id}`;
+            }
+            return url;
+        }
+
+        // Add Video
+        function addVideo() {
+            const title = document.getElementById('videoTitleInput').value.trim();
+            let url = document.getElementById('videoUrlInput').value.trim();
+            const category = document.getElementById('videoCategoryInput').value;
+
+            if (!title || !url) {
+                alert('ভিডিওর টাইটেল এবং লিংক দুটিই অবশ্যই দিতে হবে!');
+                return;
+            }
+
+            url = formatVideoEmbed(url);
+
+            const newVid = {
+                id: Date.now(),
+                title: title,
+                url: url,
+                category: category
+            };
+
+            appData.videos.unshift(newVid);
+            localStorage.setItem('app_videos', JSON.stringify(appData.videos));
+
+            document.getElementById('videoTitleInput').value = '';
+            document.getElementById('videoUrlInput').value = '';
+
+            renderVideos();
+            alert('ভিডিও সফলভাবে পোস্ট হয়েছে!');
+        }
+
+        // Delete Video
+        function deleteVideo(id) {
+            appData.videos = appData.videos.filter(v => v.id !== id);
+            localStorage.setItem('app_videos', JSON.stringify(appData.videos));
+            renderVideos();
+        }
+
+        // Render Videos
+        function renderVideos() {
+            const grid = document.getElementById('videoGrid');
+            grid.innerHTML = '';
+
+            const filtered = currentCategory === 'all' 
+                ? appData.videos 
+                : appData.videos.filter(v => v.category === currentCategory);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="no-videos">বর্তমানে কোনো ভিডিও আপলোড করা হয়নি।</div>`;
+                renderAdminVideoList();
+                return;
+            }
+
+            filtered.forEach(vid => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="video-frame-container">
+                        <iframe src="${vid.url}" allowfullscreen allow="autoplay"></iframe>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-title">${vid.title}</div>
+                        <div class="video-meta">
+                            <span>ক্যাটাগরি: ${vid.category.toUpperCase()}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            renderAdminVideoList();
+        }
+
+        function renderAdminVideoList() {
+            const list = document.getElementById('adminVideoList');
+            list.innerHTML = '';
+            appData.videos.forEach(v => {
+                const item = document.createElement('div');
+                item.className = 'admin-item-row';
+                item.innerHTML = `
+                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%;">🎬 ${v.title}</span>
+                    <button class="btn-delete" onclick="deleteVideo(${v.id})">ডিলিট</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Filter Category
+        function filterCategory(cat, el) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-badge').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            renderVideos();
+        }
+
+        // Admin Auth Flow
+        let isAdminLoggedIn = false;
+
+        function openAdminModal() {
+            if (isAdminLoggedIn) {
+                document.getElementById('noticeInput').value = appData.notice;
+                document.getElementById('adminModal').style.display = 'block';
+            } else {
+                document.getElementById('loginModal').style.display = 'block';
+            }
+        }
+
+        function checkAdminPassword() {
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === '123456') {
+                isAdminLoggedIn = true;
+                closeModal('loginModal');
+                document.getElementById('adminPasswordInput').value = '';
+                document.getElementById('noticeInput').value = appData.notice;
+                document.getElementById('adminModal').style.display = 'block';
+                renderAdminBannerList();
+                renderAdminVideoList();
+            } else {
+                alert('ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।');
+            }
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+    </script>
 </body>
 </html>
