@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফ্রি ভিডিও ও মিডিয়া অ্যাপ</title>
   
-  <!-- Monetag SDK Tag -->
+  <!-- Monetag SDK Tag (আপনার এডের কোড এখানে বসাতে পারেন) -->
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
 
   <!-- Telegram WebApp SDK -->
@@ -66,7 +66,7 @@
       100% { transform: scale(1); }
     }
 
-    /* Image Slider */
+    /* Slider */
     .slider-card {
       background: #1e293b;
       border: 1px solid #334155;
@@ -98,9 +98,9 @@
       background: #0f172a; border-radius: 10px; padding: 8px; margin-bottom: 12px; border: 1px solid #334155; position: relative;
     }
     .video-wrapper {
-      position: relative; width: 100%; min-height: 250px; border-radius: 8px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;
+      position: relative; width: 100%; min-height: 220px; border-radius: 8px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;
     }
-    .video-wrapper iframe, .video-wrapper video { width: 100%; height: 250px; border: none; }
+    .video-wrapper video, .video-wrapper iframe { width: 100%; height: 220px; border: none; }
     
     .video-overlay {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 8px; cursor: pointer; z-index: 10;
@@ -110,6 +110,11 @@
 
     .video-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .fav-btn { color: #f59e0b; cursor: pointer; font-size: 16px; }
+
+    /* Banner Ad Box */
+    .ad-banner-box {
+      background: #0284c715; border: 1px dashed #0284c7; border-radius: 10px; padding: 10px; margin: 12px 0; text-align: center; color: #38bdf8; font-size: 12px;
+    }
 
     /* Support Button */
     .whatsapp-btn {
@@ -133,7 +138,7 @@
   <!-- ২. ইউজার ইন্টারফেস -->
   <div id="user-view">
     
-    <!-- এনাউন্সমেন্ট ব্যানার -->
+    <!-- নোটিশ ব্যানার -->
     <div class="announcement-bar" id="announcement-bar">
       <i class="fa-solid fa-bullhorn"></i>
       <span id="notice-text">স্বাগতম! ভিডিও দেখার জন্য প্লে বাটনে ক্লিক করুন।</span>
@@ -205,20 +210,20 @@
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span style="font-size:12px;">Video Rewarded Popup Ad চালু?</span>
+          <span style="font-size:12px;">Video Popup Ad চালু?</span>
           <button class="btn-submit" id="togglePopupBtn" style="width:70px; padding:4px;" onclick="toggleAdSetting('popup')">ON</button>
         </div>
 
         <button class="btn-submit" style="background:#0284c7;" onclick="saveAdSettings()">এড সেটিংস সেভ করুন</button>
       </div>
 
-      <!-- 🎬 টেলিগ্রাম বা অন্য ভিডিও পোস্ট অপশন -->
+      <!-- 🎬 ডাইরেক্ট ভিডিও লিঙ্ক পোস্ট সেকশন -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 ভিডিও পোস্ট করুন</h4>
         <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম">
         
-        <label style="font-size:11px; color:#94a3b8;">টেলিগ্রাম বা এমপি৪ ভিডিও লিঙ্ক:</label>
-        <input type="text" id="newVideoUrl" placeholder="উদাহরণ: https://t.me/telegram/19">
+        <label style="font-size:11px; color:#94a3b8;">ডাইরেক্ট ভিডিও লিঙ্ক (MP4/YouTube/Stream Link):</label>
+        <input type="text" id="newVideoUrl" placeholder="উদাহরণ: https://site.com/video.mp4">
 
         <select id="videoCategorySelect">
           <option value="viral">ভাইরাল (Viral)</option>
@@ -279,8 +284,8 @@
     };
 
     const defaultVideos = [
-      { id: 101, title: 'টেলিগ্রাম ভিডিও ১', url: 'https://t.me/telegram/19', category: 'viral' },
-      { id: 102, title: 'ইউটিউব ট্রেইলার', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'trending' }
+      { id: 101, title: 'স্যাম্পল ডাইরেক্ট ভিডিও ১', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', category: 'viral' },
+      { id: 102, title: 'স্যাম্পল ডাইরেক্ট ভিডিও ২', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', category: 'trending' }
     ];
 
     function applyAdSettings() {
@@ -293,34 +298,17 @@
       }
     }
 
-    // --- টেলিগ্রাম লিঙ্ক কনভার্টার ফাংশন (FIXED) ---
-    function formatTelegramUrl(rawUrl) {
-      let clean = rawUrl.trim();
-      if(clean.includes('t.me/')) {
-        let parts = clean.split('t.me/')[1].split('/');
-        if(parts.length >= 2) {
-          let channel = parts[0];
-          let postId = parts[1].split('?')[0];
-          return `https://t.me/${channel}/${postId}?embed=1&mode=tme`;
-        }
-      }
-      return clean;
-    }
-
     // --- ভিডিও প্লেয়ার স্ট্রাকচার রেন্ডারিং ---
     function getEmbedPlayerHtml(id, url) {
-      if (url.includes('t.me/')) {
-        let embedSrc = formatTelegramUrl(url);
-        return `<iframe id="player-${id}" data-src="${embedSrc}" style="display:none; width:100%; height:250px; border:none; background:#000;" allowfullscreen></iframe>`;
-      } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
         let embedUrl = url;
         if (!url.includes('embed')) {
           let vidId = url.split('v=')[1] || url.split('/').pop();
           embedUrl = `https://www.youtube.com/embed/${vidId}`;
         }
-        return `<iframe id="player-${id}" data-src="${embedUrl}?autoplay=1" style="display:none; width:100%; height:250px; border:none;" allowfullscreen></iframe>`;
+        return `<iframe id="player-${id}" data-src="${embedUrl}?autoplay=1" style="display:none; width:100%; height:220px; border:none;" allowfullscreen></iframe>`;
       } else {
-        return `<video id="player-${id}" controls style="display:none; width:100%; height:250px; background:#000;"><source src="${url}" type="video/mp4"></video>`;
+        return `<video id="player-${id}" controls style="display:none; width:100%; height:220px; background:#000;"><source src="${url}" type="video/mp4"></video>`;
       }
     }
 
@@ -346,7 +334,7 @@
         return;
       }
 
-      filtered.forEach(v => {
+      filtered.forEach((v, index) => {
         const isFav = favs.includes(v.id);
         const playerHtml = getEmbedPlayerHtml(v.id, v.url);
 
@@ -365,6 +353,15 @@
             </div>
           </div>
         `;
+
+        // প্রতি ২টা ভিডিও পরপর Banner Ad
+        if ((index + 1) % 2 === 0) {
+          container.innerHTML += `
+            <div class="ad-banner-box">
+              📢 <b>বিজ্ঞাপন স্থান:</b> এখানে যেকোনো ব্যানার এড কোড বসাতে পারেন।
+            </div>
+          `;
+        }
       });
     }
 
