@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফ্রি ভিডিও ও মিডিয়া অ্যাপ</title>
   
-  <!-- Monetag SDK Tag (আপনার জোন আইডির ট্যাগ) -->
+  <!-- Monetag SDK Tag -->
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
 
   <!-- Telegram WebApp SDK -->
@@ -29,7 +29,7 @@
     .header-title { color: #38bdf8; font-size: 20px; margin: 8px 0 5px; font-weight: 800; }
     .badge-viral { background: linear-gradient(45deg, #ef4444, #f97316); color: white; padding: 3px 10px; font-size: 11px; border-radius: 20px; text-transform: uppercase; font-weight: bold; }
     
-    /* Announcement Banner */
+    /* Notice Bar */
     .announcement-bar {
       background: linear-gradient(90deg, #3b82f6, #8b5cf6);
       color: white;
@@ -42,6 +42,27 @@
       align-items: center;
       gap: 8px;
       text-align: left;
+    }
+
+    /* Direct Link Button */
+    .direct-link-btn {
+      display: block;
+      background: linear-gradient(45deg, #f59e0b, #ef4444);
+      color: white;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
     }
 
     /* Image Slider */
@@ -71,7 +92,7 @@
     }
     .filter-btn.active { background: #0284c7; color: white; font-weight: bold; }
 
-    /* Video Player Wrapper */
+    /* Video Player */
     .video-card {
       background: #0f172a; border-radius: 10px; padding: 8px; margin-bottom: 12px; border: 1px solid #334155; position: relative;
     }
@@ -85,18 +106,41 @@
     .video-overlay i { font-size: 45px; color: #38bdf8; margin-bottom: 6px; }
     .video-overlay span { font-size: 12px; color: #f8fafc; font-weight: bold; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 12px; }
 
-    .video-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
-    }
+    .video-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .fav-btn { color: #f59e0b; cursor: pointer; font-size: 16px; }
 
-    /* Floating Support Button */
+    /* Visual Ad Map Styles in Admin */
+    .ad-map-container {
+      background: #090d16;
+      border: 2px dashed #0284c7;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+    .ad-map-node {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+    .ad-map-node.active-ad { border-left: 4px solid #10b981; }
+    .ad-map-node.inactive-ad { border-left: 4px solid #ef4444; opacity: 0.6; }
+    .status-tag { padding: 2px 8px; border-radius: 10px; font-weight: bold; font-size: 10px; }
+    .status-on { background: #10b981; color: white; }
+    .status-off { background: #ef4444; color: white; }
+
+    /* Support Button */
     .whatsapp-btn {
       position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; border-radius: 50px; padding: 10px 18px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; font-weight: bold; font-size: 14px; z-index: 999;
     }
 
-    input[type="text"], input[type="password"] { width: 100%; padding: 12px; margin: 8px 0 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 14px; }
-    .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; }
+    .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
     .hidden { display: none !important; }
     .blocked-screen { background: #450a0a; border: 2px solid #ef4444; color: #fca5a5; padding: 20px; border-radius: 12px; margin-top: 30px; text-align: center; }
   </style>
@@ -115,11 +159,16 @@
     <!-- এনাউন্সমেন্ট ব্যানার -->
     <div class="announcement-bar" id="announcement-bar">
       <i class="fa-solid fa-bullhorn"></i>
-      <span id="notice-text">স্বাগতম! ভিডিও দেখতে পাওয়ার জন্য ভিডিওর প্লে বাটনে ক্লিক করুন।</span>
+      <span id="notice-text">স্বাগতম! ভিডিও দেখার জন্য প্লে বাটনে ক্লিক করুন।</span>
     </div>
 
     <span class="badge-viral">🔥 Free Video Stream App</span>
     <h2 class="header-title">ভিডিও মিনি অ্যাপ</h2>
+
+    <!-- Direct Link Ad Button -->
+    <a id="top-direct-link-btn" href="https://omg10.com/4/11848732" target="_blank" class="direct-link-btn">
+      🎁 স্পেশাল অফার / বোনাস লিঙ্ক (ক্লিক করুন)
+    </a>
 
     <!-- স্লাইডার ব্যানার -->
     <div class="slider-card">
@@ -155,7 +204,7 @@
     <span>সাপোর্ট</span>
   </a>
 
-  <!-- এডমিন প্যানেল (ভিউ সনাক্ত করতে ?admin প্যারামিটার ব্যবহার করুন) -->
+  <!-- ৩. এডমিন প্যানেল (?admin) -->
   <div id="admin-view" class="hidden">
     <div id="admin-login-box" class="card" style="max-width:350px; margin: 30px auto; text-align:center;">
       <h3 style="color:#38bdf8; margin-top:0;">👑 এডমিন প্যানেল লগইন</h3>
@@ -164,26 +213,75 @@
     </div>
 
     <div id="admin-dashboard" class="card hidden">
-      <h3 style="color:#f59e0b; margin-top:0; text-align:center;">👑 মাস্টার এডমিন কন্ট্রোল</h3>
+      <h3 style="color:#f59e0b; margin-top:0; text-align:center;">👑 এডমিন কন্ট্রোল ও এড ম্যাপ</h3>
+
+      <!-- 🗺️ VISUAL AD MAP SECTION -->
+      <div class="ad-map-container">
+        <h4 style="margin:0 0 10px 0; color:#38bdf8; text-align:center;">🗺️ অ্যাপ এড পজিশন ভিজুয়াল ম্যাপ</h4>
+        
+        <div class="ad-map-node" id="map-node-direct">
+          <div>
+            <strong>[TOP] Direct Link Button</strong><br>
+            <span style="color:#94a3b8;" id="map-url-direct">https://omg10.com/4/11848732</span>
+          </div>
+          <span class="status-tag status-on" id="tag-direct">ACTIVE</span>
+        </div>
+
+        <div class="ad-map-node" id="map-node-popup">
+          <div>
+            <strong>[PLAY] Rewarded Popup Ad</strong><br>
+            <span style="color:#94a3b8;">show_11848596('pop')</span>
+          </div>
+          <span class="status-tag status-on" id="tag-popup">ACTIVE</span>
+        </div>
+
+        <div class="ad-map-node" id="map-node-interstitial">
+          <div>
+            <strong>[IN-APP] Interstitial Auto Ad</strong><br>
+            <span style="color:#94a3b8;">show_11848596({type:'inApp'})</span>
+          </div>
+          <span class="status-tag status-on" id="tag-interstitial">ACTIVE</span>
+        </div>
+      </div>
+
+      <!-- ⚙️ AD CONFIGURATION FORM -->
+      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
+        <h4 style="margin:0 0 8px 0; color:#f59e0b;">⚙️ এডমিন এড সেটিংস কন্ট্রোল</h4>
+        
+        <label style="font-size:12px; color:#cbd5e1;">১. Top Direct Link URL:</label>
+        <input type="text" id="adminDirectUrlInput" placeholder="Direct Link URL দিন">
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <span style="font-size:12px;">Direct Link Button দেখাবে?</span>
+          <button class="btn-submit" id="toggleDirectBtn" style="width:70px; padding:4px;" onclick="toggleAdSetting('direct')">ON</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <span style="font-size:12px;">Video Rewarded Popup Ad চালু?</span>
+          <button class="btn-submit" id="togglePopupBtn" style="width:70px; padding:4px;" onclick="toggleAdSetting('popup')">ON</button>
+        </div>
+
+        <button class="btn-submit" style="background:#0284c7;" onclick="saveAdSettings()">এড সেটিংস সেভ করুন</button>
+      </div>
 
       <!-- নোটিশ আপডেট -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#38bdf8;">📢 নোটিশ আপডেট</h4>
-        <input type="text" id="newNoticeInput" placeholder="নতুন নোটিশ লিখুন" style="margin-bottom:8px;">
+        <input type="text" id="newNoticeInput" placeholder="নতুন নোটিশ লিখুন">
         <button class="btn-submit" style="background:#8b5cf6;" onclick="updateNotice()">নোটিশ পরিবর্তন করুন</button>
       </div>
 
       <!-- পাসওয়ার্ড পরিবর্তন -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#38bdf8;">🔑 পাসওয়ার্ড পরিবর্তন</h4>
-        <input type="password" id="newPassInput" placeholder="নতুন পাসওয়ার্ড লিখুন" style="margin-bottom:8px;">
+        <input type="password" id="newPassInput" placeholder="নতুন পাসওয়ার্ড লিখুন">
         <button class="btn-submit" style="background:#f59e0b;" onclick="changeAdminPassword()">আপডেট করুন</button>
       </div>
 
       <!-- স্লাইডার ইমেজ -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#38bdf8;">🖼️ স্লাইডার ব্যানার ইমেজ পরিবর্তন</h4>
-        <input type="text" id="newBannerUrl" placeholder="ইমেজের Direct Link দিন" style="margin-bottom:8px;">
+        <input type="text" id="newBannerUrl" placeholder="ইমেজের Direct Link দিন">
         <button class="btn-submit" style="background:#0284c7; margin-bottom:8px;" onclick="addBannerImage()">যোগ করুন</button>
         <button class="btn-submit" style="background:#ef4444;" onclick="resetBannerImages()">রিসেট করুন</button>
       </div>
@@ -191,7 +289,7 @@
       <!-- ইউজার ব্যান/আনব্যান -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#ef4444;">🚫 ইউজার ব্যান / আনব্যান</h4>
-        <input type="text" id="banUserIdInput" placeholder="ইউজার Telegram ID দিন" style="margin-bottom:8px;">
+        <input type="text" id="banUserIdInput" placeholder="ইউজার Telegram ID দিন">
         <div style="display:flex; gap:8px;">
           <button class="btn-submit" style="background:#ef4444;" onclick="banUserAction(true)">ব্যান করুন</button>
           <button class="btn-submit" style="background:#10b981;" onclick="banUserAction(false)">আনব্যান করুন</button>
@@ -201,8 +299,8 @@
       <!-- নতুন ভিডিও পোস্ট -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 নতুন ভিডিও পোস্ট করুন</h4>
-        <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম" style="margin-bottom:8px;">
-        <input type="text" id="newVideoUrl" placeholder="Youtube / Bunny / Embed Video Link" style="margin-bottom:8px;">
+        <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম">
+        <input type="text" id="newVideoUrl" placeholder="Youtube / Embed Video Link">
         <select id="videoCategorySelect" style="width:100%; padding:10px; border-radius:8px; background:#0f172a; color:white; border:1px solid #475569; margin-bottom:8px;">
           <option value="viral">ভাইরাল (Viral)</option>
           <option value="trending">ট্রেন্ডিং (Trending)</option>
@@ -229,18 +327,19 @@
     const userId = tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : 'DEMO_USER_123';
     let swiper = null, currentCategory = 'all';
 
+    // ডিফল্ট এড সেটিংস
+    let adSettings = JSON.parse(localStorage.getItem('app_ad_settings')) || {
+      directUrl: 'https://omg10.com/4/11848732',
+      showDirect: true,
+      showPopup: true
+    };
+
     // অটোমেটিক In-App Interstitial অ্যাড ইনিশিয়ালাইজেশন
     try {
       if (typeof show_11848596 === 'function') {
         show_11848596({
           type: 'inApp',
-          inAppSettings: {
-            frequency: 2,
-            capping: 0.1,
-            interval: 30,
-            timeout: 5,
-            everyPage: false
-          }
+          inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false }
         });
       }
     } catch(e) { console.log('Ad init error:', e); }
@@ -250,6 +349,38 @@
       { id: 1, title: 'এক্সক্লুসিভ ভাইরাল ভিডিও ১', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'viral' },
       { id: 2, title: 'ট্রেন্ডিং শর্ট ভিডিও ২', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'trending' }
     ];
+
+    // --- অ্যাড UI আপডেট ---
+    function applyAdSettings() {
+      const btn = document.getElementById('top-direct-link-btn');
+      if(adSettings.showDirect) {
+        btn.classList.remove('hidden');
+        btn.href = adSettings.directUrl;
+      } else {
+        btn.classList.add('hidden');
+      }
+
+      // Update Map View in Admin
+      document.getElementById('map-url-direct').innerText = adSettings.directUrl;
+      
+      const tagDirect = document.getElementById('tag-direct');
+      if(adSettings.showDirect) {
+        tagDirect.className = "status-tag status-on"; tagDirect.innerText = "ACTIVE";
+        document.getElementById('map-node-direct').className = "ad-map-node active-ad";
+      } else {
+        tagDirect.className = "status-tag status-off"; tagDirect.innerText = "OFF";
+        document.getElementById('map-node-direct').className = "ad-map-node inactive-ad";
+      }
+
+      const tagPopup = document.getElementById('tag-popup');
+      if(adSettings.showPopup) {
+        tagPopup.className = "status-tag status-on"; tagPopup.innerText = "ACTIVE";
+        document.getElementById('map-node-popup').className = "ad-map-node active-ad";
+      } else {
+        tagPopup.className = "status-tag status-off"; tagPopup.innerText = "OFF";
+        document.getElementById('map-node-popup').className = "ad-map-node inactive-ad";
+      }
+    }
 
     // --- ভিডিও রেন্ডার ও প্লে উইথ অ্যাড ---
     function renderVideos() {
@@ -293,25 +424,25 @@
       });
     }
 
-    // অ্যাড দেখার পর ভিডিও রান করার লজিক
+    // বিজ্ঞাপনের পর ভিডিও প্লে করার লজিক (Rewarded Popup Integration)
     function playVideoWithAd(id, videoUrl) {
       const overlay = document.getElementById('overlay-' + id);
       const iframe = document.getElementById('iframe-' + id);
 
-      // Monetag Rewarded Interstitial অ্যাড কল
-      if (typeof show_11848596 === 'function') {
-        show_11848596().then(() => {
-          // অ্যাড দেখা সম্পন্ন হলে ভিডিও প্লে হবে
-          overlay.style.display = 'none';
-          iframe.src = videoUrl + "?autoplay=1&rel=0&modestbranding=1";
-        }).catch(e => {
-          // কোনো কারণে অ্যাড লোড না হলেও ইউজারকে ভিডিও দেওয়া হবে
-          overlay.style.display = 'none';
-          iframe.src = videoUrl + "?autoplay=1&rel=0&modestbranding=1";
-        });
-      } else {
+      const startVideo = () => {
         overlay.style.display = 'none';
         iframe.src = videoUrl + "?autoplay=1&rel=0&modestbranding=1";
+      };
+
+      if (adSettings.showPopup && typeof show_11848596 === 'function') {
+        // Rewarded Popup Trigger
+        show_11848596('pop').then(() => {
+          startVideo();
+        }).catch(e => {
+          startVideo();
+        });
+      } else {
+        startVideo();
       }
     }
 
@@ -380,6 +511,32 @@
     }
 
     // --- এডমিন ফাংশনস ---
+    function toggleAdSetting(type) {
+      if(type === 'direct') {
+        adSettings.showDirect = !adSettings.showDirect;
+      } else if(type === 'popup') {
+        adSettings.showPopup = !adSettings.showPopup;
+      }
+      updateAdminFormUI();
+    }
+
+    function updateAdminFormUI() {
+      document.getElementById('toggleDirectBtn').innerText = adSettings.showDirect ? "ON" : "OFF";
+      document.getElementById('toggleDirectBtn').style.background = adSettings.showDirect ? "#10b981" : "#ef4444";
+      
+      document.getElementById('togglePopupBtn').innerText = adSettings.showPopup ? "ON" : "OFF";
+      document.getElementById('togglePopupBtn').style.background = adSettings.showPopup ? "#10b981" : "#ef4444";
+    }
+
+    function saveAdSettings() {
+      const urlInput = document.getElementById('adminDirectUrlInput').value.trim();
+      if(urlInput) adSettings.directUrl = urlInput;
+
+      localStorage.setItem('app_ad_settings', JSON.stringify(adSettings));
+      applyAdSettings();
+      alert('এড সেটিংস সফলভাবে আপডেট করা হয়েছে!');
+    }
+
     function updateNotice() {
       const val = document.getElementById('newNoticeInput').value.trim();
       if(!val) return alert('নোটিশ প্রদান করুন!');
@@ -459,10 +616,14 @@
       if (document.getElementById('adminPassInput').value === pass) {
         document.getElementById('admin-login-box').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.remove('hidden');
+        document.getElementById('adminDirectUrlInput').value = adSettings.directUrl;
+        updateAdminFormUI();
+        applyAdSettings();
       } else alert('ভুল পাসওয়ার্ড!');
     }
 
     // প্রাথমিক লোড
+    applyAdSettings();
     loadSliderImages();
     loadNotice();
     checkUserStatus();
