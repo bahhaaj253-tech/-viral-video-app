@@ -10,6 +10,9 @@
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Telegram Widget Script for Videos -->
+  <script async src="https://telegram.org/js/telegram-widget.js?22"></script>
+
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <!-- FontAwesome Icons -->
@@ -92,14 +95,14 @@
     }
     .filter-btn.active { background: #0284c7; color: white; font-weight: bold; }
 
-    /* Video Player */
+    /* Video Player Styles */
     .video-card {
       background: #0f172a; border-radius: 10px; padding: 8px; margin-bottom: 12px; border: 1px solid #334155; position: relative;
     }
     .video-wrapper {
-      position: relative; width: 100%; height: 200px; border-radius: 8px; overflow: hidden; background: #000;
+      position: relative; width: 100%; min-height: 220px; border-radius: 8px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;
     }
-    .video-wrapper iframe { width: 100%; height: 100%; border: none; }
+    .video-wrapper iframe, .video-wrapper video { width: 100%; height: 220px; border: none; object-fit: contain; }
     .video-overlay {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 8px; cursor: pointer; z-index: 10;
     }
@@ -109,37 +112,12 @@
     .video-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .fav-btn { color: #f59e0b; cursor: pointer; font-size: 16px; }
 
-    /* Visual Ad Map Styles in Admin */
-    .ad-map-container {
-      background: #090d16;
-      border: 2px dashed #0284c7;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 15px;
-    }
-    .ad-map-node {
-      background: #1e293b;
-      border: 1px solid #334155;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-    }
-    .ad-map-node.active-ad { border-left: 4px solid #10b981; }
-    .ad-map-node.inactive-ad { border-left: 4px solid #ef4444; opacity: 0.6; }
-    .status-tag { padding: 2px 8px; border-radius: 10px; font-weight: bold; font-size: 10px; }
-    .status-on { background: #10b981; color: white; }
-    .status-off { background: #ef4444; color: white; }
-
     /* Support Button */
     .whatsapp-btn {
       position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; border-radius: 50px; padding: 10px 18px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; font-weight: bold; font-size: 14px; z-index: 999;
     }
 
-    input[type="text"], input[type="password"] { width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; }
+    input[type="text"], input[type="password"], input[type="file"], select { width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; }
     .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
     .hidden { display: none !important; }
     .blocked-screen { background: #450a0a; border: 2px solid #ef4444; color: #fca5a5; padding: 20px; border-radius: 12px; margin-top: 30px; text-align: center; }
@@ -213,36 +191,7 @@
     </div>
 
     <div id="admin-dashboard" class="card hidden">
-      <h3 style="color:#f59e0b; margin-top:0; text-align:center;">👑 এডমিন কন্ট্রোল ও এড ম্যাপ</h3>
-
-      <!-- 🗺️ VISUAL AD MAP SECTION -->
-      <div class="ad-map-container">
-        <h4 style="margin:0 0 10px 0; color:#38bdf8; text-align:center;">🗺️ অ্যাপ এড পজিশন ভিজুয়াল ম্যাপ</h4>
-        
-        <div class="ad-map-node" id="map-node-direct">
-          <div>
-            <strong>[TOP] Direct Link Button</strong><br>
-            <span style="color:#94a3b8;" id="map-url-direct">https://omg10.com/4/11848732</span>
-          </div>
-          <span class="status-tag status-on" id="tag-direct">ACTIVE</span>
-        </div>
-
-        <div class="ad-map-node" id="map-node-popup">
-          <div>
-            <strong>[PLAY] Rewarded Popup Ad</strong><br>
-            <span style="color:#94a3b8;">show_11848596('pop')</span>
-          </div>
-          <span class="status-tag status-on" id="tag-popup">ACTIVE</span>
-        </div>
-
-        <div class="ad-map-node" id="map-node-interstitial">
-          <div>
-            <strong>[IN-APP] Interstitial Auto Ad</strong><br>
-            <span style="color:#94a3b8;">show_11848596({type:'inApp'})</span>
-          </div>
-          <span class="status-tag status-on" id="tag-interstitial">ACTIVE</span>
-        </div>
-      </div>
+      <h3 style="color:#f59e0b; margin-top:0; text-align:center;">👑 এডমিন কন্ট্রোল প্যানেল</h3>
 
       <!-- ⚙️ AD CONFIGURATION FORM -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
@@ -264,21 +213,30 @@
         <button class="btn-submit" style="background:#0284c7;" onclick="saveAdSettings()">এড সেটিংস সেভ করুন</button>
       </div>
 
-      <!-- নোটিশ আপডেট -->
+      <!-- 🎬 টেলিগ্রাম বা অন্য ভিডিও পোস্ট অপশন -->
+      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
+        <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 টেলিগ্রাম চ্যানেলের ভিডিও লিঙ্ক দিন</h4>
+        <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম">
+        
+        <label style="font-size:11px; color:#94a3b8;">টেলিগ্রাম ভিডিও পোস্ট লিঙ্ক (যেমন: https://t.me/telegram/19):</label>
+        <input type="text" id="newVideoUrl" placeholder="Telegram / Youtube / Video Link">
+
+        <select id="videoCategorySelect">
+          <option value="viral">ভাইরাল (Viral)</option>
+          <option value="trending">ট্রেন্ডিং (Trending)</option>
+        </select>
+
+        <button class="btn-submit" style="background:#0284c7;" onclick="addVideoByAdmin()">ভিডিও পোস্ট করুন</button>
+      </div>
+
+      <!-- 📢 নোটিশ আপডেট -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#38bdf8;">📢 নোটিশ আপডেট</h4>
         <input type="text" id="newNoticeInput" placeholder="নতুন নোটিশ লিখুন">
         <button class="btn-submit" style="background:#8b5cf6;" onclick="updateNotice()">নোটিশ পরিবর্তন করুন</button>
       </div>
 
-      <!-- পাসওয়ার্ড পরিবর্তন -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#38bdf8;">🔑 পাসওয়ার্ড পরিবর্তন</h4>
-        <input type="password" id="newPassInput" placeholder="নতুন পাসওয়ার্ড লিখুন">
-        <button class="btn-submit" style="background:#f59e0b;" onclick="changeAdminPassword()">আপডেট করুন</button>
-      </div>
-
-      <!-- স্লাইডার ইমেজ -->
+      <!-- 🖼️ স্লাইডার ইমেজ -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#38bdf8;">🖼️ স্লাইডার ব্যানার ইমেজ পরিবর্তন</h4>
         <input type="text" id="newBannerUrl" placeholder="ইমেজের Direct Link দিন">
@@ -286,7 +244,14 @@
         <button class="btn-submit" style="background:#ef4444;" onclick="resetBannerImages()">রিসেট করুন</button>
       </div>
 
-      <!-- ইউজার ব্যান/আনব্যান -->
+      <!-- 🔑 পাসওয়ার্ড পরিবর্তন -->
+      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
+        <h4 style="margin:0 0 8px 0; color:#38bdf8;">🔑 পাসওয়ার্ড পরিবর্তন</h4>
+        <input type="password" id="newPassInput" placeholder="নতুন পাসওয়ার্ড লিখুন">
+        <button class="btn-submit" style="background:#f59e0b;" onclick="changeAdminPassword()">আপডেট করুন</button>
+      </div>
+
+      <!-- 🚫 ইউজার ব্যান/আনব্যান -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#ef4444;">🚫 ইউজার ব্যান / আনব্যান</h4>
         <input type="text" id="banUserIdInput" placeholder="ইউজার Telegram ID দিন">
@@ -294,18 +259,6 @@
           <button class="btn-submit" style="background:#ef4444;" onclick="banUserAction(true)">ব্যান করুন</button>
           <button class="btn-submit" style="background:#10b981;" onclick="banUserAction(false)">আনব্যান করুন</button>
         </div>
-      </div>
-
-      <!-- নতুন ভিডিও পোস্ট -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 নতুন ভিডিও পোস্ট করুন</h4>
-        <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম">
-        <input type="text" id="newVideoUrl" placeholder="Youtube / Embed Video Link">
-        <select id="videoCategorySelect" style="width:100%; padding:10px; border-radius:8px; background:#0f172a; color:white; border:1px solid #475569; margin-bottom:8px;">
-          <option value="viral">ভাইরাল (Viral)</option>
-          <option value="trending">ট্রেন্ডিং (Trending)</option>
-        </select>
-        <button class="btn-submit" style="background:#0284c7;" onclick="addVideoByAdmin()">পোস্ট করুন</button>
       </div>
     </div>
   </div>
@@ -344,10 +297,10 @@
       }
     } catch(e) { console.log('Ad init error:', e); }
 
-    // ডিফল্ট ভিডিও লিস্ট
+    // ডিফল্ট টেলিগ্রাম/ইউটিউব ভিডিও
     const defaultVideos = [
-      { id: 1, title: 'এক্সক্লুসিভ ভাইরাল ভিডিও ১', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'viral' },
-      { id: 2, title: 'ট্রেন্ডিং শর্ট ভিডিও ২', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'trending' }
+      { id: 1, title: 'এক্সক্লুসিভ টেলিগ্রাম ভিডিও ১', url: 'https://t.me/telegram/19', category: 'viral' },
+      { id: 2, title: 'ট্রেন্ডিং ভিডিও ২', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'trending' }
     ];
 
     // --- অ্যাড UI আপডেট ---
@@ -359,30 +312,28 @@
       } else {
         btn.classList.add('hidden');
       }
+    }
 
-      // Update Map View in Admin
-      document.getElementById('map-url-direct').innerText = adSettings.directUrl;
-      
-      const tagDirect = document.getElementById('tag-direct');
-      if(adSettings.showDirect) {
-        tagDirect.className = "status-tag status-on"; tagDirect.innerText = "ACTIVE";
-        document.getElementById('map-node-direct').className = "ad-map-node active-ad";
+    // --- টেলিগ্রাম পোস্ট লিঙ্ক থেকে এমবেড লিঙ্ক তৈরির ফাংশন ---
+    function getEmbedPlayerHtml(id, url) {
+      if (url.includes('t.me/')) {
+        // Telegram Post Convert to Embed Frame
+        let cleanUrl = url.replace('https://t.me/', '').replace('http://t.me/', '');
+        return `<iframe id="player-${id}" src="https://t.me/${cleanUrl}?embed=1&mode=tme" allowfullscreen style="display:none; width:100%; height:220px; border:none;"></iframe>`;
+      } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        let embedUrl = url;
+        if (!url.includes('embed')) {
+          let vidId = url.split('v=')[1] || url.split('/').pop();
+          embedUrl = `https://www.youtube.com/embed/${vidId}`;
+        }
+        return `<iframe id="player-${id}" src="" data-src="${embedUrl}?autoplay=1" allowfullscreen style="display:none; width:100%; height:220px; border:none;"></iframe>`;
       } else {
-        tagDirect.className = "status-tag status-off"; tagDirect.innerText = "OFF";
-        document.getElementById('map-node-direct').className = "ad-map-node inactive-ad";
-      }
-
-      const tagPopup = document.getElementById('tag-popup');
-      if(adSettings.showPopup) {
-        tagPopup.className = "status-tag status-on"; tagPopup.innerText = "ACTIVE";
-        document.getElementById('map-node-popup').className = "ad-map-node active-ad";
-      } else {
-        tagPopup.className = "status-tag status-off"; tagPopup.innerText = "OFF";
-        document.getElementById('map-node-popup').className = "ad-map-node inactive-ad";
+        // Direct MP4 or external video
+        return `<video id="player-${id}" controls style="display:none; width:100%; height:220px;"><source src="${url}" type="video/mp4"></video>`;
       }
     }
 
-    // --- ভিডিও রেন্ডার ও প্লে উইথ অ্যাড ---
+    // --- ভিডিও রেন্ডার ---
     function renderVideos() {
       const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
       const favs = JSON.parse(localStorage.getItem('fav_videos_' + userId) || '[]');
@@ -406,6 +357,8 @@
 
       filtered.forEach(v => {
         const isFav = favs.includes(v.id);
+        const playerHtml = getEmbedPlayerHtml(v.id, v.url);
+
         container.innerHTML += `
           <div class="video-card">
             <div class="video-header">
@@ -417,7 +370,7 @@
                 <i class="fa-solid fa-circle-play"></i>
                 <span>বিজ্ঞাপন দেখে প্লে করুন</span>
               </div>
-              <iframe id="iframe-${v.id}" src="" allowfullscreen></iframe>
+              ${playerHtml}
             </div>
           </div>
         `;
@@ -427,15 +380,23 @@
     // বিজ্ঞাপনের পর ভিডিও প্লে করার লজিক (Rewarded Popup Integration)
     function playVideoWithAd(id, videoUrl) {
       const overlay = document.getElementById('overlay-' + id);
-      const iframe = document.getElementById('iframe-' + id);
 
       const startVideo = () => {
         overlay.style.display = 'none';
-        iframe.src = videoUrl + "?autoplay=1&rel=0&modestbranding=1";
+        const player = document.getElementById('player-' + id);
+        if (player) {
+          player.style.display = 'block';
+          if (player.tagName === 'IFRAME') {
+            if (player.dataset.src) {
+              player.src = player.dataset.src;
+            }
+          } else if (player.tagName === 'VIDEO') {
+            player.play();
+          }
+        }
       };
 
       if (adSettings.showPopup && typeof show_11848596 === 'function') {
-        // Rewarded Popup Trigger
         show_11848596('pop').then(() => {
           startVideo();
         }).catch(e => {
@@ -571,18 +532,21 @@
       alert('ব্যানার রিসেট করা হয়েছে!');
     }
 
+    // --- টেলিগ্রাম বা অন্য ভিডিও পোস্ট করার ফাংশন ---
     function addVideoByAdmin() {
       const title = document.getElementById('videoTitleInput').value.trim();
-      const url = document.getElementById('newVideoUrl').value.trim();
+      const urlInput = document.getElementById('newVideoUrl').value.trim();
       const cat = document.getElementById('videoCategorySelect').value;
 
-      if (!title || !url) return alert('সবগুলো ফিল্ড পূরণ করুন!');
+      if (!title) return alert('ভিডিওর শিরোনাম পূরণ করুন!');
+      if (!urlInput) return alert('ভিডিওর লিঙ্ক প্রদান করুন!');
 
       const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
-      videos.unshift({ id: Date.now(), title: title, url: url, category: cat });
-      localStorage.setItem('app_videos', JSON.stringify(videos));
 
-      alert('নতুন ভিডিও সফলভাবে যুক্ত করা হয়েছে!');
+      videos.unshift({ id: Date.now(), title: title, url: urlInput, category: cat });
+      localStorage.setItem('app_videos', JSON.stringify(videos));
+      alert('ভিডিও সফলভাবে পোস্ট হয়েছে!');
+      
       document.getElementById('videoTitleInput').value = "";
       document.getElementById('newVideoUrl').value = "";
       renderVideos();
