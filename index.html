@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>প্রাইভেট সিকিউর ভিডিও অ্যাপ</title>
+  <title>ফ্রি ভিডিও ও মিডিয়া অ্যাপ</title>
+  
+  <!-- Monetag SDK Tag (আপনার জোন আইডির ট্যাগ) -->
+  <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
+
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Swiper CSS -->
@@ -54,11 +58,6 @@
     .swiper-pagination-bullet-active { background: #38bdf8 !important; }
 
     .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); text-align: left; }
-    .price-box { border: 1px solid #38bdf8; border-radius: 10px; padding: 12px; margin: 10px 0; background: #0f172a; display: flex; justify-content: space-between; align-items: center; }
-    .price-box h4 { margin: 0; color: #38bdf8; font-size: 15px; }
-    .price-box p { margin: 3px 0 0; font-size: 12px; color: #94a3b8; }
-    
-    .btn-buy { background: linear-gradient(135deg, #0284c7, #0369a1); color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
     
     /* Search Bar & Category Filter */
     .search-box {
@@ -81,38 +80,25 @@
     }
     .video-wrapper iframe { width: 100%; height: 100%; border: none; }
     .video-overlay {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 8px; cursor: pointer; z-index: 10;
     }
+    .video-overlay i { font-size: 45px; color: #38bdf8; margin-bottom: 6px; }
+    .video-overlay span { font-size: 12px; color: #f8fafc; font-weight: bold; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 12px; }
+
     .video-header {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
     }
     .fav-btn { color: #f59e0b; cursor: pointer; font-size: 16px; }
 
-    /* Floating WhatsApp Button */
+    /* Floating Support Button */
     .whatsapp-btn {
       position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; border-radius: 50px; padding: 10px 18px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; font-weight: bold; font-size: 14px; z-index: 999;
     }
 
-    /* Modal Pop-up */
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-    .modal-box { background: #1e293b; border: 1px solid #38bdf8; border-radius: 16px; padding: 20px; width: 100%; max-width: 350px; text-align: left; }
-    .payment-badge { background: #334155; padding: 8px 12px; border-radius: 8px; margin: 8px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
-    .bkash { color: #e2136e; font-weight: bold; }
-    .nagad { color: #f7921e; font-weight: bold; }
-    .number-highlight { color: #38bdf8; font-family: monospace; font-size: 14px; font-weight: bold; }
-    
-    .btn-copy { background: #0284c7; color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; }
     input[type="text"], input[type="password"] { width: 100%; padding: 12px; margin: 8px 0 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 14px; }
     .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; }
-    .btn-close { background: #ef4444; color: white; border: none; width: 100%; padding: 8px; border-radius: 8px; margin-top: 8px; font-size: 13px; cursor: pointer; }
     .hidden { display: none !important; }
-    
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-    th, td { border: 1px solid #334155; padding: 8px; text-align: left; word-break: break-word; }
-    th { background: #0f172a; color: #38bdf8; }
     .blocked-screen { background: #450a0a; border: 2px solid #ef4444; color: #fca5a5; padding: 20px; border-radius: 12px; margin-top: 30px; text-align: center; }
-    .timer-badge { background: #10b981; color: white; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
-    .status-active-box { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; padding: 10px; border-radius: 8px; margin-top: 8px; text-align: center; }
   </style>
 </head>
 <body oncontextmenu="return false;">
@@ -120,7 +106,7 @@
   <!-- ১. ইউজার ব্যান স্ক্রিন -->
   <div id="blocked-view" class="blocked-screen hidden">
     <h2>⛔ এক্সেস ব্লক করা হয়েছে!</h2>
-    <p>আপনাকে সিকিউরিটি ভায়োলেশনের কারণে ব্লক করা হয়েছে। সাপোর্টে যোগাযোগ করুন।</p>
+    <p>আপনাকে সিকিউরিটি ভায়োলেশনের কারণে ব্লক করা হয়েছে।</p>
   </div>
 
   <!-- ২. ইউজার ইন্টারফেস -->
@@ -129,11 +115,11 @@
     <!-- এনাউন্সমেন্ট ব্যানার -->
     <div class="announcement-bar" id="announcement-bar">
       <i class="fa-solid fa-bullhorn"></i>
-      <span id="notice-text">স্বাগতম! নতুন ভিডিও প্রতিদিন আপডেট করা হয়।</span>
+      <span id="notice-text">স্বাগতম! ভিডিও দেখতে পাওয়ার জন্য ভিডিওর প্লে বাটনে ক্লিক করুন।</span>
     </div>
 
-    <span class="badge-viral">🔥 Private Viral Platform</span>
-    <h2 class="header-title">প্রাইভেট ভিডিও মিনি অ্যাপ</h2>
+    <span class="badge-viral">🔥 Free Video Stream App</span>
+    <h2 class="header-title">ভিডিও মিনি অ্যাপ</h2>
 
     <!-- স্লাইডার ব্যানার -->
     <div class="slider-card">
@@ -143,52 +129,9 @@
       </div>
     </div>
 
-    <!-- ইউজার প্রোফাইল ও স্ট্যাটাস -->
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <p style="margin:2px 0; font-size: 14px;">স্বাগতম, <b id="username">ইউজার</b>!</p>
-        <span id="expiry-timer" class="timer-badge hidden">অ্যাক্টিভ</span>
-      </div>
-      <p style="margin:6px 0 0; font-size: 13px;">স্ট্যাটাস: <span id="status" style="color: #ef4444; font-weight: bold;">মেয়াদ শেষ (No Access)</span></p>
-    </div>
-
-    <!-- সাবস্ক্রিপশন প্যাকেজসমূহ -->
-    <div id="subscription-section" class="card">
-      <h3 style="margin-top:0; font-size:16px; color:#38bdf8; text-align:center;">আনলক করতে প্যাকেজ নির্বাচন করুন</h3>
-      
-      <div class="price-box">
-        <div>
-          <h4>১ মাসের এক্সেস</h4>
-          <p>সকল ভিডিও ফিড</p>
-        </div>
-        <button class="btn-buy" onclick="openPaymentModal('১ মাস', 100, 30)">১০০৳</button>
-      </div>
-
-      <div class="price-box">
-        <div>
-          <h4>২ মাসের এক্সেস</h4>
-          <p>পপুলার প্যাকেজ</p>
-        </div>
-        <button class="btn-buy" onclick="openPaymentModal('২ মাস', 180, 60)">১৮০৳</button>
-      </div>
-
-      <div class="price-box">
-        <div>
-          <h4>লাইফটাইম মেম্বারশিপ</h4>
-          <p>অনলিমিটেড এক্সেস</p>
-        </div>
-        <button class="btn-buy" onclick="openPaymentModal('লাইফটাইম', 500, 3650)">৫০০৳</button>
-      </div>
-    </div>
-
-    <!-- প্রিমিয়াম ভিডিও সেকশন -->
-    <div id="video-section" class="card hidden">
-      <div class="status-active-box">
-        <h4 style="margin:0; color:#10b981;">🎉 আপনার অ্যাকাউন্ট সক্রিয় আছে!</h4>
-        <p style="margin:3px 0 0; font-size:12px; color:#cbd5e1;">নিচের ভিডিও ক্যাটাগরি থেকে পছন্দের ভিডিও দেখুন</p>
-      </div>
-      
-      <h3 style="margin: 15px 0 10px; color: #38bdf8; font-size:16px; text-align:center;">🔥 এক্সক্লুসিভ ভিডিও ফিড</h3>
+    <!-- ভিডিও সেকশন -->
+    <div id="video-section" class="card">
+      <h3 style="margin: 5px 0 10px; color: #38bdf8; font-size:16px; text-align:center;">🔥 এক্সক্লুসিভ ফ্রি ভিডিও ফিড</h3>
       
       <!-- সার্চ বার -->
       <input type="text" class="search-box" id="searchVideoInput" placeholder="🔍 ভিডিও সার্চ করুন..." onkeyup="filterVideos()">
@@ -206,37 +149,13 @@
     </div>
   </div>
 
-  <!-- WhatsApp সাপোর্ট বাটন -->
+  <!-- হেল্প/সাপোর্ট বাটন -->
   <a href="https://wa.me/8801605617380?text=হ্যালো,%20আমার%20অ্যাপ%20হেল্প%20দরকার।" target="_blank" class="whatsapp-btn">
     <i class="fa-brands fa-whatsapp" style="font-size: 20px;"></i>
-    <span>হেল্প / সাপোর্ট</span>
+    <span>সাপোর্ট</span>
   </a>
 
-  <!-- পেমেন্ট পপ-আপ -->
-  <div id="paymentModal" class="modal-overlay">
-    <div class="modal-box">
-      <h3 style="margin-top:0; color:#38bdf8; font-size:18px;">পেমেন্ট করুন</h3>
-      <p style="font-size:13px; color:#cbd5e1; margin-bottom:10px;">প্যাকেজ: <b id="selectedPlan" style="color:#10b981;">-</b></p>
-      
-      <div class="payment-badge">
-        <div><span class="bkash">বিকাশ:</span> <span class="number-highlight">01965291171</span></div>
-        <button class="btn-copy" onclick="copyNumber('01965291171', this)"><i class="fa-regular fa-copy"></i> Copy</button>
-      </div>
-
-      <div class="payment-badge">
-        <div><span class="nagad">নগদ:</span> <span class="number-highlight">01965291171</span></div>
-        <button class="btn-copy" onclick="copyNumber('01965291171', this)"><i class="fa-regular fa-copy"></i> Copy</button>
-      </div>
-
-      <p style="font-size:11px; color:#94a3b8; margin: 10px 0 5px;">📌 টাকা পাঠানোর পর TrxID লিখুন:</p>
-      <input type="text" id="trxIdInput" placeholder="TrxID প্রদান করুন">
-
-      <button class="btn-submit" onclick="submitTrx()">সাবমিট করুন</button>
-      <button class="btn-close" onclick="closeModal('paymentModal')">বন্ধ করুন</button>
-    </div>
-  </div>
-
-  <!-- এডমিন প্যানেল -->
+  <!-- এডমিন প্যানেল (ভিউ সনাক্ত করতে ?admin প্যারামিটার ব্যবহার করুন) -->
   <div id="admin-view" class="hidden">
     <div id="admin-login-box" class="card" style="max-width:350px; margin: 30px auto; text-align:center;">
       <h3 style="color:#38bdf8; margin-top:0;">👑 এডমিন প্যানেল লগইন</h3>
@@ -283,22 +202,13 @@
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 নতুন ভিডিও পোস্ট করুন</h4>
         <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম" style="margin-bottom:8px;">
-        <input type="text" id="newVideoUrl" placeholder="Bunny / Embed Video Link" style="margin-bottom:8px;">
+        <input type="text" id="newVideoUrl" placeholder="Youtube / Bunny / Embed Video Link" style="margin-bottom:8px;">
         <select id="videoCategorySelect" style="width:100%; padding:10px; border-radius:8px; background:#0f172a; color:white; border:1px solid #475569; margin-bottom:8px;">
           <option value="viral">ভাইরাল (Viral)</option>
           <option value="trending">ট্রেন্ডিং (Trending)</option>
         </select>
         <button class="btn-submit" style="background:#0284c7;" onclick="addVideoByAdmin()">পোস্ট করুন</button>
       </div>
-
-      <!-- পেন্ডিং পেমেন্টসমূহ -->
-      <h4 style="margin-bottom:5px;">📩 পেন্ডিং পেমেন্ট রিকোয়েস্ট:</h4>
-      <table>
-        <thead>
-          <tr><th>ইউজার</th><th>প্যাকেজ</th><th>TrxID</th><th>অ্যাকশন</th></tr>
-        </thead>
-        <tbody id="admin-payment-list"></tbody>
-      </table>
     </div>
   </div>
 
@@ -317,20 +227,31 @@
     tg.ready(); tg.expand();
 
     const userId = tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : 'DEMO_USER_123';
-    const userName = tg.initDataUnsafe?.user?.first_name || 'ইউজার';
-    document.getElementById('username').innerText = userName;
-
-    let currentPlan = "", currentPrice = 0, selectedDays = 30;
     let swiper = null, currentCategory = 'all';
-    let isAlreadyUnlocked = false;
+
+    // অটোমেটিক In-App Interstitial অ্যাড ইনিশিয়ালাইজেশন
+    try {
+      if (typeof show_11848596 === 'function') {
+        show_11848596({
+          type: 'inApp',
+          inAppSettings: {
+            frequency: 2,
+            capping: 0.1,
+            interval: 30,
+            timeout: 5,
+            everyPage: false
+          }
+        });
+      }
+    } catch(e) { console.log('Ad init error:', e); }
 
     // ডিফল্ট ভিডিও লিস্ট
     const defaultVideos = [
-      { id: 1, title: 'এক্সক্লুসিভ ভাইরাল ক্লিপ ১', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'viral' },
+      { id: 1, title: 'এক্সক্লুসিভ ভাইরাল ভিডিও ১', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'viral' },
       { id: 2, title: 'ট্রেন্ডিং শর্ট ভিডিও ২', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'trending' }
     ];
 
-    // --- ১. ভিডিও লোডার ---
+    // --- ভিডিও রেন্ডার ও প্লে উইথ অ্যাড ---
     function renderVideos() {
       const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
       const favs = JSON.parse(localStorage.getItem('fav_videos_' + userId) || '[]');
@@ -361,12 +282,37 @@
               <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-star fav-btn" onclick="toggleFavorite(${v.id})"></i>
             </div>
             <div class="video-wrapper">
-              <iframe src="${v.url}?rel=0&modestbranding=1" allowfullscreen></iframe>
-              <div class="video-overlay"></div>
+              <div class="video-overlay" id="overlay-${v.id}" onclick="playVideoWithAd(${v.id}, '${v.url}')">
+                <i class="fa-solid fa-circle-play"></i>
+                <span>বিজ্ঞাপন দেখে প্লে করুন</span>
+              </div>
+              <iframe id="iframe-${v.id}" src="" allowfullscreen></iframe>
             </div>
           </div>
         `;
       });
+    }
+
+    // অ্যাড দেখার পর ভিডিও রান করার লজিক
+    function playVideoWithAd(id, videoUrl) {
+      const overlay = document.getElementById('overlay-' + id);
+      const iframe = document.getElementById('iframe-' + id);
+
+      // Monetag Rewarded Interstitial অ্যাড কল
+      if (typeof show_11848596 === 'function') {
+        show_11848596().then(() => {
+          // অ্যাড দেখা সম্পন্ন হলে ভিডিও প্লে হবে
+          overlay.style.display = 'none';
+          iframe.src = videoUrl + "?autoplay=1&rel=0&modestbranding=1";
+        }).catch(e => {
+          // কোনো কারণে অ্যাড লোড না হলেও ইউজারকে ভিডিও দেওয়া হবে
+          overlay.style.display = 'none';
+          iframe.src = videoUrl + "?autoplay=1&rel=0&modestbranding=1";
+        });
+      } else {
+        overlay.style.display = 'none';
+        iframe.src = videoUrl + "?autoplay=1&rel=0&modestbranding=1";
+      }
     }
 
     function toggleFavorite(vid) {
@@ -389,7 +335,7 @@
 
     function filterVideos() { renderVideos(); }
 
-    // --- ২. অটো স্লাইডার ও নোটিশ ---
+    // --- স্লাইডার ও নোটিশ ---
     const defaultBanners = [
       "https://i.postimg.cc/3Rr152PJ/1789892566921.jpg",
       "https://i.postimg.cc/kM11ChM4/1789892582192.jpg"
@@ -399,7 +345,6 @@
       const savedBanners = JSON.parse(localStorage.getItem('app_banners')) || defaultBanners;
       const wrapper = document.getElementById('slider-wrapper');
       
-      // Swiper পুরানো ইন্সট্যান্স নষ্ট করা
       if (swiper) {
         swiper.destroy(true, true);
         swiper = null;
@@ -410,7 +355,6 @@
         wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}" onerror="this.src='https://via.placeholder.com/400x180?text=Image+Error'"></div>`;
       });
 
-      // Swiper পুনারায় শুরু করা
       setTimeout(() => {
         swiper = new Swiper(".mySwiper", { 
           loop: savedBanners.length > 1, 
@@ -421,145 +365,21 @@
     }
 
     function loadNotice() {
-      const notice = localStorage.getItem('app_notice') || "স্বাগতম! নতুন ভিডিও প্রতিদিন আপডেট করা হয়।";
+      const notice = localStorage.getItem('app_notice') || "স্বাগতম! ভিডিও দেখার জন্য প্লে বাটনে ক্লিক করুন।";
       document.getElementById('notice-text').innerText = notice;
     }
 
-    // --- ৩. রিয়েল-টাইম সাবস্ক্রিপশন ও ব্যান চেকার ---
-    function checkUserSubscription() {
-      // ব্যান চেকার
+    function checkUserStatus() {
       const bannedUsers = JSON.parse(localStorage.getItem('sys_banned_users') || '[]');
       if (bannedUsers.includes(String(userId))) {
         document.getElementById('user-view').classList.add('hidden');
         document.getElementById('blocked-view').classList.remove('hidden');
-        return;
       } else {
         document.getElementById('blocked-view').classList.add('hidden');
       }
-
-      const activePlan = localStorage.getItem('user_sub_active_' + userId);
-      const expiryTime = localStorage.getItem('user_sub_expiry_' + userId);
-
-      if (activePlan && expiryTime) {
-        const now = Date.now();
-        const diff = expiryTime - now;
-
-        if (diff > 0) {
-          document.getElementById('subscription-section').classList.add('hidden');
-          document.getElementById('video-section').classList.remove('hidden');
-          
-          const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
-          const statusElem = document.getElementById('status');
-          statusElem.innerText = activePlan + " (Active)";
-          statusElem.style.color = "#10b981";
-
-          const timerBadge = document.getElementById('expiry-timer');
-          timerBadge.classList.remove('hidden');
-          timerBadge.innerText = `মেয়াদ: ${daysLeft} দিন`;
-          
-          if(!isAlreadyUnlocked) {
-            isAlreadyUnlocked = true;
-            renderVideos();
-          }
-        } else {
-          localStorage.removeItem('user_sub_active_' + userId);
-          localStorage.removeItem('user_sub_expiry_' + userId);
-          isAlreadyUnlocked = false;
-          document.getElementById('subscription-section').classList.remove('hidden');
-          document.getElementById('video-section').classList.add('hidden');
-          document.getElementById('status').innerText = "মেয়াদ শেষ (No Access)";
-          document.getElementById('status').style.color = "#ef4444";
-          document.getElementById('expiry-timer').classList.add('hidden');
-        }
-      } else {
-        document.getElementById('subscription-section').classList.remove('hidden');
-        document.getElementById('video-section').classList.add('hidden');
-        document.getElementById('status').innerText = "মেয়াদ শেষ (No Access)";
-        document.getElementById('status').style.color = "#ef4444";
-        document.getElementById('expiry-timer').classList.add('hidden');
-      }
     }
 
-    // প্রতি ৩ সেকেন্ড পর পর অ্যাক্টিভেশন ও ব্যান চেক
-    setInterval(checkUserSubscription, 3000);
-
-    // --- ৪. পেমেন্ট ও এডমিন অ্যাকশন ---
-    function openPaymentModal(plan, price, days) {
-      currentPlan = plan; currentPrice = price; selectedDays = days;
-      document.getElementById('selectedPlan').innerText = plan + " (" + price + "৳)";
-      document.getElementById('paymentModal').style.display = "flex";
-    }
-
-    function closeModal(id) { document.getElementById(id).style.display = "none"; }
-
-    function copyNumber(text, btn) {
-      navigator.clipboard.writeText(text);
-      btn.innerText = "Copied!";
-      setTimeout(() => btn.innerText = "Copy", 2000);
-    }
-
-    function submitTrx() {
-      const trx = document.getElementById('trxIdInput').value.trim();
-      if (!trx) return alert('TrxID প্রদান করুন!');
-
-      const payments = JSON.parse(localStorage.getItem('sys_pending_payments') || '[]');
-      payments.push({ id: Date.now(), user: userName, userId: String(userId), plan: currentPlan, days: selectedDays, trx: trx });
-      localStorage.setItem('sys_pending_payments', JSON.stringify(payments));
-
-      alert('রিকোয়েস্ট জমা হয়েছে! এডমিন এপ্রুভ করলেই আপনার এক্সেস আনলক হয়ে যাবে।');
-      closeModal('paymentModal');
-      document.getElementById('trxIdInput').value = "";
-    }
-
-    function renderAdminPayments() {
-      const payments = JSON.parse(localStorage.getItem('sys_pending_payments') || '[]');
-      const list = document.getElementById('admin-payment-list');
-      list.innerHTML = payments.length === 0 ? "<tr><td colspan='4' style='text-align:center;'>পেন্ডিং রিকোয়েস্ট নেই</td></tr>" : "";
-
-      payments.forEach((item, index) => {
-        list.innerHTML += `
-          <tr>
-            <td>${item.user} <br><small>(${item.userId})</small></td>
-            <td>${item.plan}</td>
-            <td><b>${item.trx}</b></td>
-            <td><button style="background:#10b981; color:white; border:none; padding:6px 10px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="approvePayment(${index})">Approve</button></td>
-          </tr>
-        `;
-      });
-    }
-
-    function approvePayment(index) {
-      const payments = JSON.parse(localStorage.getItem('sys_pending_payments') || '[]');
-      const app = payments[index];
-      
-      const expiryDate = Date.now() + (app.days * 24 * 60 * 60 * 1000);
-      localStorage.setItem('user_sub_active_' + app.userId, app.plan);
-      localStorage.setItem('user_sub_expiry_' + app.userId, expiryDate);
-
-      payments.splice(index, 1);
-      localStorage.setItem('sys_pending_payments', JSON.stringify(payments));
-      alert(`${app.user}-এর এক্সেস সফলভাবে আনলক করা হয়েছে!`);
-      renderAdminPayments();
-      checkUserSubscription();
-    }
-
-    function addVideoByAdmin() {
-      const title = document.getElementById('videoTitleInput').value.trim();
-      const url = document.getElementById('newVideoUrl').value.trim();
-      const cat = document.getElementById('videoCategorySelect').value;
-
-      if (!title || !url) return alert('সবগুলো ফিল্ড পূরণ করুন!');
-
-      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
-      videos.unshift({ id: Date.now(), title: title, url: url, category: cat });
-      localStorage.setItem('app_videos', JSON.stringify(videos));
-
-      alert('নতুন ভিডিও সফলভাবে যুক্ত করা হয়েছে!');
-      document.getElementById('videoTitleInput').value = "";
-      document.getElementById('newVideoUrl').value = "";
-    }
-
-    // --- ৫. এডমিন কন্ট্রোল ফাংশনস ---
+    // --- এডমিন ফাংশনস ---
     function updateNotice() {
       const val = document.getElementById('newNoticeInput').value.trim();
       if(!val) return alert('নোটিশ প্রদান করুন!');
@@ -594,6 +414,23 @@
       alert('ব্যানার রিসেট করা হয়েছে!');
     }
 
+    function addVideoByAdmin() {
+      const title = document.getElementById('videoTitleInput').value.trim();
+      const url = document.getElementById('newVideoUrl').value.trim();
+      const cat = document.getElementById('videoCategorySelect').value;
+
+      if (!title || !url) return alert('সবগুলো ফিল্ড পূরণ করুন!');
+
+      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+      videos.unshift({ id: Date.now(), title: title, url: url, category: cat });
+      localStorage.setItem('app_videos', JSON.stringify(videos));
+
+      alert('নতুন ভিডিও সফলভাবে যুক্ত করা হয়েছে!');
+      document.getElementById('videoTitleInput').value = "";
+      document.getElementById('newVideoUrl').value = "";
+      renderVideos();
+    }
+
     function banUserAction(isBan) {
       const targetId = document.getElementById('banUserIdInput').value.trim();
       if(!targetId) return alert('ইউজার Telegram ID দিন!');
@@ -608,10 +445,10 @@
       }
       localStorage.setItem('sys_banned_users', JSON.stringify(bannedUsers));
       document.getElementById('banUserIdInput').value = "";
-      checkUserSubscription();
+      checkUserStatus();
     }
 
-    // এডমিন পেজ সনাক্তকরণ (URL Query প্যারামিটার: ?admin)
+    // এডমিন পেজ চেক (?admin)
     if (window.location.search.includes('admin')) {
       document.getElementById('user-view').classList.add('hidden');
       document.getElementById('admin-view').classList.remove('hidden');
@@ -622,14 +459,14 @@
       if (document.getElementById('adminPassInput').value === pass) {
         document.getElementById('admin-login-box').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.remove('hidden');
-        renderAdminPayments();
       } else alert('ভুল পাসওয়ার্ড!');
     }
 
     // প্রাথমিক লোড
     loadSliderImages();
     loadNotice();
-    checkUserSubscription();
+    checkUserStatus();
+    renderVideos();
   </script>
 </body>
 </html>
