@@ -398,16 +398,26 @@
     function loadSliderImages() {
       const savedBanners = JSON.parse(localStorage.getItem('app_banners')) || defaultBanners;
       const wrapper = document.getElementById('slider-wrapper');
+      
+      // Swiper পুরানো ইন্সট্যান্স নষ্ট করা
+      if (swiper) {
+        swiper.destroy(true, true);
+        swiper = null;
+      }
+      
       wrapper.innerHTML = "";
       savedBanners.forEach(url => {
-        wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
+        wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}" onerror="this.src='https://via.placeholder.com/400x180?text=Image+Error'"></div>`;
       });
-      if(swiper) swiper.destroy();
-      swiper = new Swiper(".mySwiper", { 
-        loop: true, 
-        autoplay: { delay: 3000, disableOnInteraction: false },
-        pagination: { el: '.swiper-pagination', clickable: true }
-      });
+
+      // Swiper পুনারায় শুরু করা
+      setTimeout(() => {
+        swiper = new Swiper(".mySwiper", { 
+          loop: savedBanners.length > 1, 
+          autoplay: { delay: 3000, disableOnInteraction: false },
+          pagination: { el: '.swiper-pagination', clickable: true }
+        });
+      }, 100);
     }
 
     function loadNotice() {
@@ -423,6 +433,8 @@
         document.getElementById('user-view').classList.add('hidden');
         document.getElementById('blocked-view').classList.remove('hidden');
         return;
+      } else {
+        document.getElementById('blocked-view').classList.add('hidden');
       }
 
       const activePlan = localStorage.getItem('user_sub_active_' + userId);
@@ -433,20 +445,20 @@
         const diff = expiryTime - now;
 
         if (diff > 0) {
+          document.getElementById('subscription-section').classList.add('hidden');
+          document.getElementById('video-section').classList.remove('hidden');
+          
+          const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
+          const statusElem = document.getElementById('status');
+          statusElem.innerText = activePlan + " (Active)";
+          statusElem.style.color = "#10b981";
+
+          const timerBadge = document.getElementById('expiry-timer');
+          timerBadge.classList.remove('hidden');
+          timerBadge.innerText = `মেয়াদ: ${daysLeft} দিন`;
+          
           if(!isAlreadyUnlocked) {
             isAlreadyUnlocked = true;
-            document.getElementById('subscription-section').classList.add('hidden');
-            document.getElementById('video-section').classList.remove('hidden');
-            
-            const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
-            const statusElem = document.getElementById('status');
-            statusElem.innerText = activePlan + " (Active)";
-            statusElem.style.color = "#10b981";
-
-            const timerBadge = document.getElementById('expiry-timer');
-            timerBadge.classList.remove('hidden');
-            timerBadge.innerText = `মেয়াদ: ${daysLeft} দিন`;
-            
             renderVideos();
           }
         } else {
@@ -459,6 +471,12 @@
           document.getElementById('status').style.color = "#ef4444";
           document.getElementById('expiry-timer').classList.add('hidden');
         }
+      } else {
+        document.getElementById('subscription-section').classList.remove('hidden');
+        document.getElementById('video-section').classList.add('hidden');
+        document.getElementById('status').innerText = "মেয়াদ শেষ (No Access)";
+        document.getElementById('status').style.color = "#ef4444";
+        document.getElementById('expiry-timer').classList.add('hidden');
       }
     }
 
@@ -541,7 +559,7 @@
       document.getElementById('newVideoUrl').value = "";
     }
 
-    // --- ৫. অতিরিক্ত এডমিন কন্ট্রোল ফাংশনস ---
+    // --- ৫. এডমিন কন্ট্রোল ফাংশনস ---
     function updateNotice() {
       const val = document.getElementById('newNoticeInput').value.trim();
       if(!val) return alert('নোটিশ প্রদান করুন!');
