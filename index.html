@@ -10,8 +10,6 @@
 
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Telegram Widget Script for Videos -->
-  <script async src="https://telegram.org/js/telegram-widget.js?22"></script>
 
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -100,14 +98,15 @@
       background: #0f172a; border-radius: 10px; padding: 8px; margin-bottom: 12px; border: 1px solid #334155; position: relative;
     }
     .video-wrapper {
-      position: relative; width: 100%; min-height: 220px; border-radius: 8px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;
+      position: relative; width: 100%; min-height: 250px; border-radius: 8px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;
     }
-    .video-wrapper iframe, .video-wrapper video { width: 100%; height: 220px; border: none; object-fit: contain; }
+    .video-wrapper iframe, .video-wrapper video { width: 100%; height: 250px; border: none; }
+    
     .video-overlay {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 8px; cursor: pointer; z-index: 10;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 8px; cursor: pointer; z-index: 10;
     }
     .video-overlay i { font-size: 45px; color: #38bdf8; margin-bottom: 6px; }
-    .video-overlay span { font-size: 12px; color: #f8fafc; font-weight: bold; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 12px; }
+    .video-overlay span { font-size: 12px; color: #f8fafc; font-weight: bold; background: rgba(0,0,0,0.8); padding: 5px 12px; border-radius: 12px; }
 
     .video-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .fav-btn { color: #f59e0b; cursor: pointer; font-size: 16px; }
@@ -215,11 +214,11 @@
 
       <!-- 🎬 টেলিগ্রাম বা অন্য ভিডিও পোস্ট অপশন -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 টেলিগ্রাম চ্যানেলের ভিডিও লিঙ্ক দিন</h4>
+        <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 ভিডিও পোস্ট করুন</h4>
         <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম">
         
-        <label style="font-size:11px; color:#94a3b8;">টেলিগ্রাম ভিডিও পোস্ট লিঙ্ক (যেমন: https://t.me/telegram/19):</label>
-        <input type="text" id="newVideoUrl" placeholder="Telegram / Youtube / Video Link">
+        <label style="font-size:11px; color:#94a3b8;">টেলিগ্রাম বা এমপি৪ ভিডিও লিঙ্ক:</label>
+        <input type="text" id="newVideoUrl" placeholder="উদাহরণ: https://t.me/telegram/19">
 
         <select id="videoCategorySelect">
           <option value="viral">ভাইরাল (Viral)</option>
@@ -267,43 +266,23 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
   <script>
-    // --- সিকিউরিটি প্রটেকশন ---
-    document.addEventListener('keydown', function(e) {
-      if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
-        e.preventDefault();
-      }
-    });
-
     const tg = window.Telegram.WebApp;
     tg.ready(); tg.expand();
 
     const userId = tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : 'DEMO_USER_123';
     let swiper = null, currentCategory = 'all';
 
-    // ডিফল্ট এড সেটিংস
     let adSettings = JSON.parse(localStorage.getItem('app_ad_settings')) || {
       directUrl: 'https://omg10.com/4/11848732',
       showDirect: true,
       showPopup: true
     };
 
-    // অটোমেটিক In-App Interstitial অ্যাড ইনিশিয়ালাইজেশন
-    try {
-      if (typeof show_11848596 === 'function') {
-        show_11848596({
-          type: 'inApp',
-          inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false }
-        });
-      }
-    } catch(e) { console.log('Ad init error:', e); }
-
-    // ডিফল্ট টেলিগ্রাম/ইউটিউব ভিডিও
     const defaultVideos = [
-      { id: 1, title: 'এক্সক্লুসিভ টেলিগ্রাম ভিডিও ১', url: 'https://t.me/telegram/19', category: 'viral' },
-      { id: 2, title: 'ট্রেন্ডিং ভিডিও ২', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'trending' }
+      { id: 101, title: 'টেলিগ্রাম ভিডিও ১', url: 'https://t.me/telegram/19', category: 'viral' },
+      { id: 102, title: 'ইউটিউব ট্রেইলার', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', category: 'trending' }
     ];
 
-    // --- অ্যাড UI আপডেট ---
     function applyAdSettings() {
       const btn = document.getElementById('top-direct-link-btn');
       if(adSettings.showDirect) {
@@ -314,26 +293,38 @@
       }
     }
 
-    // --- টেলিগ্রাম পোস্ট লিঙ্ক থেকে এমবেড লিঙ্ক তৈরির ফাংশন ---
+    // --- টেলিগ্রাম লিঙ্ক কনভার্টার ফাংশন (FIXED) ---
+    function formatTelegramUrl(rawUrl) {
+      let clean = rawUrl.trim();
+      if(clean.includes('t.me/')) {
+        let parts = clean.split('t.me/')[1].split('/');
+        if(parts.length >= 2) {
+          let channel = parts[0];
+          let postId = parts[1].split('?')[0];
+          return `https://t.me/${channel}/${postId}?embed=1&mode=tme`;
+        }
+      }
+      return clean;
+    }
+
+    // --- ভিডিও প্লেয়ার স্ট্রাকচার রেন্ডারিং ---
     function getEmbedPlayerHtml(id, url) {
       if (url.includes('t.me/')) {
-        // Telegram Post Convert to Embed Frame
-        let cleanUrl = url.replace('https://t.me/', '').replace('http://t.me/', '');
-        return `<iframe id="player-${id}" src="https://t.me/${cleanUrl}?embed=1&mode=tme" allowfullscreen style="display:none; width:100%; height:220px; border:none;"></iframe>`;
+        let embedSrc = formatTelegramUrl(url);
+        return `<iframe id="player-${id}" data-src="${embedSrc}" style="display:none; width:100%; height:250px; border:none; background:#000;" allowfullscreen></iframe>`;
       } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
         let embedUrl = url;
         if (!url.includes('embed')) {
           let vidId = url.split('v=')[1] || url.split('/').pop();
           embedUrl = `https://www.youtube.com/embed/${vidId}`;
         }
-        return `<iframe id="player-${id}" src="" data-src="${embedUrl}?autoplay=1" allowfullscreen style="display:none; width:100%; height:220px; border:none;"></iframe>`;
+        return `<iframe id="player-${id}" data-src="${embedUrl}?autoplay=1" style="display:none; width:100%; height:250px; border:none;" allowfullscreen></iframe>`;
       } else {
-        // Direct MP4 or external video
-        return `<video id="player-${id}" controls style="display:none; width:100%; height:220px;"><source src="${url}" type="video/mp4"></video>`;
+        return `<video id="player-${id}" controls style="display:none; width:100%; height:250px; background:#000;"><source src="${url}" type="video/mp4"></video>`;
       }
     }
 
-    // --- ভিডিও রেন্ডার ---
+    // --- ভিডিও লিস্ট রেন্ডারিং ---
     function renderVideos() {
       const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
       const favs = JSON.parse(localStorage.getItem('fav_videos_' + userId) || '[]');
@@ -366,7 +357,7 @@
               <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-star fav-btn" onclick="toggleFavorite(${v.id})"></i>
             </div>
             <div class="video-wrapper">
-              <div class="video-overlay" id="overlay-${v.id}" onclick="playVideoWithAd(${v.id}, '${v.url}')">
+              <div class="video-overlay" id="overlay-${v.id}" onclick="playVideoWithAd(${v.id})">
                 <i class="fa-solid fa-circle-play"></i>
                 <span>বিজ্ঞাপন দেখে প্লে করুন</span>
               </div>
@@ -377,8 +368,8 @@
       });
     }
 
-    // বিজ্ঞাপনের পর ভিডিও প্লে করার লজিক (Rewarded Popup Integration)
-    function playVideoWithAd(id, videoUrl) {
+    // --- ভিডিও প্লে লজিক ---
+    function playVideoWithAd(id) {
       const overlay = document.getElementById('overlay-' + id);
 
       const startVideo = () => {
@@ -397,11 +388,7 @@
       };
 
       if (adSettings.showPopup && typeof show_11848596 === 'function') {
-        show_11848596('pop').then(() => {
-          startVideo();
-        }).catch(e => {
-          startVideo();
-        });
+        show_11848596('pop').then(() => { startVideo(); }).catch(e => { startVideo(); });
       } else {
         startVideo();
       }
@@ -437,14 +424,11 @@
       const savedBanners = JSON.parse(localStorage.getItem('app_banners')) || defaultBanners;
       const wrapper = document.getElementById('slider-wrapper');
       
-      if (swiper) {
-        swiper.destroy(true, true);
-        swiper = null;
-      }
+      if (swiper) { swiper.destroy(true, true); swiper = null; }
       
       wrapper.innerHTML = "";
       savedBanners.forEach(url => {
-        wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}" onerror="this.src='https://via.placeholder.com/400x180?text=Image+Error'"></div>`;
+        wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
       });
 
       setTimeout(() => {
@@ -471,13 +455,10 @@
       }
     }
 
-    // --- এডমিন ফাংশনস ---
+    // --- এডমিন প্যানেল লজিক ---
     function toggleAdSetting(type) {
-      if(type === 'direct') {
-        adSettings.showDirect = !adSettings.showDirect;
-      } else if(type === 'popup') {
-        adSettings.showPopup = !adSettings.showPopup;
-      }
+      if(type === 'direct') adSettings.showDirect = !adSettings.showDirect;
+      else if(type === 'popup') adSettings.showPopup = !adSettings.showPopup;
       updateAdminFormUI();
     }
 
@@ -495,7 +476,7 @@
 
       localStorage.setItem('app_ad_settings', JSON.stringify(adSettings));
       applyAdSettings();
-      alert('এড সেটিংস সফলভাবে আপডেট করা হয়েছে!');
+      alert('এড সেটিংস আপডেট হয়েছে!');
     }
 
     function updateNotice() {
@@ -503,7 +484,7 @@
       if(!val) return alert('নোটিশ প্রদান করুন!');
       localStorage.setItem('app_notice', val);
       loadNotice();
-      alert('নোটিশ আপডেট হয়েছে!');
+      alert('নোটিশ পরিবর্তন সফল হয়েছে!');
       document.getElementById('newNoticeInput').value = "";
     }
 
@@ -511,13 +492,13 @@
       const val = document.getElementById('newPassInput').value.trim();
       if(!val) return alert('নতুন পাসওয়ার্ড লিখুন!');
       localStorage.setItem('sys_admin_password', val);
-      alert('এডমিন পাসওয়ার্ড পরিবর্তিত হয়েছে!');
+      alert('এডমিন পাসওয়ার্ড আপডেট হয়েছে!');
       document.getElementById('newPassInput').value = "";
     }
 
     function addBannerImage() {
       const url = document.getElementById('newBannerUrl').value.trim();
-      if(!url) return alert('ইমেজ ইউআরএল দিন!');
+      if(!url) return alert('ইমেজ লিঙ্ক দিন!');
       const banners = JSON.parse(localStorage.getItem('app_banners')) || defaultBanners;
       banners.push(url);
       localStorage.setItem('app_banners', JSON.stringify(banners));
@@ -529,26 +510,26 @@
     function resetBannerImages() {
       localStorage.removeItem('app_banners');
       loadSliderImages();
-      alert('ব্যানার রিসেট করা হয়েছে!');
+      alert('ব্যানার রিসেট হয়েছে!');
     }
 
-    // --- টেলিগ্রাম বা অন্য ভিডিও পোস্ট করার ফাংশন ---
     function addVideoByAdmin() {
       const title = document.getElementById('videoTitleInput').value.trim();
       const urlInput = document.getElementById('newVideoUrl').value.trim();
       const cat = document.getElementById('videoCategorySelect').value;
 
-      if (!title) return alert('ভিডিওর শিরোনাম পূরণ করুন!');
-      if (!urlInput) return alert('ভিডিওর লিঙ্ক প্রদান করুন!');
+      if (!title) return alert('ভিডিওর শিরোনাম টাইপ করুন!');
+      if (!urlInput) return alert('ভিডিওর সঠিক লিঙ্ক দিন!');
 
-      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+      let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
 
       videos.unshift({ id: Date.now(), title: title, url: urlInput, category: cat });
       localStorage.setItem('app_videos', JSON.stringify(videos));
-      alert('ভিডিও সফলভাবে পোস্ট হয়েছে!');
       
+      alert('ভিডিও এডমিন থেকে সফলভাবে পোস্ট হয়েছে!');
       document.getElementById('videoTitleInput').value = "";
       document.getElementById('newVideoUrl').value = "";
+      
       renderVideos();
     }
 
@@ -569,7 +550,6 @@
       checkUserStatus();
     }
 
-    // এডমিন পেজ চেক (?admin)
     if (window.location.search.includes('admin')) {
       document.getElementById('user-view').classList.add('hidden');
       document.getElementById('admin-view').classList.remove('hidden');
@@ -586,7 +566,6 @@
       } else alert('ভুল পাসওয়ার্ড!');
     }
 
-    // প্রাথমিক লোড
     applyAdSettings();
     loadSliderImages();
     loadNotice();
