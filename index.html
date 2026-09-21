@@ -243,7 +243,7 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
   <script>
-    // ⚙️ ক্লাউডিনারি কনফিগারেশন
+    // ⚙️ আপডেটেড ক্লাউডিনারি কনফিগারেশন
     const CLOUDINARY_CLOUD_NAME = "eyovtidv";
     const CLOUDINARY_UPLOAD_PRESET = "ml_default";
 
@@ -359,7 +359,7 @@
           renderBanners();
           renderAdminBannerList();
         } else {
-          alert('ব্যানার আপলোড ব্যর্থ হয়েছে! ক্লাউডিনারি সেটিংস পরীক্ষা করুন।');
+          alert('ব্যানার আপলোড ব্যর্থ হয়েছে! ক্লাউডিনারি প্রিসেট Unsigned করা আছে কিনা চেক করুন।');
         }
       })
       .catch(() => alert('ব্যানার আপলোড ব্যর্থ হয়েছে!'));
@@ -396,11 +396,12 @@
       const container = document.getElementById('video-container');
       if(!container) return;
 
-      const searchVal = document.getElementById('searchVideoInput') ? document.getElementById('searchVideoInput').value.toLowerCase() : '';
+      const searchVal = document.getElementById('searchVideoInput') ? document.getElementById('searchVideoInput').value.toLowerCase().trim() : '';
       container.innerHTML = "";
 
       const filtered = videos.filter(v => {
-        const matchesCategory = (currentCategory === 'all') || (v.category === currentCategory);
+        const vCat = (v.category || 'viral').toLowerCase();
+        const matchesCategory = (currentCategory === 'all') || (vCat === currentCategory.toLowerCase());
         const matchesSearch = v.title.toLowerCase().includes(searchVal);
         return matchesCategory && matchesSearch;
       });
@@ -445,7 +446,7 @@
       }
     }
 
-    // --- উন্নত ভিডিও আপলোড ফাংশন (XHR Progress Tracking সহ) ---
+    // --- ভিডিও আপলোড ফাংশন ---
     function uploadVideo() {
       const title = document.getElementById('videoTitleInput').value.trim();
       const fileInput = document.getElementById('videoFileInput');
@@ -455,7 +456,6 @@
       if (!title) return alert('ভিডিওর শিরোনাম দিন!');
       if (!file) return alert('গ্যালারি থেকে ভিডিও নির্বাচন করুন!');
 
-      // ফাইল সাইজ লিমিট (৫০ MB)
       if (file.size > 50 * 1024 * 1024) {
         return alert('ভিডিও ফাইলটি অনেক বড়! ৫০ MB এর চেয়ে ছোট ভিডিও সিলেক্ট করুন।');
       }
@@ -477,7 +477,6 @@
       const xhr = new XMLHttpRequest();
       xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`, true);
 
-      // রিয়েলটাইম শতাংশ ট্র্যাকিং
       xhr.upload.onprogress = function(e) {
         if (e.lengthComputable) {
           const percentComplete = Math.round((e.loaded / e.total) * 100);
@@ -509,6 +508,14 @@
           progressBox.style.display = 'none';
           statusText.innerText = '';
 
+          // অটোমেটিক 'সবগুলো' ফিল্টার নির্বাচন করা
+          currentCategory = 'all';
+          const allBtn = document.querySelector('.filter-btn');
+          if(allBtn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            allBtn.classList.add('active');
+          }
+
           renderAdminVideoList();
           renderVideos();
         } else {
@@ -527,7 +534,7 @@
       };
 
       xhr.onerror = function() {
-        alert('নেটওয়ার্ক সমস্যার কারণে আপলোড করতে ব্যর্থ হয়েছে! ইন্টারনেট চেক করুন।');
+        alert('নেটওয়ার্ক সমস্যার কারণে আপলোড করতে ব্যর্থ হয়েছে!');
         uploadBtn.disabled = false;
         progressBox.style.display = 'none';
         statusText.innerText = '';
