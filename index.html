@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফ্রি ভিডিও ও মিডিয়া অ্যাপ</title>
   
-  <!-- Monetag SDK Tag -->
-  <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -61,6 +61,24 @@
       100% { transform: scale(1); }
     }
 
+    /* Swiper Slider Styles */
+    .swiper { width: 100%; height: 160px; border-radius: 12px; margin-bottom: 15px; }
+    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+
+    /* Ad Container Styling */
+    .ad-slot {
+      margin: 12px 0;
+      padding: 4px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed #334155;
+      border-radius: 8px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
     .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); text-align: left; }
     
     .search-box {
@@ -84,7 +102,7 @@
 
     .video-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 
-    .admin-video-item {
+    .admin-item {
       display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 10px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #334155; font-size: 12px;
     }
     .btn-delete {
@@ -102,7 +120,9 @@
       width: 0%; height: 10px; background-color: #10b981; transition: width 0.3s;
     }
 
-    input[type="text"], input[type="password"], input[type="file"], select { width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; }
+    input[type="text"], input[type="password"], input[type="file"], textarea, select { 
+      width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; font-family: monospace;
+    }
     .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
     .hidden { display: none !important; }
   </style>
@@ -116,8 +136,20 @@
       <span id="notice-text">স্বাগতম! ভিডিও দেখার জন্য প্লে বাটনে ক্লিক করুন।</span>
     </div>
 
+    <!-- 📍 AD SLOT 1: TOP BANNER -->
+    <div class="ad-slot" id="ad-top-slot"></div>
+
     <span class="badge-viral">🔥 Free Video Stream App</span>
     <h2 class="header-title">ভিডিও মিনি অ্যাপ</h2>
+
+    <!-- Swiper Banner Slider -->
+    <div class="swiper mySwiper" id="banner-slider-box">
+      <div class="swiper-wrapper" id="banner-wrapper"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <!-- 📍 AD SLOT 2: MIDDLE BANNER -->
+    <div class="ad-slot" id="ad-middle-slot"></div>
 
     <a id="top-direct-link-btn" href="https://omg10.com/4/11848732" target="_blank" class="direct-link-btn">
       🎁 স্পেশাল অফার / বোনাস লিঙ্ক (ক্লিক করুন)
@@ -135,6 +167,9 @@
 
       <div id="video-container"></div>
     </div>
+
+    <!-- 📍 AD SLOT 3: BOTTOM BANNER -->
+    <div class="ad-slot" id="ad-bottom-slot"></div>
   </div>
 
   <!-- এডমিন প্যানেল (?admin) -->
@@ -148,8 +183,36 @@
     <div id="admin-dashboard" class="card hidden">
       <h3 style="color:#f59e0b; margin-top:0; text-align:center;">👑 এডমিন কন্ট্রোল প্যানেল</h3>
 
+      <!-- 📢 ৪. বিজ্ঞাপন (Ads) সেটআপ প্যানেল -->
+      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #3b82f6;">
+        <h4 style="margin:0 0 8px 0; color:#38bdf8;">📢 ডায়নামিক অ্যাড ম্যানেজার (Ad Settings)</h4>
+        
+        <label style="font-size:11px; color:#cbd5e1;">১. টপ ব্যানার অ্যাড কোড (Top Ad Code):</label>
+        <textarea id="adTopInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
+
+        <label style="font-size:11px; color:#cbd5e1;">২. মিডল ব্যানার অ্যাড কোড (Middle Ad Code):</label>
+        <textarea id="adMiddleInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
+
+        <label style="font-size:11px; color:#cbd5e1;">৩. ইন-ফিড / ভিডিও অ্যাড কোড (In-Feed Native Ad Code):</label>
+        <textarea id="adNativeInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
+
+        <label style="font-size:11px; color:#cbd5e1;">৪. বটম ব্যানার অ্যাড কোড (Bottom Ad Code):</label>
+        <textarea id="adBottomInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
+
+        <button class="btn-submit" style="background:#3b82f6;" onclick="saveAdSettings()">💾 অ্যাড কোড সেভ করুন</button>
+      </div>
+
+      <!-- ১. স্লাইডার ব্যানার আপলোড -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">☁️ গ্যালারি থেকে সরাসরি ভিডিও আপলোড করুন</h4>
+        <h4 style="margin:0 0 8px 0; color:#f59e0b;">🖼️ স্লাইডার ব্যানার আপলোড (ইমেজ)</h4>
+        <input type="file" id="bannerFileInput" accept="image/*">
+        <button class="btn-submit" style="background:#f59e0b;" onclick="uploadBanner()">📸 ব্যানার আপলোড করুন</button>
+        <div id="admin-banner-list" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- ২. ভিডিও আপলোড -->
+      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
+        <h4 style="margin:0 0 8px 0; color:#10b981;">☁️ ভিডিও আপলোড করুন</h4>
         <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম টাইপ করুন">
         
         <label style="font-size:12px; color:#cbd5e1;">গ্যালারি থেকে ভিডিও ফাইল সিলেক্ট করুন:</label>
@@ -165,9 +228,10 @@
         </div>
         <p id="uploadStatusText" style="font-size:11px; color:#38bdf8; margin: 2px 0 8px 0;"></p>
 
-        <button class="btn-submit" id="uploadBtn" style="background:#0284c7;" onclick="uploadToCloudinary()">🚀 ফ্রি সার্ভারে আপলোড ও পোস্ট করুন</button>
+        <button class="btn-submit" id="uploadBtn" style="background:#0284c7;" onclick="uploadVideo()">🚀 ভিডিও আপলোড ও পোস্ট করুন</button>
       </div>
 
+      <!-- ৩. ভিডিও ডিলিট ও ভিউ লিস্ট -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
         <h4 style="margin:0 0 8px 0; color:#ef4444;">📊 ভিডিও ভিউ কাউন্ট ও ডিলিট প্যানেল</h4>
         <div id="admin-video-list" style="max-height: 250px; overflow-y: auto;"></div>
@@ -175,19 +239,143 @@
     </div>
   </div>
 
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
   <script>
-    // ⚙️ ক্লাউডিনারি কনফিগারেশন সেট করা হয়েছে
-    const CLOUDINARY_CLOUD_NAME = "ml_default"; 
-    const CLOUDINARY_UPLOAD_PRESET = "my_preset";
+    // ⚙️ ক্লাউডিনারি কনফিগারেশন সেট করা আছে
+    const CLOUDINARY_CLOUD_NAME = "kulynnwx";
+    const CLOUDINARY_UPLOAD_PRESET = "my_preset";[span_0](start_span)[span_0](end_span)
 
     const tg = window.Telegram.WebApp;
     if(tg) { tg.ready(); tg.expand(); }
 
     let currentCategory = 'all';
-    const defaultVideos = [];
+    let swiperInstance = null;
 
+    // --- অ্যাড রেন্ডার ও সেভ করার ফাংশন ---
+    function saveAdSettings() {
+      const adsConfig = {
+        top: document.getElementById('adTopInput').value,
+        middle: document.getElementById('adMiddleInput').value,
+        native: document.getElementById('adNativeInput').value,
+        bottom: document.getElementById('adBottomInput').value,
+      };
+      localStorage.setItem('app_ads_config', JSON.stringify(adsConfig));
+      alert('বিজ্ঞাপনের কোড সফলভাবে সংরক্ষিত হয়েছে!');
+      renderAds();
+    }
+
+    function loadAdInputs() {
+      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
+      document.getElementById('adTopInput').value = ads.top || '';
+      document.getElementById('adMiddleInput').value = ads.middle || '';
+      document.getElementById('adNativeInput').value = ads.native || '';
+      document.getElementById('adBottomInput').value = ads.bottom || '';
+    }
+
+    function executeAdScripts(container, htmlContent) {
+      container.innerHTML = htmlContent;
+      const scripts = container.getElementsByTagName('script');
+      for (let i = 0; i < scripts.length; i++) {
+        const script = document.createElement('script');
+        if (scripts[i].src) {
+          script.src = scripts[i].src;
+        } else {
+          script.textContent = scripts[i].textContent;
+        }
+        document.body.appendChild(script);
+      }
+    }
+
+    function renderAds() {
+      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
+      
+      const topSlot = document.getElementById('ad-top-slot');
+      const middleSlot = document.getElementById('ad-middle-slot');
+      const bottomSlot = document.getElementById('ad-bottom-slot');
+
+      if(ads.top) executeAdScripts(topSlot, ads.top);
+      if(ads.middle) executeAdScripts(middleSlot, ads.middle);
+      if(ads.bottom) executeAdScripts(bottomSlot, ads.bottom);
+    }
+
+    // --- ব্যানার স্লাইডার হ্যান্ডলার ---
+    function renderBanners() {
+      const banners = JSON.parse(localStorage.getItem('app_banners')) || [
+        'https://via.placeholder.com/600x200/0284c7/ffffff?text=Welcome+Banner'
+      ];
+      const wrapper = document.getElementById('banner-wrapper');
+      wrapper.innerHTML = "";
+
+      banners.forEach(url => {
+        wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
+      });
+
+      if(swiperInstance) swiperInstance.destroy();
+      swiperInstance = new Swiper(".mySwiper", {
+        autoplay: { delay: 2500, disableOnInteraction: false },
+        pagination: { el: ".swiper-pagination", clickable: true },
+      });
+    }
+
+    function uploadBanner() {
+      const fileInput = document.getElementById('bannerFileInput');
+      const file = fileInput.files[0];
+
+      if (!file) return alert('গ্যালারি থেকে কোনো ছবি সিলেক্ট করুন!');
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+      fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.secure_url) {
+          let banners = JSON.parse(localStorage.getItem('app_banners')) || [];
+          banners.unshift(data.secure_url);
+          localStorage.setItem('app_banners', JSON.stringify(banners));
+          alert('স্লাইডার ব্যানার সফলভাবে আপলোড হয়েছে!');
+          fileInput.value = "";
+          renderBanners();
+          renderAdminBannerList();
+        } else {
+          alert('ব্যানার আপলোড ব্যর্থ হয়েছে!');
+        }
+      });
+    }
+
+    function renderAdminBannerList() {
+      const banners = JSON.parse(localStorage.getItem('app_banners')) || [];
+      const listContainer = document.getElementById('admin-banner-list');
+      listContainer.innerHTML = "";
+
+      banners.forEach((url, index) => {
+        listContainer.innerHTML += `
+          <div class="admin-item">
+            <img src="${url}" style="width:50px; height:30px; object-fit:cover; border-radius:4px;">
+            <button class="btn-delete" onclick="deleteBanner(${index})">🗑️ ডিলিট</button>
+          </div>
+        `;
+      });
+    }
+
+    function deleteBanner(index) {
+      let banners = JSON.parse(localStorage.getItem('app_banners')) || [];
+      banners.splice(index, 1);
+      localStorage.setItem('app_banners', JSON.stringify(banners));
+      renderBanners();
+      renderAdminBannerList();
+    }
+
+    // --- ভিডিও হ্যান্ডলার ---
     function renderVideos() {
-      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+      const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
+      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       const container = document.getElementById('video-container');
       const searchVal = document.getElementById('searchVideoInput').value.toLowerCase();
       container.innerHTML = "";
@@ -203,7 +391,7 @@
         return;
       }
 
-      filtered.forEach((v) => {
+      filtered.forEach((v, idx) => {
         container.innerHTML += `
           <div class="video-card">
             <div class="video-header">
@@ -216,11 +404,21 @@
             </div>
           </div>
         `;
+
+        // প্রতি ২টা ভিডিওর পর ইন-ফিড নেটিভ অ্যাড প্রদর্শন
+        if ((idx + 1) % 2 === 0 && ads.native) {
+          const adDivId = `native-ad-${idx}`;
+          container.innerHTML += `<div class="ad-slot" id="${adDivId}"></div>`;
+          setTimeout(() => {
+            const el = document.getElementById(adDivId);
+            if(el) executeAdScripts(el, ads.native);
+          }, 100);
+        }
       });
     }
 
     function countView(id) {
-      let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+      let videos = JSON.parse(localStorage.getItem('app_videos')) || [];
       const index = videos.findIndex(v => v.id === id);
       if(index !== -1) {
         videos[index].views = (videos[index].views || 0) + 1;
@@ -229,14 +427,14 @@
       }
     }
 
-    function uploadToCloudinary() {
+    function uploadVideo() {
       const title = document.getElementById('videoTitleInput').value.trim();
       const fileInput = document.getElementById('videoFileInput');
       const file = fileInput.files[0];
       const category = document.getElementById('videoCategorySelect').value;
 
       if (!title) return alert('ভিডিওর শিরোনাম দিন!');
-      if (!file) return alert('গ্যালারি থেকে ফাইল সিলেক্ট করুন!');
+      if (!file) return alert('গ্যালারি থেকে ভিডিও নির্বাচন করুন!');
 
       const uploadBtn = document.getElementById('uploadBtn');
       const progressBox = document.getElementById('uploadProgressBox');
@@ -245,7 +443,7 @@
 
       uploadBtn.disabled = true;
       progressBox.style.display = 'block';
-      statusText.innerText = 'ভিডিও প্রসেস ও আপলোড হচ্ছে...';
+      statusText.innerText = 'ভিডিও আপলোড হচ্ছে...';
       progressBar.style.width = '50%';
 
       const formData = new FormData();
@@ -256,13 +454,13 @@
         method: 'POST',
         body: formData
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
         if(data.secure_url) {
           progressBar.style.width = '100%';
-          statusText.innerText = 'আপলোড সম্পূর্ণ!';
+          statusText.innerText = 'আপলোড সফল!';
 
-          let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+          let videos = JSON.parse(localStorage.getItem('app_videos')) || [];
           videos.unshift({
             id: Date.now(),
             title: title,
@@ -272,7 +470,7 @@
           });
           localStorage.setItem('app_videos', JSON.stringify(videos));
 
-          alert('ভিডিও সফলভাবে আপলোড ও পোস্ট হয়েছে!');
+          alert('ভিডিও সফলভাবে পোস্ট হয়েছে!');
           document.getElementById('videoTitleInput').value = "";
           fileInput.value = "";
           uploadBtn.disabled = false;
@@ -282,19 +480,18 @@
           renderAdminVideoList();
           renderVideos();
         } else {
-          throw new Error('Upload failed');
+          throw new Error('Upload Error');
         }
       })
-      .catch(error => {
-        console.error(error);
-        alert('আপলোড ব্যর্থ হয়েছে! Cloud Name বা Preset Unsigned করেছেন কিনা নিশ্চিত হন।');
+      .catch(err => {
+        alert('আপলোড ব্যর্থ! Cloudinary Preset-এ Unsigned মোড চালু আছে কিনা পরীক্ষা করুন।');
         uploadBtn.disabled = false;
         progressBox.style.display = 'none';
       });
     }
 
     function renderAdminVideoList() {
-      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+      const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
       const listContainer = document.getElementById('admin-video-list');
       listContainer.innerHTML = "";
 
@@ -305,7 +502,7 @@
 
       videos.forEach(v => {
         listContainer.innerHTML += `
-          <div class="admin-video-item">
+          <div class="admin-item">
             <div>
               <div style="color:#f8fafc; font-weight:bold;">${v.title}</div>
               <span class="view-badge"><i class="fa-solid fa-eye"></i> ${v.views || 0} জন দেখেছে</span>
@@ -318,7 +515,7 @@
 
     function deleteVideoByAdmin(id) {
       if(confirm('ভিডিওটি ডিলিট করতে চান?')) {
-        let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+        let videos = JSON.parse(localStorage.getItem('app_videos')) || [];
         videos = videos.filter(v => v.id !== id);
         localStorage.setItem('app_videos', JSON.stringify(videos));
         renderAdminVideoList();
@@ -345,9 +542,13 @@
         document.getElementById('admin-login-box').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.remove('hidden');
         renderAdminVideoList();
+        renderAdminBannerList();
+        loadAdInputs();
       } else alert('ভুল পাসওয়ার্ড!');
     }
 
+    renderBanners();
+    renderAds();
     renderVideos();
   </script>
 </body>
