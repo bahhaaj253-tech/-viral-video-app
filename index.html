@@ -117,7 +117,7 @@
       width: 100%; background-color: #334155; border-radius: 8px; margin: 8px 0; overflow: hidden; display: none;
     }
     .progress-bar {
-      width: 0%; height: 10px; background-color: #10b981; transition: width 0.3s;
+      width: 0%; height: 10px; background-color: #10b981; transition: width 0.2s;
     }
 
     input[type="text"], input[type="password"], input[type="file"], textarea, select { 
@@ -247,7 +247,7 @@
     const CLOUDINARY_CLOUD_NAME = "kulynnwx";
     const CLOUDINARY_UPLOAD_PRESET = "my_preset";
 
-    const tg = window.Telegram.WebApp;
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
     if(tg) { tg.ready(); tg.expand(); }
 
     let currentCategory = 'all';
@@ -359,9 +359,10 @@
           renderBanners();
           renderAdminBannerList();
         } else {
-          alert('ব্যানার আপলোড ব্যর্থ হয়েছে!');
+          alert('ব্যানার আপলোড ব্যর্থ হয়েছে! ক্লাউডিনারি সেটিংস পরীক্ষা করুন।');
         }
-      });
+      })
+      .catch(() => alert('ব্যানার আপলোড ব্যর্থ হয়েছে!'));
     }
 
     function renderAdminBannerList() {
@@ -444,6 +445,7 @@
       }
     }
 
+    // --- উন্নত ভিডিও আপলোড ফাংশন (XHR Progress Tracking সহ) ---
     function uploadVideo() {
       const title = document.getElementById('videoTitleInput').value.trim();
       const fileInput = document.getElementById('videoFileInput');
@@ -453,6 +455,11 @@
       if (!title) return alert('ভিডিওর শিরোনাম দিন!');
       if (!file) return alert('গ্যালারি থেকে ভিডিও নির্বাচন করুন!');
 
+      // ফাইল সাইজ লিমিট (৫০ MB)
+      if (file.size > 50 * 1024 * 1024) {
+        return alert('ভিডিও ফাইলটি অনেক বড়! ৫০ MB এর চেয়ে ছোট ভিডিও সিলেক্ট করুন।');
+      }
+
       const uploadBtn = document.getElementById('uploadBtn');
       const progressBox = document.getElementById('uploadProgressBox');
       const progressBar = document.getElementById('uploadProgressBar');
@@ -460,20 +467,28 @@
 
       uploadBtn.disabled = true;
       progressBox.style.display = 'block';
-      statusText.innerText = 'ভিডিও আপলোড হচ্ছে...';
-      progressBar.style.width = '50%';
+      progressBar.style.width = '0%';
+      statusText.innerText = 'আপলোড শুরু হচ্ছে... 0%';
 
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
-      fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`, {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.secure_url) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`, true);
+
+      // রিয়েলটাইম শতাংশ ট্র্যাকিং
+      xhr.upload.onprogress = function(e) {
+        if (e.lengthComputable) {
+          const percentComplete = Math.round((e.loaded / e.total) * 100);
+          progressBar.style.width = percentComplete + '%';
+          statusText.innerText = `আপলোড হচ্ছে... ${percentComplete}%`;
+        }
+      };
+
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          const data = JSON.parse(xhr.responseText);
           progressBar.style.width = '100%';
           statusText.innerText = 'আপলোড সফল!';
 
@@ -487,7 +502,7 @@
           });
           localStorage.setItem('app_videos', JSON.stringify(videos));
 
-          alert('ভিডিও সফলভাবে পোস্ট হয়েছে!');
+          alert('🎉 ভিডিও সফলভাবে পোস্ট হয়েছে!');
           document.getElementById('videoTitleInput').value = "";
           fileInput.value = "";
           uploadBtn.disabled = false;
@@ -497,14 +512,28 @@
           renderAdminVideoList();
           renderVideos();
         } else {
-          throw new Error('Upload Error');
+          let errorMsg = 'আপলোড ব্যর্থ হয়েছে!';
+          try {
+            const errData = JSON.parse(xhr.responseText);
+            if(errData.error && errData.error.message) {
+              errorMsg += ' কারণ: ' + errData.error.message;
+            }
+          } catch(e) {}
+          alert(errorMsg);
+          uploadBtn.disabled = false;
+          progressBox.style.display = 'none';
+          statusText.innerText = '';
         }
-      })
-      .catch(err => {
-        alert('আপলোড ব্যর্থ! Cloudinary Preset-এ Unsigned মোড চালু আছে কিনা পরীক্ষা করুন।');
+      };
+
+      xhr.onerror = function() {
+        alert('নেটওয়ার্ক সমস্যার কারণে আপলোড করতে ব্যর্থ হয়েছে! ইন্টারনেট চেক করুন।');
         uploadBtn.disabled = false;
         progressBox.style.display = 'none';
-      });
+        statusText.innerText = '';
+      };
+
+      xhr.send(formData);
     }
 
     function renderAdminVideoList() {
