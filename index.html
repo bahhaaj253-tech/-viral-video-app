@@ -7,12 +7,9 @@
   
   <!-- Monetag SDK Tag -->
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
-
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -30,7 +27,6 @@
     .header-title { color: #38bdf8; font-size: 20px; margin: 8px 0 5px; font-weight: 800; }
     .badge-viral { background: linear-gradient(45deg, #ef4444, #f97316); color: white; padding: 3px 10px; font-size: 11px; border-radius: 20px; text-transform: uppercase; font-weight: bold; }
     
-    /* Notice Bar */
     .announcement-bar {
       background: linear-gradient(90deg, #3b82f6, #8b5cf6);
       color: white;
@@ -45,7 +41,6 @@
       text-align: left;
     }
 
-    /* Direct Link Button */
     .direct-link-btn {
       display: block;
       background: linear-gradient(45deg, #f59e0b, #ef4444);
@@ -66,22 +61,8 @@
       100% { transform: scale(1); }
     }
 
-    /* Slider */
-    .slider-card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 14px;
-      padding: 8px;
-      margin-bottom: 15px;
-      overflow: hidden;
-    }
-    .swiper { width: 100%; height: 180px; border-radius: 10px; }
-    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
-    .swiper-pagination-bullet-active { background: #38bdf8 !important; }
-
     .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); text-align: left; }
     
-    /* Search Bar & Category Filter */
     .search-box {
       width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; margin-bottom: 10px;
     }
@@ -93,60 +74,43 @@
     }
     .filter-btn.active { background: #0284c7; color: white; font-weight: bold; }
 
-    /* Video Player Styles */
     .video-card {
       background: #0f172a; border-radius: 10px; padding: 8px; margin-bottom: 12px; border: 1px solid #334155; position: relative;
     }
     .video-wrapper {
       position: relative; width: 100%; min-height: 220px; border-radius: 8px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;
     }
-    .video-wrapper video, .video-wrapper iframe { width: 100%; height: 220px; border: none; }
-    
-    .video-overlay {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 8px; cursor: pointer; z-index: 10;
-    }
-    .video-overlay i { font-size: 45px; color: #38bdf8; margin-bottom: 6px; }
-    .video-overlay span { font-size: 12px; color: #f8fafc; font-weight: bold; background: rgba(0,0,0,0.8); padding: 5px 12px; border-radius: 12px; }
+    .video-wrapper video { width: 100%; height: 220px; }
 
     .video-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .fav-btn { color: #f59e0b; cursor: pointer; font-size: 16px; }
 
-    /* Banner Ad Box */
-    .ad-banner-box {
-      background: #0284c715; border: 1px dashed #0284c7; border-radius: 10px; padding: 10px; margin: 12px 0; text-align: center; color: #38bdf8; font-size: 12px;
-    }
-
-    /* Support Button */
-    .whatsapp-btn {
-      position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; border-radius: 50px; padding: 10px 18px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); text-decoration: none; font-weight: bold; font-size: 14px; z-index: 999;
-    }
-
-    /* Admin Delete List Style */
     .admin-video-item {
-      display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 8px 10px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #334155; font-size: 12px;
+      display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 10px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #334155; font-size: 12px;
     }
     .btn-delete {
-      background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;
+      background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;
+    }
+
+    .view-badge {
+      background: #0284c7; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;
+    }
+
+    .progress-container {
+      width: 100%; background-color: #334155; border-radius: 8px; margin: 8px 0; overflow: hidden; display: none;
+    }
+    .progress-bar {
+      width: 0%; height: 10px; background-color: #10b981; transition: width 0.3s;
     }
 
     input[type="text"], input[type="password"], input[type="file"], select { width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; }
     .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
     .hidden { display: none !important; }
-    .blocked-screen { background: #450a0a; border: 2px solid #ef4444; color: #fca5a5; padding: 20px; border-radius: 12px; margin-top: 30px; text-align: center; }
   </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-  <!-- ১. ইউজার ব্যান স্ক্রিন -->
-  <div id="blocked-view" class="blocked-screen hidden">
-    <h2>⛔ এক্সেস ব্লক করা হয়েছে!</h2>
-    <p>আপনাকে সিকিউরিটি ভায়োলেশনের কারণে ব্লক করা হয়েছে।</p>
-  </div>
-
-  <!-- ২. ইউজার ইন্টারফেস -->
+  <!-- ইউজার ভিউ -->
   <div id="user-view">
-    
-    <!-- নোটিশ ব্যানার -->
     <div class="announcement-bar" id="announcement-bar">
       <i class="fa-solid fa-bullhorn"></i>
       <span id="notice-text">স্বাগতম! ভিডিও দেখার জন্য প্লে বাটনে ক্লিক করুন।</span>
@@ -155,46 +119,25 @@
     <span class="badge-viral">🔥 Free Video Stream App</span>
     <h2 class="header-title">ভিডিও মিনি অ্যাপ</h2>
 
-    <!-- Direct Link Ad Button -->
     <a id="top-direct-link-btn" href="https://omg10.com/4/11848732" target="_blank" class="direct-link-btn">
       🎁 স্পেশাল অফার / বোনাস লিঙ্ক (ক্লিক করুন)
     </a>
 
-    <!-- স্লাইডার ব্যানার -->
-    <div class="slider-card">
-      <div class="swiper mySwiper">
-        <div class="swiper-wrapper" id="slider-wrapper"></div>
-        <div class="swiper-pagination"></div>
-      </div>
-    </div>
-
-    <!-- ভিডিও সেকশন -->
     <div id="video-section" class="card">
       <h3 style="margin: 5px 0 10px; color: #38bdf8; font-size:16px; text-align:center;">🔥 এক্সক্লুসিভ ফ্রি ভিডিও ফিড</h3>
-      
-      <!-- সার্চ বার -->
       <input type="text" class="search-box" id="searchVideoInput" placeholder="🔍 ভিডিও সার্চ করুন..." onkeyup="filterVideos()">
 
-      <!-- ভিডিও ক্যাটাগরি ফিল্টার -->
       <div class="filter-container">
         <button class="filter-btn active" onclick="setCategory('all', this)">সবগুলো</button>
         <button class="filter-btn" onclick="setCategory('viral', this)">ভাইরাল</button>
         <button class="filter-btn" onclick="setCategory('trending', this)">ট্রেন্ডিং</button>
-        <button class="filter-btn" onclick="setCategory('favorite', this)">⭐ সেভ করা</button>
       </div>
 
-      <!-- ভিডিও কনটেইনার -->
       <div id="video-container"></div>
     </div>
   </div>
 
-  <!-- হেল্প/সাপোর্ট বাটন -->
-  <a href="https://wa.me/8801605617380?text=হ্যালো,%20আমার%20অ্যাপ%20হেল্প%20দরকার।" target="_blank" class="whatsapp-btn">
-    <i class="fa-brands fa-whatsapp" style="font-size: 20px;"></i>
-    <span>সাপোর্ট</span>
-  </a>
-
-  <!-- ৩. এডমিন প্যানেল (?admin) -->
+  <!-- এডমিন প্যানেল (?admin) -->
   <div id="admin-view" class="hidden">
     <div id="admin-login-box" class="card" style="max-width:350px; margin: 30px auto; text-align:center;">
       <h3 style="color:#38bdf8; margin-top:0;">👑 এডমিন প্যানেল লগইন</h3>
@@ -205,145 +148,52 @@
     <div id="admin-dashboard" class="card hidden">
       <h3 style="color:#f59e0b; margin-top:0; text-align:center;">👑 এডমিন কন্ট্রোল প্যানেল</h3>
 
-      <!-- ⚙️ AD CONFIGURATION FORM -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#f59e0b;">⚙️ এডমিন এড সেটিংস কন্ট্রোল</h4>
+        <h4 style="margin:0 0 8px 0; color:#10b981;">☁️ গ্যালারি থেকে সরাসরি ভিডিও আপলোড করুন</h4>
+        <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম টাইপ করুন">
         
-        <label style="font-size:12px; color:#cbd5e1;">১. Top Direct Link URL:</label>
-        <input type="text" id="adminDirectUrlInput" placeholder="Direct Link URL দিন">
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span style="font-size:12px;">Direct Link Button দেখাবে?</span>
-          <button class="btn-submit" id="toggleDirectBtn" style="width:70px; padding:4px;" onclick="toggleAdSetting('direct')">ON</button>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span style="font-size:12px;">Video Popup Ad চালু?</span>
-          <button class="btn-submit" id="togglePopupBtn" style="width:70px; padding:4px;" onclick="toggleAdSetting('popup')">ON</button>
-        </div>
-
-        <button class="btn-submit" style="background:#0284c7;" onclick="saveAdSettings()">এড সেটিংস সেভ করুন</button>
-      </div>
-
-      <!-- 🎬 ডাইরেক্ট ভিডিও লিঙ্ক পোস্ট সেকশন -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">🎬 নতুন ভিডিও পোস্ট করুন</h4>
-        <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম">
-        
-        <label style="font-size:11px; color:#94a3b8;">ডাইরেক্ট ভিডিও লিঙ্ক (MP4/Catbox/YouTube Link):</label>
-        <input type="text" id="newVideoUrl" placeholder="উদাহরণ: https://files.catbox.moe/xxxxx.mp4">
+        <label style="font-size:12px; color:#cbd5e1;">গ্যালারি থেকে ভিডিও ফাইল সিলেক্ট করুন:</label>
+        <input type="file" id="videoFileInput" accept="video/*">
 
         <select id="videoCategorySelect">
           <option value="viral">ভাইরাল (Viral)</option>
           <option value="trending">ট্রেন্ডিং (Trending)</option>
         </select>
 
-        <button class="btn-submit" style="background:#0284c7;" onclick="addVideoByAdmin()">ভিডিও পোস্ট করুন</button>
-      </div>
-
-      <!-- 🗑️ ভিডিও ম্যানেজমেন্ট ও ডিলিট সেকশন -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#ef4444;">🗑️ ভিডিও লিস্ট ও ডিলিট প্যানেল</h4>
-        <div id="admin-video-list" style="max-height: 250px; overflow-y: auto;">
-          <!-- এখানে ডিলিট করার জন্য ভিডিওগুলোর লিস্ট রেন্ডার হবে -->
+        <div class="progress-container" id="uploadProgressBox">
+          <div class="progress-bar" id="uploadProgressBar"></div>
         </div>
+        <p id="uploadStatusText" style="font-size:11px; color:#38bdf8; margin: 2px 0 8px 0;"></p>
+
+        <button class="btn-submit" id="uploadBtn" style="background:#0284c7;" onclick="uploadToCloudinary()">🚀 ফ্রি সার্ভারে আপলোড ও পোস্ট করুন</button>
       </div>
 
-      <!-- 📢 নোটিশ আপডেট -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#38bdf8;">📢 নোটিশ আপডেট</h4>
-        <input type="text" id="newNoticeInput" placeholder="নতুন নোটিশ লিখুন">
-        <button class="btn-submit" style="background:#8b5cf6;" onclick="updateNotice()">নোটিশ পরিবর্তন করুন</button>
-      </div>
-
-      <!-- 🖼️ স্লাইডার ইমেজ -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#38bdf8;">🖼️ স্লাইডার ব্যানার ইমেজ পরিবর্তন</h4>
-        <input type="text" id="newBannerUrl" placeholder="ইমেজের Direct Link দিন">
-        <button class="btn-submit" style="background:#0284c7; margin-bottom:8px;" onclick="addBannerImage()">যোগ করুন</button>
-        <button class="btn-submit" style="background:#ef4444;" onclick="resetBannerImages()">রিসেট করুন</button>
-      </div>
-
-      <!-- 🔑 পাসওয়ার্ড পরিবর্তন -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#38bdf8;">🔑 পাসওয়ার্ড পরিবর্তন</h4>
-        <input type="password" id="newPassInput" placeholder="নতুন পাসওয়ার্ড লিখুন">
-        <button class="btn-submit" style="background:#f59e0b;" onclick="changeAdminPassword()">আপডেট করুন</button>
-      </div>
-
-      <!-- 🚫 ইউজার ব্যান/আনব্যান -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#ef4444;">🚫 ইউজার ব্যান / আনব্যান</h4>
-        <input type="text" id="banUserIdInput" placeholder="ইউজার Telegram ID দিন">
-        <div style="display:flex; gap:8px;">
-          <button class="btn-submit" style="background:#ef4444;" onclick="banUserAction(true)">ব্যান করুন</button>
-          <button class="btn-submit" style="background:#10b981;" onclick="banUserAction(false)">আনব্যান করুন</button>
-        </div>
+        <h4 style="margin:0 0 8px 0; color:#ef4444;">📊 ভিডিও ভিউ কাউন্ট ও ডিলিট প্যানেল</h4>
+        <div id="admin-video-list" style="max-height: 250px; overflow-y: auto;"></div>
       </div>
     </div>
   </div>
 
-  <!-- Swiper JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
   <script>
+    // ⚙️ ক্লাউডিনারি কনফিগারেশন সেট করা হয়েছে
+    const CLOUDINARY_CLOUD_NAME = "ml_default"; 
+    const CLOUDINARY_UPLOAD_PRESET = "my_preset";
+
     const tg = window.Telegram.WebApp;
-    tg.ready(); tg.expand();
+    if(tg) { tg.ready(); tg.expand(); }
 
-    const userId = tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : 'DEMO_USER_123';
-    let swiper = null, currentCategory = 'all';
+    let currentCategory = 'all';
+    const defaultVideos = [];
 
-    let adSettings = JSON.parse(localStorage.getItem('app_ad_settings')) || {
-      directUrl: 'https://omg10.com/4/11848732',
-      showDirect: true,
-      showPopup: true
-    };
-
-    const defaultVideos = [
-      { id: 101, title: 'স্যাম্পল ডাইরেক্ট ভিডিও ১', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', category: 'viral' },
-      { id: 102, title: 'স্যাম্পল ডাইরেক্ট ভিডিও ২', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', category: 'trending' }
-    ];
-
-    function applyAdSettings() {
-      const btn = document.getElementById('top-direct-link-btn');
-      if(adSettings.showDirect) {
-        btn.classList.remove('hidden');
-        btn.href = adSettings.directUrl;
-      } else {
-        btn.classList.add('hidden');
-      }
-    }
-
-    // --- ভিডিও প্লেয়ার স্ট্রাকচার ---
-    function getEmbedPlayerHtml(id, url) {
-      if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        let vidId = "";
-        if (url.includes('youtu.be/')) {
-          vidId = url.split('youtu.be/')[1].split('?')[0];
-        } else if (url.includes('v=')) {
-          vidId = url.split('v=')[1].split('&')[0];
-        } else if (url.includes('embed/')) {
-          vidId = url.split('embed/')[1].split('?')[0];
-        }
-        return `<iframe id="player-${id}" src="https://www.youtube.com/embed/${vidId}?autoplay=1" style="display:none; width:100%; height:220px; border:none;" allow="autoplay" allowfullscreen></iframe>`;
-      } else {
-        return `<video id="player-${id}" controls style="display:none; width:100%; height:220px; background:#000;"><source src="${url}" type="video/mp4"></video>`;
-      }
-    }
-
-    // --- ভিডিও লিস্ট রেন্ডারিং ---
     function renderVideos() {
       const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
-      const favs = JSON.parse(localStorage.getItem('fav_videos_' + userId) || '[]');
       const container = document.getElementById('video-container');
       const searchVal = document.getElementById('searchVideoInput').value.toLowerCase();
-      
       container.innerHTML = "";
 
       const filtered = videos.filter(v => {
-        const matchesCategory = (currentCategory === 'all') || 
-                                (currentCategory === 'favorite' && favs.includes(v.id)) || 
-                                (v.category === currentCategory);
+        const matchesCategory = (currentCategory === 'all') || (v.category === currentCategory);
         const matchesSearch = v.title.toLowerCase().includes(searchVal);
         return matchesCategory && matchesSearch;
       });
@@ -353,66 +203,127 @@
         return;
       }
 
-      filtered.forEach((v, index) => {
-        const isFav = favs.includes(v.id);
-        const playerHtml = getEmbedPlayerHtml(v.id, v.url);
-
+      filtered.forEach((v) => {
         container.innerHTML += `
           <div class="video-card">
             <div class="video-header">
               <span style="font-size:13px; font-weight:bold; color:#cbd5e1;">${v.title}</span>
-              <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-star fav-btn" onclick="toggleFavorite(${v.id})"></i>
             </div>
             <div class="video-wrapper">
-              <div class="video-overlay" id="overlay-${v.id}" onclick="playVideoWithAd(${v.id})">
-                <i class="fa-solid fa-circle-play"></i>
-                <span>বিজ্ঞাপন দেখে প্লে করুন</span>
-              </div>
-              ${playerHtml}
+              <video controls style="width:100%; height:220px; background:#000;" onplay="countView(${v.id})">
+                <source src="${v.url}" type="video/mp4">
+              </video>
             </div>
           </div>
         `;
-
-        if ((index + 1) % 2 === 0) {
-          container.innerHTML += `
-            <div class="ad-banner-box">
-              📢 <b>বিজ্ঞাপন স্থান:</b> এখানে যেকোনো ব্যানার এড কোড বসাতে পারেন।
-            </div>
-          `;
-        }
       });
     }
 
-    // --- প্লে লজিক ---
-    function playVideoWithAd(id) {
-      const overlay = document.getElementById('overlay-' + id);
-      const startVideo = () => {
-        overlay.style.display = 'none';
-        const player = document.getElementById('player-' + id);
-        if (player) {
-          player.style.display = 'block';
-          if (player.tagName === 'VIDEO') {
-            player.play().catch(e => console.log("Play error:", e));
-          }
-        }
-      };
-
-      if (adSettings.showPopup && typeof show_11848596 === 'function') {
-        show_11848596('pop').then(() => { startVideo(); }).catch(e => { startVideo(); });
-      } else {
-        startVideo();
+    function countView(id) {
+      let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+      const index = videos.findIndex(v => v.id === id);
+      if(index !== -1) {
+        videos[index].views = (videos[index].views || 0) + 1;
+        localStorage.setItem('app_videos', JSON.stringify(videos));
+        renderAdminVideoList();
       }
     }
 
-    function toggleFavorite(vid) {
-      let favs = JSON.parse(localStorage.getItem('fav_videos_' + userId) || '[]');
-      if(favs.includes(vid)) {
-        favs = favs.filter(id => id !== vid);
-      } else {
-        favs.push(vid);
+    function uploadToCloudinary() {
+      const title = document.getElementById('videoTitleInput').value.trim();
+      const fileInput = document.getElementById('videoFileInput');
+      const file = fileInput.files[0];
+      const category = document.getElementById('videoCategorySelect').value;
+
+      if (!title) return alert('ভিডিওর শিরোনাম দিন!');
+      if (!file) return alert('গ্যালারি থেকে ফাইল সিলেক্ট করুন!');
+
+      const uploadBtn = document.getElementById('uploadBtn');
+      const progressBox = document.getElementById('uploadProgressBox');
+      const progressBar = document.getElementById('uploadProgressBar');
+      const statusText = document.getElementById('uploadStatusText');
+
+      uploadBtn.disabled = true;
+      progressBox.style.display = 'block';
+      statusText.innerText = 'ভিডিও প্রসেস ও আপলোড হচ্ছে...';
+      progressBar.style.width = '50%';
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+      fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.secure_url) {
+          progressBar.style.width = '100%';
+          statusText.innerText = 'আপলোড সম্পূর্ণ!';
+
+          let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+          videos.unshift({
+            id: Date.now(),
+            title: title,
+            url: data.secure_url,
+            category: category,
+            views: 0
+          });
+          localStorage.setItem('app_videos', JSON.stringify(videos));
+
+          alert('ভিডিও সফলভাবে আপলোড ও পোস্ট হয়েছে!');
+          document.getElementById('videoTitleInput').value = "";
+          fileInput.value = "";
+          uploadBtn.disabled = false;
+          progressBox.style.display = 'none';
+          statusText.innerText = '';
+
+          renderAdminVideoList();
+          renderVideos();
+        } else {
+          throw new Error('Upload failed');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        alert('আপলোড ব্যর্থ হয়েছে! Cloud Name বা Preset Unsigned করেছেন কিনা নিশ্চিত হন।');
+        uploadBtn.disabled = false;
+        progressBox.style.display = 'none';
+      });
+    }
+
+    function renderAdminVideoList() {
+      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+      const listContainer = document.getElementById('admin-video-list');
+      listContainer.innerHTML = "";
+
+      if(videos.length === 0) {
+        listContainer.innerHTML = `<p style="color:#94a3b8; font-size:12px;">কোনো পোস্ট করা ভিডিও নেই!</p>`;
+        return;
       }
-      localStorage.setItem('fav_videos_' + userId, JSON.stringify(favs));
-      renderVideos();
+
+      videos.forEach(v => {
+        listContainer.innerHTML += `
+          <div class="admin-video-item">
+            <div>
+              <div style="color:#f8fafc; font-weight:bold;">${v.title}</div>
+              <span class="view-badge"><i class="fa-solid fa-eye"></i> ${v.views || 0} জন দেখেছে</span>
+            </div>
+            <button class="btn-delete" onclick="deleteVideoByAdmin(${v.id})">🗑️ ডিলিট</button>
+          </div>
+        `;
+      });
+    }
+
+    function deleteVideoByAdmin(id) {
+      if(confirm('ভিডিওটি ডিলিট করতে চান?')) {
+        let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
+        videos = videos.filter(v => v.id !== id);
+        localStorage.setItem('app_videos', JSON.stringify(videos));
+        renderAdminVideoList();
+        renderVideos();
+      }
     }
 
     function setCategory(cat, btn) {
@@ -424,196 +335,19 @@
 
     function filterVideos() { renderVideos(); }
 
-    // --- স্লাইডার ও নোটিশ ---
-    const defaultBanners = [
-      "https://i.postimg.cc/3Rr152PJ/1789892566921.jpg",
-      "https://i.postimg.cc/kM11ChM4/1789892582192.jpg"
-    ];
-
-    function loadSliderImages() {
-      const savedBanners = JSON.parse(localStorage.getItem('app_banners')) || defaultBanners;
-      const wrapper = document.getElementById('slider-wrapper');
-      
-      if (swiper) { swiper.destroy(true, true); swiper = null; }
-      
-      wrapper.innerHTML = "";
-      savedBanners.forEach(url => {
-        wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
-      });
-
-      setTimeout(() => {
-        swiper = new Swiper(".mySwiper", { 
-          loop: savedBanners.length > 1, 
-          autoplay: { delay: 3000, disableOnInteraction: false },
-          pagination: { el: '.swiper-pagination', clickable: true }
-        });
-      }, 100);
-    }
-
-    function loadNotice() {
-      const notice = localStorage.getItem('app_notice') || "স্বাগতম! ভিডিও দেখার জন্য প্লে বাটনে ক্লিক করুন।";
-      document.getElementById('notice-text').innerText = notice;
-    }
-
-    function checkUserStatus() {
-      const bannedUsers = JSON.parse(localStorage.getItem('sys_banned_users') || '[]');
-      if (bannedUsers.includes(String(userId))) {
-        document.getElementById('user-view').classList.add('hidden');
-        document.getElementById('blocked-view').classList.remove('hidden');
-      } else {
-        document.getElementById('blocked-view').classList.add('hidden');
-      }
-    }
-
-    // --- এডমিন প্যানেল লজিক ---
-    function renderAdminVideoList() {
-      const videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
-      const listContainer = document.getElementById('admin-video-list');
-      
-      listContainer.innerHTML = "";
-      if (videos.length === 0) {
-        listContainer.innerHTML = `<p style="color:#94a3b8; font-size:12px;">কোনো ভিডিও নেই!</p>`;
-        return;
-      }
-
-      videos.forEach(v => {
-        listContainer.innerHTML += `
-          <div class="admin-video-item">
-            <span style="color:#f8fafc; font-weight:500;">${v.title.length > 25 ? v.title.substring(0,25) + '...' : v.title}</span>
-            <button class="btn-delete" onclick="deleteVideoByAdmin(${v.id})">🗑️ ডিলিট</button>
-          </div>
-        `;
-      });
-    }
-
-    function deleteVideoByAdmin(id) {
-      if(confirm('আপনি কি নিশ্চিত যে এই ভিডিওটি ডিলিট করতে চান?')) {
-        let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
-        videos = videos.filter(v => v.id !== id);
-        localStorage.setItem('app_videos', JSON.stringify(videos));
-        
-        renderAdminVideoList();
-        renderVideos();
-        alert('ভিডিওটি সফলভাবে ডিলিট করা হয়েছে!');
-      }
-    }
-
-    function toggleAdSetting(type) {
-      if(type === 'direct') adSettings.showDirect = !adSettings.showDirect;
-      else if(type === 'popup') adSettings.showPopup = !adSettings.showPopup;
-      updateAdminFormUI();
-    }
-
-    function updateAdminFormUI() {
-      document.getElementById('toggleDirectBtn').innerText = adSettings.showDirect ? "ON" : "OFF";
-      document.getElementById('toggleDirectBtn').style.background = adSettings.showDirect ? "#10b981" : "#ef4444";
-      
-      document.getElementById('togglePopupBtn').innerText = adSettings.showPopup ? "ON" : "OFF";
-      document.getElementById('togglePopupBtn').style.background = adSettings.showPopup ? "#10b981" : "#ef4444";
-    }
-
-    function saveAdSettings() {
-      const urlInput = document.getElementById('adminDirectUrlInput').value.trim();
-      if(urlInput) adSettings.directUrl = urlInput;
-
-      localStorage.setItem('app_ad_settings', JSON.stringify(adSettings));
-      applyAdSettings();
-      alert('এড সেটিংস আপডেট হয়েছে!');
-    }
-
-    function updateNotice() {
-      const val = document.getElementById('newNoticeInput').value.trim();
-      if(!val) return alert('নোটিশ প্রদান করুন!');
-      localStorage.setItem('app_notice', val);
-      loadNotice();
-      alert('নোটিশ পরিবর্তন সফল হয়েছে!');
-      document.getElementById('newNoticeInput').value = "";
-    }
-
-    function changeAdminPassword() {
-      const val = document.getElementById('newPassInput').value.trim();
-      if(!val) return alert('নতুন পাসওয়ার্ড লিখুন!');
-      localStorage.setItem('sys_admin_password', val);
-      alert('এডমিন পাসওয়ার্ড আপডেট হয়েছে!');
-      document.getElementById('newPassInput').value = "";
-    }
-
-    function addBannerImage() {
-      const url = document.getElementById('newBannerUrl').value.trim();
-      if(!url) return alert('ইমেজ লিঙ্ক দিন!');
-      const banners = JSON.parse(localStorage.getItem('app_banners')) || defaultBanners;
-      banners.push(url);
-      localStorage.setItem('app_banners', JSON.stringify(banners));
-      loadSliderImages();
-      alert('নতুন ব্যানার যুক্ত হয়েছে!');
-      document.getElementById('newBannerUrl').value = "";
-    }
-
-    function resetBannerImages() {
-      localStorage.removeItem('app_banners');
-      loadSliderImages();
-      alert('ব্যানার রিসেট হয়েছে!');
-    }
-
-    function addVideoByAdmin() {
-      const title = document.getElementById('videoTitleInput').value.trim();
-      const urlInput = document.getElementById('newVideoUrl').value.trim();
-      const cat = document.getElementById('videoCategorySelect').value;
-
-      if (!title) return alert('ভিডিওর শিরোনাম টাইপ করুন!');
-      if (!urlInput) return alert('ভিডিওর সঠিক লিঙ্ক দিন!');
-
-      let videos = JSON.parse(localStorage.getItem('app_videos')) || defaultVideos;
-
-      videos.unshift({ id: Date.now(), title: title, url: urlInput, category: cat });
-      localStorage.setItem('app_videos', JSON.stringify(videos));
-      
-      alert('ভিডিও সফলভাবে পোস্ট হয়েছে!');
-      document.getElementById('videoTitleInput').value = "";
-      document.getElementById('newVideoUrl').value = "";
-      
-      renderAdminVideoList();
-      renderVideos();
-    }
-
-    function banUserAction(isBan) {
-      const targetId = document.getElementById('banUserIdInput').value.trim();
-      if(!targetId) return alert('ইউজার Telegram ID দিন!');
-      let bannedUsers = JSON.parse(localStorage.getItem('sys_banned_users') || '[]');
-      
-      if(isBan) {
-        if(!bannedUsers.includes(targetId)) bannedUsers.push(targetId);
-        alert(`ইউজার ${targetId} ব্যান করা হয়েছে!`);
-      } else {
-        bannedUsers = bannedUsers.filter(id => id !== targetId);
-        alert(`ইউজার ${targetId} আনব্যান করা হয়েছে!`);
-      }
-      localStorage.setItem('sys_banned_users', JSON.stringify(bannedUsers));
-      document.getElementById('banUserIdInput').value = "";
-      checkUserStatus();
-    }
-
     if (window.location.search.includes('admin')) {
       document.getElementById('user-view').classList.add('hidden');
       document.getElementById('admin-view').classList.remove('hidden');
     }
 
     function loginAdmin() {
-      const pass = localStorage.getItem('sys_admin_password') || '123456';
-      if (document.getElementById('adminPassInput').value === pass) {
+      if (document.getElementById('adminPassInput').value === '123456') {
         document.getElementById('admin-login-box').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.remove('hidden');
-        document.getElementById('adminDirectUrlInput').value = adSettings.directUrl;
-        updateAdminFormUI();
-        applyAdSettings();
         renderAdminVideoList();
       } else alert('ভুল পাসওয়ার্ড!');
     }
 
-    applyAdSettings();
-    loadSliderImages();
-    loadNotice();
-    checkUserStatus();
     renderVideos();
   </script>
 </body>
