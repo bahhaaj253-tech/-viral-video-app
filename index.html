@@ -210,9 +210,9 @@
         <div id="admin-banner-list" style="margin-top:10px;"></div>
       </div>
 
-      <!-- ২. ভিডিও আপলোড -->
+      <!-- ২. ভিডিও আপলোড (Catbox API) -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">☁️ ভিডিও আপলোড করুন</h4>
+        <h4 style="margin:0 0 8px 0; color:#10b981;">🐱 ফ্রি ভিডিও আপলোড (Catbox API)</h4>
         <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম টাইপ করুন">
         
         <label style="font-size:12px; color:#cbd5e1;">গ্যালারি থেকে ভিডিও ফাইল সিলেক্ট করুন:</label>
@@ -243,10 +243,6 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
   <script>
-    // ⚙️ নতুন ক্লাউডিনারি কনফিগারেশন
-    const CLOUDINARY_CLOUD_NAME = "eyovtidv";
-    const CLOUDINARY_UPLOAD_PRESET = "ml_default";
-
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if(tg) { tg.ready(); tg.expand(); }
 
@@ -334,6 +330,7 @@
       });
     }
 
+    // Catbox-এ ব্যানার ইমেজ আপলোড
     function uploadBanner() {
       const fileInput = document.getElementById('bannerFileInput');
       const file = fileInput.files[0];
@@ -341,25 +338,26 @@
       if (!file) return alert('গ্যালারি থেকে কোনো ছবি সিলেক্ট করুন!');
 
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      formData.append('reqtype', 'fileupload');
+      formData.append('fileToUpload', file);
 
-      fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+      fetch('https://catbox.moe/user/api.php', {
         method: 'POST',
         body: formData
       })
-      .then(res => res.json())
-      .then(data => {
-        if(data.secure_url) {
+      .then(res => res.text())
+      .then(imageUrl => {
+        imageUrl = imageUrl.trim();
+        if(imageUrl.startsWith('http')) {
           let banners = JSON.parse(localStorage.getItem('app_banners')) || [];
-          banners.unshift(data.secure_url);
+          banners.unshift(imageUrl);
           localStorage.setItem('app_banners', JSON.stringify(banners));
           alert('স্লাইডার ব্যানার সফলভাবে আপলোড হয়েছে!');
           fileInput.value = "";
           renderBanners();
           renderAdminBannerList();
         } else {
-          alert('ব্যানার আপলোড ব্যর্থ হয়েছে! ক্লাউডিনারি প্রিসেট Unsigned করা আছে কিনা চেক করুন।');
+          alert('ব্যানার আপলোড ব্যর্থ হয়েছে!');
         }
       })
       .catch(() => alert('ব্যানার আপলোড ব্যর্থ হয়েছে!'));
@@ -446,7 +444,7 @@
       }
     }
 
-    // --- ভিডিও আপলোড ফাংশন ---
+    // --- ভিডিও আপলোড ফাংশন (Catbox API - সম্পূর্ণ ফ্রি ও আনলিমিটেড) ---
     function uploadVideo() {
       const title = document.getElementById('videoTitleInput').value.trim();
       const fileInput = document.getElementById('videoFileInput');
@@ -456,10 +454,6 @@
       if (!title) return alert('ভিডিওর শিরোনাম দিন!');
       if (!file) return alert('গ্যালারি থেকে ভিডিও নির্বাচন করুন!');
 
-      if (file.size > 50 * 1024 * 1024) {
-        return alert('ভিডিও ফাইলটি অনেক বড়! ৫০ MB এর চেয়ে ছোট ভিডিও সিলেক্ট করুন।');
-      }
-
       const uploadBtn = document.getElementById('uploadBtn');
       const progressBox = document.getElementById('uploadProgressBox');
       const progressBar = document.getElementById('uploadProgressBar');
@@ -468,14 +462,14 @@
       uploadBtn.disabled = true;
       progressBox.style.display = 'block';
       progressBar.style.width = '0%';
-      statusText.innerText = 'আপলোড শুরু হচ্ছে... 0%';
+      statusText.innerText = 'আপলোড শুরু হচ্ছে...';
 
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      formData.append('reqtype', 'fileupload');
+      formData.append('fileToUpload', file);
 
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`, true);
+      xhr.open('POST', 'https://catbox.moe/user/api.php', true);
 
       xhr.upload.onprogress = function(e) {
         if (e.lengthComputable) {
@@ -487,7 +481,7 @@
 
       xhr.onload = function() {
         if (xhr.status === 200) {
-          const data = JSON.parse(xhr.responseText);
+          const videoUrl = xhr.responseText.trim();
           progressBar.style.width = '100%';
           statusText.innerText = 'আপলোড সফল!';
 
@@ -495,7 +489,7 @@
           videos.unshift({
             id: Date.now(),
             title: title,
-            url: data.secure_url,
+            url: videoUrl,
             category: category,
             views: 0
           });
@@ -508,24 +502,10 @@
           progressBox.style.display = 'none';
           statusText.innerText = '';
 
-          currentCategory = 'all';
-          const allBtn = document.querySelector('.filter-btn');
-          if(allBtn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            allBtn.classList.add('active');
-          }
-
           renderAdminVideoList();
           renderVideos();
         } else {
-          let errorMsg = 'আপলোড ব্যর্থ হয়েছে!';
-          try {
-            const errData = JSON.parse(xhr.responseText);
-            if(errData.error && errData.error.message) {
-              errorMsg += ' কারণ: ' + errData.error.message;
-            }
-          } catch(e) {}
-          alert(errorMsg);
+          alert('আপলোড ব্যর্থ হয়েছে! ফাইলটি একটু ছোট করে আবার চেষ্টা করুন।');
           uploadBtn.disabled = false;
           progressBox.style.display = 'none';
           statusText.innerText = '';
@@ -533,7 +513,7 @@
       };
 
       xhr.onerror = function() {
-        alert('নেটওয়ার্ক সমস্যার কারণে আপলোড করতে ব্যর্থ হয়েছে!');
+        alert('নেটওয়ার্ক সমস্যার কারণে আপলোড ব্যর্থ হয়েছে!');
         uploadBtn.disabled = false;
         progressBox.style.display = 'none';
         statusText.innerText = '';
