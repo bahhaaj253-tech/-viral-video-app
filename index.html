@@ -116,9 +116,6 @@
     .progress-container {
       width: 100%; background-color: #334155; border-radius: 8px; margin: 8px 0; overflow: hidden; display: none;
     }
-    .progress-bar {
-      width: 0%; height: 10px; background-color: #10b981; transition: width 0.2s;
-    }
 
     input[type="text"], input[type="password"], input[type="file"], textarea, select { 
       width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; font-family: monospace;
@@ -210,9 +207,9 @@
         <div id="admin-banner-list" style="margin-top:10px;"></div>
       </div>
 
-      <!-- ২. ভিডিও আপলোড (Catbox API) -->
+      <!-- ২. ভিডিও আপলোড (ব্যাকএন্ড API) -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">🐱 ফ্রি ভিডিও আপলোড (Catbox API)</h4>
+        <h4 style="margin:0 0 8px 0; color:#10b981;">🚀 ফ্রি ভিডিও আপলোড (ব্যাকএন্ড ইঞ্জিন)</h4>
         <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম টাইপ করুন">
         
         <label style="font-size:12px; color:#cbd5e1;">গ্যালারি থেকে ভিডিও ফাইল সিলেক্ট করুন:</label>
@@ -223,10 +220,7 @@
           <option value="trending">ট্রেন্ডিং (Trending)</option>
         </select>
 
-        <div class="progress-container" id="uploadProgressBox">
-          <div class="progress-bar" id="uploadProgressBar"></div>
-        </div>
-        <p id="uploadStatusText" style="font-size:11px; color:#38bdf8; margin: 2px 0 8px 0;"></p>
+        <p id="uploadStatusText" style="font-size:12px; color:#38bdf8; margin: 6px 0; font-weight:bold;"></p>
 
         <button class="btn-submit" id="uploadBtn" style="background:#0284c7;" onclick="uploadVideo()">🚀 ভিডিও আপলোড ও পোস্ট করুন</button>
       </div>
@@ -249,7 +243,7 @@
     let currentCategory = 'all';
     let swiperInstance = null;
 
-    // --- এডমিন ভিউ চেক ফাংশন ---
+    // --- এডমিন ভিউ চেক ---
     function checkAdminView() {
       const isParamAdmin = window.location.search.includes('admin');
       const isHashAdmin = window.location.hash.includes('admin');
@@ -263,7 +257,7 @@
       }
     }
 
-    // --- অ্যাড রেন্ডার ও সেভ করার ফাংশন ---
+    // --- অ্যাড রেন্ডার ও সেভ ---
     function saveAdSettings() {
       const adsConfig = {
         top: document.getElementById('adTopInput').value,
@@ -310,7 +304,7 @@
       if(ads.bottom && bottomSlot) executeAdScripts(bottomSlot, ads.bottom);
     }
 
-    // --- ব্যানার স্লাইডার হ্যান্ডলার ---
+    // --- ব্যানার স্লাইডার ---
     function renderBanners() {
       const banners = JSON.parse(localStorage.getItem('app_banners')) || [
         'https://via.placeholder.com/600x200/0284c7/ffffff?text=Welcome+Banner'
@@ -330,7 +324,6 @@
       });
     }
 
-    // Catbox-এ ব্যানার ইমেজ আপলোড
     function uploadBanner() {
       const fileInput = document.getElementById('bannerFileInput');
       const file = fileInput.files[0];
@@ -338,19 +331,17 @@
       if (!file) return alert('গ্যালারি থেকে কোনো ছবি সিলেক্ট করুন!');
 
       const formData = new FormData();
-      formData.append('reqtype', 'fileupload');
-      formData.append('fileToUpload', file);
+      formData.append('file', file);
 
-      fetch('https://catbox.moe/user/api.php', {
+      fetch('/api/upload-catbox', {
         method: 'POST',
         body: formData
       })
-      .then(res => res.text())
-      .then(imageUrl => {
-        imageUrl = imageUrl.trim();
-        if(imageUrl.startsWith('http')) {
+      .then(res => res.json())
+      .then(data => {
+        if(data.url) {
           let banners = JSON.parse(localStorage.getItem('app_banners')) || [];
-          banners.unshift(imageUrl);
+          banners.unshift(data.url);
           localStorage.setItem('app_banners', JSON.stringify(banners));
           alert('স্লাইডার ব্যানার সফলভাবে আপলোড হয়েছে!');
           fileInput.value = "";
@@ -387,7 +378,7 @@
       renderAdminBannerList();
     }
 
-    // --- ভিডিও হ্যান্ডলার ---
+    // --- ভিডিও ফিড ও ইন-অ্যাপ প্লেয়ার ---
     function renderVideos() {
       const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
@@ -416,7 +407,7 @@
               <span style="font-size:13px; font-weight:bold; color:#cbd5e1;">${v.title}</span>
             </div>
             <div class="video-wrapper">
-              <video controls style="width:100%; height:220px; background:#000;" onplay="countView(${v.id})">
+              <video controls playsinline preload="metadata" style="width:100%; height:220px; background:#000;" onplay="countView(${v.id})">
                 <source src="${v.url}" type="video/mp4">
               </video>
             </div>
@@ -444,7 +435,7 @@
       }
     }
 
-    // --- ভিডিও আপলোড ফাংশন (Catbox API - সম্পূর্ণ ফ্রি ও আনলিমিটেড) ---
+    // --- ব্যাকএন্ডের মাধ্যমে ভিডিও আপলোড করার ফাংশন ---
     function uploadVideo() {
       const title = document.getElementById('videoTitleInput').value.trim();
       const fileInput = document.getElementById('videoFileInput');
@@ -455,41 +446,28 @@
       if (!file) return alert('গ্যালারি থেকে ভিডিও নির্বাচন করুন!');
 
       const uploadBtn = document.getElementById('uploadBtn');
-      const progressBox = document.getElementById('uploadProgressBox');
-      const progressBar = document.getElementById('uploadProgressBar');
       const statusText = document.getElementById('uploadStatusText');
 
       uploadBtn.disabled = true;
-      progressBox.style.display = 'block';
-      progressBar.style.width = '0%';
-      statusText.innerText = 'আপলোড শুরু হচ্ছে...';
+      statusText.innerText = '⏳ সার্ভারে ভিডিও আপলোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...';
 
       const formData = new FormData();
-      formData.append('reqtype', 'fileupload');
-      formData.append('fileToUpload', file);
+      formData.append('file', file);
 
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'https://catbox.moe/user/api.php', true);
-
-      xhr.upload.onprogress = function(e) {
-        if (e.lengthComputable) {
-          const percentComplete = Math.round((e.loaded / e.total) * 100);
-          progressBar.style.width = percentComplete + '%';
-          statusText.innerText = `আপলোড হচ্ছে... ${percentComplete}%`;
-        }
-      };
-
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const videoUrl = xhr.responseText.trim();
-          progressBar.style.width = '100%';
-          statusText.innerText = 'আপলোড সফল!';
+      fetch('/api/upload-catbox', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.url) {
+          statusText.innerText = '✅ আপলোড সফল হয়েছে!';
 
           let videos = JSON.parse(localStorage.getItem('app_videos')) || [];
           videos.unshift({
             id: Date.now(),
             title: title,
-            url: videoUrl,
+            url: data.url,
             category: category,
             views: 0
           });
@@ -499,27 +477,22 @@
           document.getElementById('videoTitleInput').value = "";
           fileInput.value = "";
           uploadBtn.disabled = false;
-          progressBox.style.display = 'none';
           statusText.innerText = '';
 
           renderAdminVideoList();
           renderVideos();
         } else {
-          alert('আপলোড ব্যর্থ হয়েছে! ফাইলটি একটু ছোট করে আবার চেষ্টা করুন।');
+          alert('আপলোড ব্যর্থ হয়েছে!');
           uploadBtn.disabled = false;
-          progressBox.style.display = 'none';
           statusText.innerText = '';
         }
-      };
-
-      xhr.onerror = function() {
-        alert('নেটওয়ার্ক সমস্যার কারণে আপলোড ব্যর্থ হয়েছে!');
+      })
+      .catch(err => {
+        console.error(err);
+        alert('নেটওয়ার্ক বা সার্ভার সমস্যার কারণে আপলোড ব্যর্থ হয়েছে!');
         uploadBtn.disabled = false;
-        progressBox.style.display = 'none';
         statusText.innerText = '';
-      };
-
-      xhr.send(formData);
+      });
     }
 
     function renderAdminVideoList() {
@@ -575,7 +548,6 @@
       } else alert('ভুল পাসওয়ার্ড!');
     }
 
-    // ইনিশিয়ালাইজেশন
     window.onload = function() {
       checkAdminView();
       renderBanners();
