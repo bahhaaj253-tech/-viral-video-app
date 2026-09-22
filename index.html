@@ -113,10 +113,6 @@
       background: #0284c7; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;
     }
 
-    .progress-container {
-      width: 100%; background-color: #334155; border-radius: 8px; margin: 8px 0; overflow: hidden; display: none;
-    }
-
     input[type="text"], input[type="password"], input[type="file"], textarea, select { 
       width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; font-family: monospace;
     }
@@ -207,9 +203,9 @@
         <div id="admin-banner-list" style="margin-top:10px;"></div>
       </div>
 
-      <!-- ২. ভিডিও আপলোড (ব্যাকএন্ড API) -->
+      <!-- ২. ভিডিও আপলোড (ডাইরেক্ট Catbox API) -->
       <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">🚀 ফ্রি ভিডিও আপলোড (ব্যাকএন্ড ইঞ্জিন)</h4>
+        <h4 style="margin:0 0 8px 0; color:#10b981;">🚀 ফ্রি ভিডিও আপলোড (ডাইরেক্ট আপলোড)</h4>
         <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম টাইপ করুন">
         
         <label style="font-size:12px; color:#cbd5e1;">গ্যালারি থেকে ভিডিও ফাইল সিলেক্ট করুন:</label>
@@ -331,17 +327,18 @@
       if (!file) return alert('গ্যালারি থেকে কোনো ছবি সিলেক্ট করুন!');
 
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('reqtype', 'fileupload');
+      formData.append('fileToUpload', file);
 
-      fetch('/api/upload-catbox', {
+      fetch('https://catbox.moe/user/api.php', {
         method: 'POST',
         body: formData
       })
-      .then(res => res.json())
-      .then(data => {
-        if(data.url) {
+      .then(res => res.text())
+      .then(url => {
+        if(url && url.startsWith('http')) {
           let banners = JSON.parse(localStorage.getItem('app_banners')) || [];
-          banners.unshift(data.url);
+          banners.unshift(url.trim());
           localStorage.setItem('app_banners', JSON.stringify(banners));
           alert('স্লাইডার ব্যানার সফলভাবে আপলোড হয়েছে!');
           fileInput.value = "";
@@ -435,7 +432,7 @@
       }
     }
 
-    // --- ব্যাকএন্ডের মাধ্যমে ভিডিও আপলোড করার ফাংশন ---
+    // --- সরাসরি Catbox API-তে ভিডিও আপলোড করার ফাংশন ---
     function uploadVideo() {
       const title = document.getElementById('videoTitleInput').value.trim();
       const fileInput = document.getElementById('videoFileInput');
@@ -449,25 +446,26 @@
       const statusText = document.getElementById('uploadStatusText');
 
       uploadBtn.disabled = true;
-      statusText.innerText = '⏳ সার্ভারে ভিডিও আপলোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...';
+      statusText.innerText = '⏳ ভিডিও আপলোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...';
 
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('reqtype', 'fileupload');
+      formData.append('fileToUpload', file);
 
-      fetch('/api/upload-catbox', {
+      fetch('https://catbox.moe/user/api.php', {
         method: 'POST',
         body: formData
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.url) {
+      .then(res => res.text())
+      .then(url => {
+        if (url && url.startsWith('http')) {
           statusText.innerText = '✅ আপলোড সফল হয়েছে!';
 
           let videos = JSON.parse(localStorage.getItem('app_videos')) || [];
           videos.unshift({
             id: Date.now(),
             title: title,
-            url: data.url,
+            url: url.trim(),
             category: category,
             views: 0
           });
@@ -482,14 +480,14 @@
           renderAdminVideoList();
           renderVideos();
         } else {
-          alert('আপলোড ব্যর্থ হয়েছে!');
+          alert('আপলোড ব্যর্থ হয়েছে! অন্য কোনো ফাইল চেষ্টা করে দেখুন।');
           uploadBtn.disabled = false;
           statusText.innerText = '';
         }
       })
       .catch(err => {
         console.error(err);
-        alert('নেটওয়ার্ক বা সার্ভার সমস্যার কারণে আপলোড ব্যর্থ হয়েছে!');
+        alert('নেটওয়ার্ক সমস্যার কারণে আপলোড ব্যর্থ হয়েছে!');
         uploadBtn.disabled = false;
         statusText.innerText = '';
       });
