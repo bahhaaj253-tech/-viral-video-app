@@ -202,67 +202,20 @@
         <button class="btn-submit" style="background:#f59e0b;" onclick="uploadBanner()">📸 ব্যানার আপলোড করুন</button>
         <div id="admin-banner-list" style="margin-top:10px;"></div>
       </div>
-// --- ফ্রন্টএন্ড থেকে সরাসরি Catbox আপলোড ফাংশন ---
-    function uploadVideo() {
-      const title = document.getElementById('videoTitleInput').value.trim();
-      const fileInput = document.getElementById('videoFileInput');
-      const file = fileInput.files[0];
-      const category = document.getElementById('videoCategorySelect').value;
 
-      if (!title) return alert('ভিডিওর শিরোনাম দিন!');
-      if (!file) return alert('গ্যালারি থেকে ভিডিও নির্বাচন করুন!');
+      <!-- ২. ভিডিও আপলোড (ডাইরেক্ট Catbox API) -->
+      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
+        <h4 style="margin:0 0 8px 0; color:#10b981;">🚀 ফ্রি ভিডিও আপলোড (ডাইরেক্ট আপলোড)</h4>
+        <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম টাইপ করুন">
+        
+        <label style="font-size:12px; color:#cbd5e1;">গ্যালারি থেকে ভিডিও ফাইল সিলেক্ট করুন:</label>
+        <input type="file" id="videoFileInput" accept="video/*">
 
-      const uploadBtn = document.getElementById('uploadBtn');
-      const statusText = document.getElementById('uploadStatusText');
+        <select id="videoCategorySelect">
+          <option value="viral">ভাইরাল (Viral)</option>
+          <option value="trending">ট্রেন্ডিং (Trending)</option>
+        </select>
 
-      uploadBtn.disabled = true;
-      statusText.innerText = '⏳ ভিডিও আপলোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...';
-
-      const formData = new FormData();
-      formData.append('reqtype', 'fileupload');
-      formData.append('fileToUpload', file);
-
-      // সরাসরি Catbox API-তে ফাইল পাঠানো (Render সার্ভার হয়ে যাবে না)
-      fetch('https://catbox.moe/user/api.php', {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.text())
-      .then(url => {
-        if (url && url.startsWith('http')) {
-          statusText.innerText = '✅ আপলোড সফল হয়েছে!';
-
-          let videos = JSON.parse(localStorage.getItem('app_videos')) || [];
-          videos.unshift({
-            id: Date.now(),
-            title: title,
-            url: url.trim(),
-            category: category,
-            views: 0
-          });
-          localStorage.setItem('app_videos', JSON.stringify(videos));
-
-          alert('🎉 ভিডিও সফলভাবে পোস্ট হয়েছে!');
-          document.getElementById('videoTitleInput').value = "";
-          fileInput.value = "";
-          uploadBtn.disabled = false;
-          statusText.innerText = '';
-
-          renderAdminVideoList();
-          renderVideos();
-        } else {
-          alert('আপলোড ব্যর্থ হয়েছে! ফাইল সাইজ ছোট করে চেষ্টা করুন।');
-          uploadBtn.disabled = false;
-          statusText.innerText = '';
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert('আপলোড হতে সমস্যা হচ্ছে! অন্য একটি ভিডিও ফাইল চেষ্টা করুন।');
-        uploadBtn.disabled = false;
-        statusText.innerText = '';
-      });
-    }
         <p id="uploadStatusText" style="font-size:12px; color:#38bdf8; margin: 6px 0; font-weight:bold;"></p>
 
         <button class="btn-submit" id="uploadBtn" style="background:#0284c7;" onclick="uploadVideo()">🚀 ভিডিও আপলোড ও পোস্ট করুন</button>
@@ -527,14 +480,14 @@
           renderAdminVideoList();
           renderVideos();
         } else {
-          alert('আপলোড ব্যর্থ হয়েছে! অন্য কোনো ফাইল চেষ্টা করে দেখুন।');
+          alert('আপলোড হতে সমস্যা হচ্ছে! অন্য একটি ভিডিও ফাইল চেষ্টা করুন।');
           uploadBtn.disabled = false;
           statusText.innerText = '';
         }
       })
       .catch(err => {
         console.error(err);
-        alert('নেটওয়ার্ক সমস্যার কারণে আপলোড ব্যর্থ হয়েছে!');
+        alert('আপলোড হতে সমস্যা হচ্ছে! অন্য একটি ভিডিও ফাইল চেষ্টা করুন।');
         uploadBtn.disabled = false;
         statusText.innerText = '';
       });
