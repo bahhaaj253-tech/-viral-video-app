@@ -65,11 +65,9 @@
 
     .ad-slot {
       margin: 12px 0;
-      padding: 4px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px dashed #334155;
+      padding: 0;
       border-radius: 8px;
-      min-height: 50px;
+      min-height: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -217,11 +215,13 @@
 
     let allBloggerVideos = [];
 
-    // Monetag SDK Trigger Function
+    // Monetag SDK Trigger Function (In-App Interstitial)
     function triggerMonetagAd() {
       if (typeof window.show_11848596 === 'function') {
-        window.show_11848596({ type: 'inApp', inAppSettings: { frequency: 2, interval: 30 } })
-          .catch(e => console.log('Monetag InApp Error/Skipped:', e));
+        window.show_11848596({
+          type: 'inApp',
+          inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false }
+        }).catch(e => console.log('Monetag InApp Error/Skipped:', e));
       }
     }
 
@@ -342,6 +342,10 @@
     }
 
     function executeAdScripts(container, htmlContent) {
+      if(!htmlContent || !htmlContent.trim()) {
+        container.innerHTML = '';
+        return;
+      }
       container.innerHTML = htmlContent;
       const scripts = container.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
@@ -359,9 +363,9 @@
         document.getElementById('top-direct-link-btn').href = ads.directLink;
       }
       
-      if(ads.top && document.getElementById('ad-top-slot')) executeAdScripts(document.getElementById('ad-top-slot'), ads.top);
-      if(ads.middle && document.getElementById('ad-middle-slot')) executeAdScripts(document.getElementById('ad-middle-slot'), ads.middle);
-      if(ads.bottom && document.getElementById('ad-bottom-slot')) executeAdScripts(document.getElementById('ad-bottom-slot'), ads.bottom);
+      if(document.getElementById('ad-top-slot')) executeAdScripts(document.getElementById('ad-top-slot'), ads.top || '');
+      if(document.getElementById('ad-middle-slot')) executeAdScripts(document.getElementById('ad-middle-slot'), ads.middle || '');
+      if(document.getElementById('ad-bottom-slot')) executeAdScripts(document.getElementById('ad-bottom-slot'), ads.bottom || '');
     }
 
     function loginAdmin() {
@@ -376,7 +380,7 @@
       checkAdminView();
       renderAds();
       fetchBloggerVideos();
-      setTimeout(triggerMonetagAd, 2000);
+      setTimeout(triggerMonetagAd, 3000);
     };
   </script>
 </body>
