@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফ্রি ভিডিও ও মিডিয়া অ্যাপ</title>
 
-  <!-- Monetag SDK Script -->
+  <!-- Monetag Official SDK -->
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
 
   <!-- Telegram WebApp SDK -->
@@ -64,10 +64,10 @@
     }
 
     .ad-slot {
-      margin: 12px 0;
+      margin: 10px 0;
       padding: 0;
       border-radius: 8px;
-      min-height: 10px;
+      min-height: 0px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -88,6 +88,7 @@
     }
     .video-wrapper video, .video-wrapper iframe { width: 100%; height: 220px; border: none; }
 
+    /* Admin Styling */
     .admin-card {
       background: #1e293b;
       border: 1px solid #3b82f6;
@@ -130,6 +131,10 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+    }
+    .btn-reset {
+      background: #ef4444;
+      margin-top: 10px;
     }
     .hidden { display: none !important; }
   </style>
@@ -184,26 +189,27 @@
       </div>
 
       <div class="ad-group">
-        <label><i class="fa-solid fa-heading"></i> ১. টপ ব্যানার অ্যাড (Top Ad Code):</label>
-        <textarea id="adTopInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
+        <label><i class="fa-solid fa-heading"></i> ১. টপ ব্যানার অ্যাড (Top HTML Banner Code):</label>
+        <textarea id="adTopInput" rows="3" placeholder="<script>...</script> কোড দিন"></textarea>
       </div>
 
       <div class="ad-group">
-        <label><i class="fa-solid fa-window-maximize"></i> ২. মিডল ব্যানার অ্যাড (Middle Ad Code):</label>
-        <textarea id="adMiddleInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
+        <label><i class="fa-solid fa-window-maximize"></i> ২. মিডল ব্যানার অ্যাড (Middle HTML Banner Code):</label>
+        <textarea id="adMiddleInput" rows="3" placeholder="<script>...</script> কোড দিন"></textarea>
       </div>
 
       <div class="ad-group">
         <label><i class="fa-solid fa-film"></i> ৩. ইন-ফিড নেটিভ অ্যাড (In-Feed Native Ad Code):</label>
-        <textarea id="adNativeInput" rows="3" placeholder="ভিডিওগুলোর মাঝে দেখানোর জন্য কোড দিন..."></textarea>
+        <textarea id="adNativeInput" rows="3" placeholder="ভিডিওর মাঝখানে দেখানোর কোড"></textarea>
       </div>
 
       <div class="ad-group">
-        <label><i class="fa-solid fa-square-bottom"></i> ৪. বটম ব্যানার অ্যাড (Bottom Ad Code):</label>
-        <textarea id="adBottomInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
+        <label><i class="fa-solid fa-square-bottom"></i> ৪. বটম ব্যানার অ্যাড (Bottom HTML Banner Code):</label>
+        <textarea id="adBottomInput" rows="3" placeholder="<script>...</script> কোড দিন"></textarea>
       </div>
 
       <button class="btn-submit" onclick="saveAdSettings()"><i class="fa-solid fa-floppy-disk"></i> অ্যাড কোড সেভ করুন</button>
+      <button class="btn-submit btn-reset" onclick="resetAllAds()"><i class="fa-solid fa-trash"></i> সব অ্যাড ও ক্যাশ রিমুভ করুন</button>
     </div>
   </div>
 
@@ -215,7 +221,7 @@
 
     let allBloggerVideos = [];
 
-    // Monetag SDK Trigger Function (In-App Interstitial)
+    // Monetag SDK Trigger Function
     function triggerMonetagAd() {
       if (typeof window.show_11848596 === 'function') {
         window.show_11848596({
@@ -231,12 +237,22 @@
       }
     }
 
+    // এডমিন ভিউ চেক
     function checkAdminView() {
-      if (window.location.search.includes('admin') || window.location.hash.includes('admin')) {
+      const isParamAdmin = window.location.search.includes('admin');
+      const isHashAdmin = window.location.hash.toLowerCase().includes('admin');
+      
+      if (isParamAdmin || isHashAdmin) {
         document.getElementById('user-view').classList.add('hidden');
         document.getElementById('admin-view').classList.remove('hidden');
+      } else {
+        document.getElementById('user-view').classList.remove('hidden');
+        document.getElementById('admin-view').classList.add('hidden');
       }
     }
+
+    // উইন্ডো চেঞ্জ বা হ্যাশ পরিবর্তন হলেও অটো চেঞ্জ হবে
+    window.addEventListener('hashchange', checkAdminView);
 
     function fetchBloggerVideos() {
       const container = document.getElementById('video-container');
@@ -332,6 +348,12 @@
       renderAds();
     }
 
+    function resetAllAds() {
+      localStorage.removeItem('app_ads_config');
+      alert('সব অ্যাড ডেটা মুছে ফেলা হয়েছে!');
+      location.reload();
+    }
+
     function loadAdInputs() {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       document.getElementById('adDirectLinkInput').value = ads.directLink || 'https://omg10.com/4/11848732';
@@ -341,11 +363,16 @@
       document.getElementById('adBottomInput').value = ads.bottom || '';
     }
 
+    // শুধুমাত্র যদি এইচটিএমএল/জাভাস্ক্রিপ্ট ট্যাগ থাকে তবেই রেন্ডার করবে
     function executeAdScripts(container, htmlContent) {
-      if(!htmlContent || !htmlContent.trim()) {
-        container.innerHTML = '';
+      container.innerHTML = '';
+      if(!htmlContent || !htmlContent.trim()) return;
+
+      // যদি ট্যাগে <script, <iframe, <ins, <a টাইপ কিছু না থাকে তবে টেক্সট রেন্ডার হবে না
+      if(!htmlContent.includes('<') && !htmlContent.includes('>')) {
         return;
       }
+
       container.innerHTML = htmlContent;
       const scripts = container.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
@@ -380,7 +407,7 @@
       checkAdminView();
       renderAds();
       fetchBloggerVideos();
-      setTimeout(triggerMonetagAd, 3000);
+      setTimeout(triggerMonetagAd, 2500);
     };
   </script>
 </body>
