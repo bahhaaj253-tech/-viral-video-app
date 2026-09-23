@@ -8,8 +8,6 @@
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -61,10 +59,6 @@
       100% { transform: scale(1); }
     }
 
-    /* Swiper Slider Styles */
-    .swiper { width: 100%; height: 160px; border-radius: 12px; margin-bottom: 15px; }
-    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-
     /* Ad Container Styling */
     .ad-slot {
       margin: 12px 0;
@@ -84,13 +78,6 @@
     .search-box {
       width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; margin-bottom: 10px;
     }
-    .filter-container {
-      display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px;
-    }
-    .filter-btn {
-      background: #334155; color: #cbd5e1; border: none; padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap;
-    }
-    .filter-btn.active { background: #0284c7; color: white; font-weight: bold; }
 
     .video-card {
       background: #0f172a; border-radius: 10px; padding: 8px; margin-bottom: 12px; border: 1px solid #334155; position: relative;
@@ -98,25 +85,54 @@
     .video-wrapper {
       position: relative; width: 100%; min-height: 220px; border-radius: 8px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;
     }
-    .video-wrapper video { width: 100%; height: 220px; }
+    .video-wrapper video, .video-wrapper iframe { width: 100%; height: 220px; border: none; }
 
     .video-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 
-    .admin-item {
-      display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 10px; border-radius: 6px; margin-bottom: 6px; border: 1px solid #334155; font-size: 12px;
+    /* Admin Panel Premium Styling */
+    .admin-card {
+      background: #1e293b;
+      border: 1px solid #3b82f6;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      text-align: left;
     }
-    .btn-delete {
-      background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;
+    .ad-group {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
     }
-
-    .view-badge {
-      background: #0284c7; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;
+    .ad-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #38bdf8;
+      margin-bottom: 6px;
     }
-
-    input[type="text"], input[type="password"], input[type="file"], textarea, select { 
-      width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; font-family: monospace;
+    input[type="text"], input[type="password"], textarea { 
+      width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #1e293b; color: white; font-size: 12px; font-family: monospace; resize: vertical; margin-bottom: 8px;
     }
-    .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
+    .btn-submit { 
+      background: linear-gradient(45deg, #10b981, #059669); 
+      color: white; 
+      border: none; 
+      width: 100%; 
+      padding: 12px; 
+      border-radius: 10px; 
+      font-weight: bold; 
+      font-size: 15px; 
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -135,12 +151,6 @@
     <span class="badge-viral">🔥 Free Video Stream App</span>
     <h2 class="header-title">ভিডিও মিনি অ্যাপ</h2>
 
-    <!-- Swiper Banner Slider -->
-    <div class="swiper mySwiper" id="banner-slider-box">
-      <div class="swiper-wrapper" id="banner-wrapper"></div>
-      <div class="swiper-pagination"></div>
-    </div>
-
     <!-- AD SLOT 2: MIDDLE BANNER -->
     <div class="ad-slot" id="ad-middle-slot"></div>
 
@@ -149,264 +159,139 @@
     </a>
 
     <div id="video-section" class="card">
-      <h3 style="margin: 5px 0 10px; color: #38bdf8; font-size:16px; text-align:center;">🔥 এক্সক্লুসিভ ফ্রি ভিডিও ফিড</h3>
+      <h3 style="margin: 5px 0 10px; color: #38bdf8; font-size:16px; text-align:center;">🔥 অটোমেটিক ভিডিও ফিড</h3>
       <input type="text" class="search-box" id="searchVideoInput" placeholder="🔍 ভিডিও সার্চ করুন..." onkeyup="filterVideos()">
 
-      <div class="filter-container">
-        <button class="filter-btn active" onclick="setCategory('all', this)">সবগুলো</button>
-        <button class="filter-btn" onclick="setCategory('viral', this)">ভাইরাল</button>
-        <button class="filter-btn" onclick="setCategory('trending', this)">ট্রেন্ডিং</button>
+      <div id="video-container">
+        <p style="text-align:center; color:#38bdf8; font-size:13px; margin:20px 0;">⏳ ভিডিও লোড হচ্ছে...</p>
       </div>
-
-      <div id="video-container"></div>
     </div>
 
     <!-- AD SLOT 3: BOTTOM BANNER -->
     <div class="ad-slot" id="ad-bottom-slot"></div>
   </div>
 
-  <!-- এডমিন প্যানেল -->
+  <!-- এডমিন প্যানেল (অ্যাড কন্ট্রোল প্যানেল) -->
   <div id="admin-view" class="hidden">
-    <div id="admin-login-box" class="card" style="max-width:350px; margin: 30px auto; text-align:center;">
-      <h3 style="color:#38bdf8; margin-top:0;">👑 এডমিন প্যানেল লগইন</h3>
+    <div id="admin-login-box" class="admin-card" style="max-width:350px; margin: 30px auto; text-align:center;">
+      <h3 style="color:#38bdf8; margin-top:0;"><i class="fa-solid fa-user-shield"></i> এডমিন প্যানেল লগইন</h3>
       <input type="password" id="adminPassInput" placeholder="এডমিন পাসওয়ার্ড দিন (123456)">
-      <button class="btn-submit" onclick="loginAdmin()">লগইন করুন</button>
+      <button class="btn-submit" onclick="loginAdmin()" style="margin-top:10px;">লগইন করুন</button>
     </div>
 
-    <div id="admin-dashboard" class="card hidden">
-      <h3 style="color:#f59e0b; margin-top:0; text-align:center;">👑 এডমিন কন্ট্রোল প্যানেল</h3>
+    <div id="admin-dashboard" class="admin-card hidden" style="max-width:500px; margin:0 auto;">
+      <h3 style="color:#f59e0b; margin-top:0; text-align:center;"><i class="fa-solid fa-rectangle-ad"></i> অ্যাড সেটিং কন্ট্রোল প্যানেল</h3>
+      <p style="font-size:11px; color:#94a3b8; text-align:center; margin-bottom:15px;">নিচে আপনার Monetag / Adsterra লিঙ্ক ও কোডগুলো ইচ্ছেমতো পরিবর্তন করে সেভ করুন।</p>
 
-      <!-- 📢 ডায়নামিক অ্যাড ম্যানেজার -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #3b82f6;">
-        <h4 style="margin:0 0 8px 0; color:#38bdf8;">📢 ডায়নামিক অ্যাড ম্যানেজার (Ad Settings)</h4>
-        
-        <label style="font-size:11px; color:#cbd5e1;">১. টপ ব্যানার অ্যাড কোড (Top Ad Code):</label>
-        <textarea id="adTopInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
-
-        <label style="font-size:11px; color:#cbd5e1;">২. মিডল ব্যানার অ্যাড কোড (Middle Ad Code):</label>
-        <textarea id="adMiddleInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
-
-        <label style="font-size:11px; color:#cbd5e1;">৩. ইন-ফিড / ভিডিও অ্যাড কোড (In-Feed Native Ad Code):</label>
-        <textarea id="adNativeInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
-
-        <label style="font-size:11px; color:#cbd5e1;">৪. বটম ব্যানার অ্যাড কোড (Bottom Ad Code):</label>
-        <textarea id="adBottomInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
-
-        <button class="btn-submit" style="background:#3b82f6;" onclick="saveAdSettings()">💾 অ্যাড কোড সেভ করুন</button>
+      <div class="ad-group">
+        <label><i class="fa-solid fa-link"></i> ০. বোনাস বাটন ডাইরেক্ট লিঙ্ক (Direct SmartLink):</label>
+        <input type="text" id="adDirectLinkInput" placeholder="https://monetag_direct_link.com">
       </div>
 
-      <!-- ১. স্লাইডার ব্যানার আপলোড -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#f59e0b;">🖼️ স্লাইডার ব্যানার আপলোড (ইমেজ)</h4>
-        <input type="file" id="bannerFileInput" accept="image/*">
-        <button class="btn-submit" style="background:#f59e0b;" onclick="uploadBanner()">📸 ব্যানার আপলোড করুন</button>
-        <div id="admin-banner-list" style="margin-top:10px;"></div>
+      <div class="ad-group">
+        <label><i class="fa-solid fa-heading"></i> ১. টপ ব্যানার অ্যাড (Top Ad Code):</label>
+        <textarea id="adTopInput" rows="3" placeholder="এখানে টপ অ্যাড কোড পেস্ট করুন..."></textarea>
       </div>
 
-      <!-- ২. ভিডিও আপলোড (ডাইরেক্ট Catbox API) -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#10b981;">🚀 ফ্রি ভিডিও আপলোড (ডাইরেক্ট আপলোড)</h4>
-        <input type="text" id="videoTitleInput" placeholder="ভিডিওর শিরোনাম টাইপ করুন">
-        
-        <label style="font-size:12px; color:#cbd5e1;">গ্যালারি থেকে ভিডিও ফাইল সিলেক্ট করুন:</label>
-        <input type="file" id="videoFileInput" accept="video/*">
-
-        <select id="videoCategorySelect">
-          <option value="viral">ভাইরাল (Viral)</option>
-          <option value="trending">ট্রেন্ডিং (Trending)</option>
-        </select>
-
-        <p id="uploadStatusText" style="font-size:12px; color:#38bdf8; margin: 6px 0; font-weight:bold;"></p>
-
-        <button class="btn-submit" id="uploadBtn" style="background:#0284c7;" onclick="uploadVideo()">🚀 ভিডিও আপলোড ও পোস্ট করুন</button>
+      <div class="ad-group">
+        <label><i class="fa-solid fa-window-maximize"></i> ২. মিডল ব্যানার অ্যাড (Middle Ad Code):</label>
+        <textarea id="adMiddleInput" rows="3" placeholder="এখানে মিডল অ্যাড কোড পেস্ট করুন..."></textarea>
       </div>
 
-      <!-- ৩. ভিডিও ডিলিট ও ভিউ লিস্ট -->
-      <div style="background:#0f172a; padding:12px; border-radius:10px; margin-bottom:15px; border:1px solid #334155;">
-        <h4 style="margin:0 0 8px 0; color:#ef4444;">📊 ভিডিও ভিউ কাউন্ট ও ডিলিট প্যানেল</h4>
-        <div id="admin-video-list" style="max-height: 250px; overflow-y: auto;"></div>
+      <div class="ad-group">
+        <label><i class="fa-solid fa-film"></i> ৩. ইন-ফিড নেটিভ অ্যাড (In-Feed Native Ad Code):</label>
+        <textarea id="adNativeInput" rows="3" placeholder="ভিডিওগুলোর মাঝে দেখানোর জন্য কোড দিন..."></textarea>
       </div>
+
+      <div class="ad-group">
+        <label><i class="fa-solid fa-square-bottom"></i> ৪. বটম ব্যানার অ্যাড (Bottom Ad Code):</label>
+        <textarea id="adBottomInput" rows="3" placeholder="এখানে বটম অ্যাড কোড পেস্ট করুন..."></textarea>
+      </div>
+
+      <button class="btn-submit" onclick="saveAdSettings()"><i class="fa-solid fa-floppy-disk"></i> অ্যাড কোড সেভ করুন</button>
     </div>
   </div>
 
-  <!-- Swiper JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
   <script>
+    // ----------------------------------------------------
+    // ⚠️ আপনার ব্লগার লিঙ্ক
+    const BLOGGER_URL = "ViralMediaFeed5348.blogspot.com"; 
+    // ----------------------------------------------------
+
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if(tg) { tg.ready(); tg.expand(); }
 
-    let currentCategory = 'all';
-    let swiperInstance = null;
+    let allBloggerVideos = [];
 
-    // --- এডমিন ভিউ চেক ---
     function checkAdminView() {
-      const isParamAdmin = window.location.search.includes('admin');
-      const isHashAdmin = window.location.hash.includes('admin');
-
-      if (isParamAdmin || isHashAdmin) {
+      if (window.location.search.includes('admin') || window.location.hash.includes('admin')) {
         document.getElementById('user-view').classList.add('hidden');
         document.getElementById('admin-view').classList.remove('hidden');
-      } else {
-        document.getElementById('user-view').classList.remove('hidden');
-        document.getElementById('admin-view').classList.add('hidden');
       }
     }
 
-    // --- অ্যাড রেন্ডার ও সেভ ---
-    function saveAdSettings() {
-      const adsConfig = {
-        top: document.getElementById('adTopInput').value,
-        middle: document.getElementById('adMiddleInput').value,
-        native: document.getElementById('adNativeInput').value,
-        bottom: document.getElementById('adBottomInput').value,
-      };
-      localStorage.setItem('app_ads_config', JSON.stringify(adsConfig));
-      alert('বিজ্ঞাপনের কোড সফলভাবে সংরক্ষিত হয়েছে!');
-      renderAds();
+    // --- ব্লগার API থেকে সব ভিডিও অটো ফেচ করা ---
+    function fetchBloggerVideos() {
+      const container = document.getElementById('video-container');
+      const cleanUrl = BLOGGER_URL.replace('https://', '').replace('http://', '').replace('/', '');
+      const feedUrl = `https://${cleanUrl}/feeds/posts/default?alt=json&max-results=50`;
+
+      fetch(feedUrl)
+        .then(res => res.json())
+        .then(data => {
+          const entries = data.feed.entry || [];
+          allBloggerVideos = [];
+
+          entries.forEach(entry => {
+            const title = entry.title.$t;
+            const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : '');
+
+            let videoHtml = "";
+
+            const iframeMatch = content.match(/<iframe[^>]*src=["']([^"']+)["']/i);
+            const videoTagMatch = content.match(/<video[^>]*src=["']([^"']+)["']/i) || content.match(/<source[^>]*src=["']([^"']+)["']/i);
+            const mp4Match = content.match(/href=["']([^"']+\.mp4)["']/i) || content.match(/https?:\/\/[^\s"']+\.mp4/i);
+
+            if (iframeMatch) {
+              videoHtml = `<iframe src="${iframeMatch[1]}" allowfullscreen frameborder="0"></iframe>`;
+            } else if (videoTagMatch) {
+              videoHtml = `<video controls playsinline preload="metadata"><source src="${videoTagMatch[1]}" type="video/mp4"></video>`;
+            } else if (mp4Match) {
+              const src = mp4Match[1] || mp4Match[0];
+              videoHtml = `<video controls playsinline preload="metadata"><source src="${src}" type="video/mp4"></video>`;
+            }
+
+            if (videoHtml) {
+              allBloggerVideos.push({ title: title, html: videoHtml });
+            }
+          });
+
+          renderVideos(allBloggerVideos);
+        })
+        .catch(err => {
+          console.error(err);
+          container.innerHTML = `<p style="text-align:center; color:#ef4444; font-size:13px;">ভিডিও লোড হতে সমস্যা হয়েছে! ব্লগারে ভিডিও আছে কিনা চেক করুন।</p>`;
+        });
     }
 
-    function loadAdInputs() {
-      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
-      document.getElementById('adTopInput').value = ads.top || '';
-      document.getElementById('adMiddleInput').value = ads.middle || '';
-      document.getElementById('adNativeInput').value = ads.native || '';
-      document.getElementById('adBottomInput').value = ads.bottom || '';
-    }
-
-    function executeAdScripts(container, htmlContent) {
-      container.innerHTML = htmlContent;
-      const scripts = container.getElementsByTagName('script');
-      for (let i = 0; i < scripts.length; i++) {
-        const script = document.createElement('script');
-        if (scripts[i].src) {
-          script.src = scripts[i].src;
-        } else {
-          script.textContent = scripts[i].textContent;
-        }
-        document.body.appendChild(script);
-      }
-    }
-
-    function renderAds() {
-      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
-      
-      const topSlot = document.getElementById('ad-top-slot');
-      const middleSlot = document.getElementById('ad-middle-slot');
-      const bottomSlot = document.getElementById('ad-bottom-slot');
-
-      if(ads.top && topSlot) executeAdScripts(topSlot, ads.top);
-      if(ads.middle && middleSlot) executeAdScripts(middleSlot, ads.middle);
-      if(ads.bottom && bottomSlot) executeAdScripts(bottomSlot, ads.bottom);
-    }
-
-    // --- ব্যানার স্লাইডার ---
-    function renderBanners() {
-      const banners = JSON.parse(localStorage.getItem('app_banners')) || [
-        'https://via.placeholder.com/600x200/0284c7/ffffff?text=Welcome+Banner'
-      ];
-      const wrapper = document.getElementById('banner-wrapper');
-      if(!wrapper) return;
-      wrapper.innerHTML = "";
-
-      banners.forEach(url => {
-        wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
-      });
-
-      if(swiperInstance) swiperInstance.destroy();
-      swiperInstance = new Swiper(".mySwiper", {
-        autoplay: { delay: 2500, disableOnInteraction: false },
-        pagination: { el: ".swiper-pagination", clickable: true },
-      });
-    }
-
-    function uploadBanner() {
-      const fileInput = document.getElementById('bannerFileInput');
-      const file = fileInput.files[0];
-
-      if (!file) return alert('গ্যালারি থেকে কোনো ছবি সিলেক্ট করুন!');
-
-      const formData = new FormData();
-      formData.append('reqtype', 'fileupload');
-      formData.append('fileToUpload', file);
-
-      fetch('https://catbox.moe/user/api.php', {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.text())
-      .then(url => {
-        if(url && url.startsWith('http')) {
-          let banners = JSON.parse(localStorage.getItem('app_banners')) || [];
-          banners.unshift(url.trim());
-          localStorage.setItem('app_banners', JSON.stringify(banners));
-          alert('স্লাইডার ব্যানার সফলভাবে আপলোড হয়েছে!');
-          fileInput.value = "";
-          renderBanners();
-          renderAdminBannerList();
-        } else {
-          alert('ব্যানার আপলোড ব্যর্থ হয়েছে!');
-        }
-      })
-      .catch(() => alert('ব্যানার আপলোড ব্যর্থ হয়েছে!'));
-    }
-
-    function renderAdminBannerList() {
-      const banners = JSON.parse(localStorage.getItem('app_banners')) || [];
-      const listContainer = document.getElementById('admin-banner-list');
-      if(!listContainer) return;
-      listContainer.innerHTML = "";
-
-      banners.forEach((url, index) => {
-        listContainer.innerHTML += `
-          <div class="admin-item">
-            <img src="${url}" style="width:50px; height:30px; object-fit:cover; border-radius:4px;">
-            <button class="btn-delete" onclick="deleteBanner(${index})">🗑️ ডিলিট</button>
-          </div>
-        `;
-      });
-    }
-
-    function deleteBanner(index) {
-      let banners = JSON.parse(localStorage.getItem('app_banners')) || [];
-      banners.splice(index, 1);
-      localStorage.setItem('app_banners', JSON.stringify(banners));
-      renderBanners();
-      renderAdminBannerList();
-    }
-
-    // --- ভিডিও ফিড ও ইন-অ্যাপ প্লেয়ার ---
-    function renderVideos() {
-      const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
+    function renderVideos(videos) {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       const container = document.getElementById('video-container');
-      if(!container) return;
-
-      const searchVal = document.getElementById('searchVideoInput') ? document.getElementById('searchVideoInput').value.toLowerCase().trim() : '';
       container.innerHTML = "";
 
-      const filtered = videos.filter(v => {
-        const vCat = (v.category || 'viral').toLowerCase();
-        const matchesCategory = (currentCategory === 'all') || (vCat === currentCategory.toLowerCase());
-        const matchesSearch = v.title.toLowerCase().includes(searchVal);
-        return matchesCategory && matchesSearch;
-      });
-
-      if(filtered.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">কোনো ভিডিও পাওয়া যায়নি!</p>`;
+      if(videos.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">এখনো কোনো ভিডিও পোস্ট করা হয়নি!</p>`;
         return;
       }
 
-      filtered.forEach((v, idx) => {
+      videos.forEach((v, idx) => {
         container.innerHTML += `
           <div class="video-card">
             <div class="video-header">
               <span style="font-size:13px; font-weight:bold; color:#cbd5e1;">${v.title}</span>
             </div>
             <div class="video-wrapper">
-              <video controls playsinline preload="metadata" style="width:100%; height:220px; background:#000;" onplay="countView(${v.id})">
-                <source src="${v.url}" type="video/mp4">
-              </video>
+              ${v.html}
             </div>
           </div>
         `;
@@ -422,135 +307,71 @@
       });
     }
 
-    function countView(id) {
-      let videos = JSON.parse(localStorage.getItem('app_videos')) || [];
-      const index = videos.findIndex(v => v.id === id);
-      if(index !== -1) {
-        videos[index].views = (videos[index].views || 0) + 1;
-        localStorage.setItem('app_videos', JSON.stringify(videos));
-        renderAdminVideoList();
+    function filterVideos() {
+      const searchVal = document.getElementById('searchVideoInput').value.toLowerCase().trim();
+      const filtered = allBloggerVideos.filter(v => v.title.toLowerCase().includes(searchVal));
+      renderVideos(filtered);
+    }
+
+    // --- অ্যাড সেভ ও লোড লজিক ---
+    function saveAdSettings() {
+      const adsConfig = {
+        directLink: document.getElementById('adDirectLinkInput').value,
+        top: document.getElementById('adTopInput').value,
+        middle: document.getElementById('adMiddleInput').value,
+        native: document.getElementById('adNativeInput').value,
+        bottom: document.getElementById('adBottomInput').value,
+      };
+      localStorage.setItem('app_ads_config', JSON.stringify(adsConfig));
+      alert('বিজ্ঞাপনের লিঙ্ক ও কোড সফলভাবে সেভ হয়েছে!');
+      renderAds();
+    }
+
+    function loadAdInputs() {
+      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
+      document.getElementById('adDirectLinkInput').value = ads.directLink || 'https://omg10.com/4/11848732';
+      document.getElementById('adTopInput').value = ads.top || '';
+      document.getElementById('adMiddleInput').value = ads.middle || '';
+      document.getElementById('adNativeInput').value = ads.native || '';
+      document.getElementById('adBottomInput').value = ads.bottom || '';
+    }
+
+    function executeAdScripts(container, htmlContent) {
+      container.innerHTML = htmlContent;
+      const scripts = container.getElementsByTagName('script');
+      for (let i = 0; i < scripts.length; i++) {
+        const script = document.createElement('script');
+        if (scripts[i].src) { script.src = scripts[i].src; } 
+        else { script.textContent = scripts[i].textContent; }
+        document.body.appendChild(script);
       }
     }
 
-    // --- সরাসরি Catbox API-তে ভিডিও আপলোড করার ফাংশন ---
-    function uploadVideo() {
-      const title = document.getElementById('videoTitleInput').value.trim();
-      const fileInput = document.getElementById('videoFileInput');
-      const file = fileInput.files[0];
-      const category = document.getElementById('videoCategorySelect').value;
-
-      if (!title) return alert('ভিডিওর শিরোনাম দিন!');
-      if (!file) return alert('গ্যালারি থেকে ভিডিও নির্বাচন করুন!');
-
-      const uploadBtn = document.getElementById('uploadBtn');
-      const statusText = document.getElementById('uploadStatusText');
-
-      uploadBtn.disabled = true;
-      statusText.innerText = '⏳ ভিডিও আপলোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...';
-
-      const formData = new FormData();
-      formData.append('reqtype', 'fileupload');
-      formData.append('fileToUpload', file);
-
-      fetch('https://catbox.moe/user/api.php', {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.text())
-      .then(url => {
-        if (url && url.startsWith('http')) {
-          statusText.innerText = '✅ আপলোড সফল হয়েছে!';
-
-          let videos = JSON.parse(localStorage.getItem('app_videos')) || [];
-          videos.unshift({
-            id: Date.now(),
-            title: title,
-            url: url.trim(),
-            category: category,
-            views: 0
-          });
-          localStorage.setItem('app_videos', JSON.stringify(videos));
-
-          alert('🎉 ভিডিও সফলভাবে পোস্ট হয়েছে!');
-          document.getElementById('videoTitleInput').value = "";
-          fileInput.value = "";
-          uploadBtn.disabled = false;
-          statusText.innerText = '';
-
-          renderAdminVideoList();
-          renderVideos();
-        } else {
-          alert('আপলোড হতে সমস্যা হচ্ছে! অন্য একটি ভিডিও ফাইল চেষ্টা করুন।');
-          uploadBtn.disabled = false;
-          statusText.innerText = '';
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert('আপলোড হতে সমস্যা হচ্ছে! অন্য একটি ভিডিও ফাইল চেষ্টা করুন।');
-        uploadBtn.disabled = false;
-        statusText.innerText = '';
-      });
-    }
-
-    function renderAdminVideoList() {
-      const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
-      const listContainer = document.getElementById('admin-video-list');
-      if(!listContainer) return;
-      listContainer.innerHTML = "";
-
-      if(videos.length === 0) {
-        listContainer.innerHTML = `<p style="color:#94a3b8; font-size:12px;">কোনো পোস্ট করা ভিডিও নেই!</p>`;
-        return;
+    function renderAds() {
+      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
+      
+      // ডাইরেক্ট লিঙ্ক আপডেট
+      if(ads.directLink) {
+        document.getElementById('top-direct-link-btn').href = ads.directLink;
       }
-
-      videos.forEach(v => {
-        listContainer.innerHTML += `
-          <div class="admin-item">
-            <div>
-              <div style="color:#f8fafc; font-weight:bold;">${v.title}</div>
-              <span class="view-badge"><i class="fa-solid fa-eye"></i> ${v.views || 0} জন দেখেছে</span>
-            </div>
-            <button class="btn-delete" onclick="deleteVideoByAdmin(${v.id})">🗑️ ডিলিট</button>
-          </div>
-        `;
-      });
+      
+      if(ads.top && document.getElementById('ad-top-slot')) executeAdScripts(document.getElementById('ad-top-slot'), ads.top);
+      if(ads.middle && document.getElementById('ad-middle-slot')) executeAdScripts(document.getElementById('ad-middle-slot'), ads.middle);
+      if(ads.bottom && document.getElementById('ad-bottom-slot')) executeAdScripts(document.getElementById('ad-bottom-slot'), ads.bottom);
     }
-
-    function deleteVideoByAdmin(id) {
-      if(confirm('ভিডিওটি ডিলিট করতে চান?')) {
-        let videos = JSON.parse(localStorage.getItem('app_videos')) || [];
-        videos = videos.filter(v => v.id !== id);
-        localStorage.setItem('app_videos', JSON.stringify(videos));
-        renderAdminVideoList();
-        renderVideos();
-      }
-    }
-
-    function setCategory(cat, btn) {
-      currentCategory = cat;
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderVideos();
-    }
-
-    function filterVideos() { renderVideos(); }
 
     function loginAdmin() {
       if (document.getElementById('adminPassInput').value === '123456') {
         document.getElementById('admin-login-box').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.remove('hidden');
-        renderAdminVideoList();
-        renderAdminBannerList();
         loadAdInputs();
       } else alert('ভুল পাসওয়ার্ড!');
     }
 
     window.onload = function() {
       checkAdminView();
-      renderBanners();
       renderAds();
-      renderVideos();
+      fetchBloggerVideos();
     };
   </script>
 </body>
