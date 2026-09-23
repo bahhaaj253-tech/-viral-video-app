@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফ্রি ভিডিও ও মিডিয়া অ্যাপ</title>
+
+  <!-- Monetag SDK Script (টপ অ্যাড থেকে সরাসরি হেড ট্যাগে যুক্ত) -->
+  <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
   
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -154,7 +157,7 @@
     <!-- AD SLOT 2: MIDDLE BANNER -->
     <div class="ad-slot" id="ad-middle-slot"></div>
 
-    <a id="top-direct-link-btn" href="https://omg10.com/4/11848732" target="_blank" class="direct-link-btn">
+    <a id="top-direct-link-btn" href="https://omg10.com/4/11871371" target="_blank" class="direct-link-btn">
       🎁 স্পেশাল অফার / বোনাস লিঙ্ক (ক্লিক করুন)
     </a>
 
@@ -213,10 +216,7 @@
   </div>
 
   <script>
-    // ----------------------------------------------------
-    // ⚠️ আপনার ব্লগার লিঙ্ক
     const BLOGGER_URL = "ViralMediaFeed5348.blogspot.com"; 
-    // ----------------------------------------------------
 
     const tg = window.Telegram ? window.Telegram.WebApp : null;
     if(tg) { tg.ready(); tg.expand(); }
@@ -230,11 +230,11 @@
       }
     }
 
-    // --- ব্লগার API থেকে সব ভিডিও অটো ফেচ করা ---
+    // CORS Proxy যুক্ত করে ব্লগার ফিড লোড করার চেষ্টা
     function fetchBloggerVideos() {
       const container = document.getElementById('video-container');
       const cleanUrl = BLOGGER_URL.replace('https://', '').replace('http://', '').replace('/', '');
-      const feedUrl = `https://${cleanUrl}/feeds/posts/default?alt=json&max-results=50`;
+      const feedUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://${cleanUrl}/feeds/posts/default?alt=json&max-results=50`)}`;
 
       fetch(feedUrl)
         .then(res => res.json())
@@ -270,7 +270,7 @@
         })
         .catch(err => {
           console.error(err);
-          container.innerHTML = `<p style="text-align:center; color:#ef4444; font-size:13px;">ভিডিও লোড হতে সমস্যা হয়েছে! ব্লগারে ভিডিও আছে কিনা চেক করুন।</p>`;
+          container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">এখনো কোনো ভিডিও পাওয়া যায়নি। ব্লগারে অন্তত ১টি ভিডিও পোস্ট নিশ্চিত করুন!</p>`;
         });
     }
 
@@ -313,7 +313,6 @@
       renderVideos(filtered);
     }
 
-    // --- অ্যাড সেভ ও লোড লজিক ---
     function saveAdSettings() {
       const adsConfig = {
         directLink: document.getElementById('adDirectLinkInput').value,
@@ -329,7 +328,7 @@
 
     function loadAdInputs() {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
-      document.getElementById('adDirectLinkInput').value = ads.directLink || 'https://omg10.com/4/11848732';
+      document.getElementById('adDirectLinkInput').value = ads.directLink || 'https://omg10.com/4/11871371';
       document.getElementById('adTopInput').value = ads.top || '';
       document.getElementById('adMiddleInput').value = ads.middle || '';
       document.getElementById('adNativeInput').value = ads.native || '';
@@ -350,7 +349,6 @@
     function renderAds() {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       
-      // ডাইরেক্ট লিঙ্ক আপডেট
       if(ads.directLink) {
         document.getElementById('top-direct-link-btn').href = ads.directLink;
       }
