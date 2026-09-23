@@ -8,7 +8,7 @@
   <!-- Monetag Official SDK -->
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
 
-  <!-- Monetag In-Page Push / OnClick Script (Your Tag) -->
+  <!-- Monetag In-Page Push / OnClick Script -->
   <script>(function(s){s.dataset.zone='11873688',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 
   <!-- Telegram WebApp SDK -->
@@ -192,7 +192,7 @@
       <input type="text" class="search-box" id="searchVideoInput" placeholder="🔍 ভিডিও সার্চ করুন..." onkeyup="filterVideos()">
 
       <div id="video-container">
-        <p style="text-align:center; color:#38bdf8; font-size:13px; margin:20px 0;">⏳ ভিডিও লোড হচ্ছে...</p>
+        <p style="text-align:center; color:#38bdf8; font-size:13px; margin:20px 0;">⚡ দ্রুত ভিডিও লোড হচ্ছে...</p>
       </div>
     </div>
 
@@ -241,7 +241,7 @@
   </div>
 
   <script>
-    const BLOGGER_URL = "ViralMediaFeed5348.blogspot.com"; 
+    const BLOGGER_DOMAIN = "ViralMediaFeed5348.blogspot.com"; 
 
     // Safe Telegram WebApp Initialization
     try {
@@ -273,12 +273,10 @@
 
     // Video Play with Ad Trigger
     function playVideoWithAd(id) {
-      // Trigger Monetag Ad Event
       if (typeof window.show_11848596 === 'function') {
         window.show_11848596({ type: 'inApp' }).catch(e => console.log(e));
       }
 
-      // Hide Overlay & Play Video
       const overlay = document.getElementById(`overlay-${id}`);
       if(overlay) overlay.style.display = 'none';
 
@@ -311,47 +309,46 @@
 
     window.addEventListener('hashchange', checkAdminView);
 
-    // Blogger Videos Fetcher (Works in all Browsers & Render Links)
-    function fetchBloggerVideos() {
+    // Fast Feed Callback Function
+    window.handleBloggerFeed = function(data) {
       const container = document.getElementById('video-container');
-      const cleanUrl = BLOGGER_URL.replace('https://', '').replace('http://', '').replace('/', '');
-      const feedUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://${cleanUrl}/feeds/posts/default?alt=json&max-results=50`)}`;
+      const entries = data.feed ? (data.feed.entry || []) : [];
+      allBloggerVideos = [];
 
-      fetch(feedUrl)
-        .then(res => res.json())
-        .then(data => {
-          const entries = data.feed ? (data.feed.entry || []) : [];
-          allBloggerVideos = [];
+      entries.forEach((entry, i) => {
+        const title = entry.title ? entry.title.$t : "ভিডিও";
+        const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : '');
 
-          entries.forEach((entry, i) => {
-            const title = entry.title ? entry.title.$t : "ভিডিও";
-            const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : '');
+        let videoHtml = "";
+        const iframeMatch = content.match(/<iframe[^>]*src=["']([^"']+)["']/i);
+        const videoTagMatch = content.match(/<video[^>]*src=["']([^"']+)["']/i) || content.match(/<source[^>]*src=["']([^"']+)["']/i);
+        const mp4Match = content.match(/href=["']([^"']+\.mp4)["']/i) || content.match(/https?:\/\/[^\s"']+\.mp4/i);
 
-            let videoHtml = "";
-            const iframeMatch = content.match(/<iframe[^>]*src=["']([^"']+)["']/i);
-            const videoTagMatch = content.match(/<video[^>]*src=["']([^"']+)["']/i) || content.match(/<source[^>]*src=["']([^"']+)["']/i);
-            const mp4Match = content.match(/href=["']([^"']+\.mp4)["']/i) || content.match(/https?:\/\/[^\s"']+\.mp4/i);
+        if (iframeMatch) {
+          videoHtml = `<iframe id="vid-${i}" src="${iframeMatch[1]}" allowfullscreen allow="autoplay"></iframe>`;
+        } else if (videoTagMatch) {
+          videoHtml = `<video id="vid-${i}" controls playsinline preload="metadata"><source src="${videoTagMatch[1]}" type="video/mp4"></video>`;
+        } else if (mp4Match) {
+          const src = mp4Match[1] || mp4Match[0];
+          videoHtml = `<video id="vid-${i}" controls playsinline preload="metadata"><source src="${src}" type="video/mp4"></video>`;
+        }
 
-            if (iframeMatch) {
-              videoHtml = `<iframe id="vid-${i}" src="${iframeMatch[1]}" allowfullscreen allow="autoplay"></iframe>`;
-            } else if (videoTagMatch) {
-              videoHtml = `<video id="vid-${i}" controls playsinline preload="metadata"><source src="${videoTagMatch[1]}" type="video/mp4"></video>`;
-            } else if (mp4Match) {
-              const src = mp4Match[1] || mp4Match[0];
-              videoHtml = `<video id="vid-${i}" controls playsinline preload="metadata"><source src="${src}" type="video/mp4"></video>`;
-            }
+        if (videoHtml) {
+          allBloggerVideos.push({ id: i, title: title, html: videoHtml });
+        }
+      });
 
-            if (videoHtml) {
-              allBloggerVideos.push({ id: i, title: title, html: videoHtml });
-            }
-          });
+      renderVideos(allBloggerVideos);
+    };
 
-          renderVideos(allBloggerVideos);
-        })
-        .catch(err => {
-          console.error("Feed error:", err);
-          container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">ভিডিও পেতে সমস্যা হচ্ছে, অনুগ্রহ করে রিফ্রেশ দিন!</p>`;
-        });
+    // Fast Direct JSONP Loader
+    function fetchBloggerVideosFast() {
+      const script = document.createElement('script');
+      script.src = `https://${BLOGGER_DOMAIN}/feeds/posts/default?alt=json-in-script&callback=handleBloggerFeed&max-results=500`;
+      script.onerror = function() {
+        document.getElementById('video-container').innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">ভিডিও লোড করতে সমস্যা হয়েছে! রিফ্রেশ দিন।</p>`;
+      };
+      document.body.appendChild(script);
     }
 
     function renderVideos(videos) {
@@ -463,9 +460,9 @@
 
     window.onload = function() {
       checkAdminView();
+      fetchBloggerVideosFast();
       renderAds();
-      fetchBloggerVideos();
-      setTimeout(triggerMonetagAd, 2500);
+      setTimeout(triggerMonetagAd, 2000);
     };
   </script>
 </body>
