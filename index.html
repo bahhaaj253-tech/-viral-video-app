@@ -8,6 +8,9 @@
   <!-- Monetag Official SDK -->
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
 
+  <!-- Monetag In-Page Push / OnClick Script (Your Tag) -->
+  <script>(function(s){s.dataset.zone='11873688',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -83,10 +86,34 @@
     .video-card {
       background: #0f172a; border-radius: 10px; padding: 8px; margin-bottom: 12px; border: 1px solid #334155; position: relative;
     }
+    .video-header { margin-bottom: 6px; }
     .video-wrapper {
       position: relative; width: 100%; min-height: 220px; border-radius: 8px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center;
     }
     .video-wrapper video, .video-wrapper iframe { width: 100%; height: 220px; border: none; }
+
+    /* Video Overlay Trigger for Ad */
+    .video-overlay-trigger {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+    }
+    .play-btn-circle {
+      width: 55px; height: 55px;
+      background: rgba(239, 68, 68, 0.9);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: #fff;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+      transition: transform 0.2s;
+    }
+    .play-btn-circle:hover { transform: scale(1.1); }
 
     /* Admin Styling */
     .admin-card {
@@ -216,12 +243,19 @@
   <script>
     const BLOGGER_URL = "ViralMediaFeed5348.blogspot.com"; 
 
-    const tg = window.Telegram ? window.Telegram.WebApp : null;
-    if(tg) { tg.ready(); tg.expand(); }
+    // Safe Telegram WebApp Initialization
+    try {
+      if(window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+      }
+    } catch(e) {
+      console.log("Browser environment detected");
+    }
 
     let allBloggerVideos = [];
 
-    // Monetag SDK Trigger Function
+    // Monetag Ad Trigger
     function triggerMonetagAd() {
       if (typeof window.show_11848596 === 'function') {
         window.show_11848596({
@@ -237,7 +271,31 @@
       }
     }
 
-    // এডমিন ভিউ চেক
+    // Video Play with Ad Trigger
+    function playVideoWithAd(id) {
+      // Trigger Monetag Ad Event
+      if (typeof window.show_11848596 === 'function') {
+        window.show_11848596({ type: 'inApp' }).catch(e => console.log(e));
+      }
+
+      // Hide Overlay & Play Video
+      const overlay = document.getElementById(`overlay-${id}`);
+      if(overlay) overlay.style.display = 'none';
+
+      const vidElem = document.getElementById(`vid-${id}`);
+      if(vidElem) {
+        if(vidElem.tagName === 'VIDEO') {
+          vidElem.play().catch(err => console.log(err));
+        } else if(vidElem.tagName === 'IFRAME') {
+          let src = vidElem.src;
+          if(!src.includes('autoplay=1')) {
+            vidElem.src = src + (src.includes('?') ? '&autoplay=1' : '?autoplay=1');
+          }
+        }
+      }
+    }
+
+    // Admin View Handler
     function checkAdminView() {
       const isParamAdmin = window.location.search.includes('admin');
       const isHashAdmin = window.location.hash.toLowerCase().includes('admin');
@@ -251,9 +309,9 @@
       }
     }
 
-    // উইন্ডো চেঞ্জ বা হ্যাশ পরিবর্তন হলেও অটো চেঞ্জ হবে
     window.addEventListener('hashchange', checkAdminView);
 
+    // Blogger Videos Fetcher (Works in all Browsers & Render Links)
     function fetchBloggerVideos() {
       const container = document.getElementById('video-container');
       const cleanUrl = BLOGGER_URL.replace('https://', '').replace('http://', '').replace('/', '');
@@ -262,11 +320,11 @@
       fetch(feedUrl)
         .then(res => res.json())
         .then(data => {
-          const entries = data.feed.entry || [];
+          const entries = data.feed ? (data.feed.entry || []) : [];
           allBloggerVideos = [];
 
-          entries.forEach(entry => {
-            const title = entry.title.$t;
+          entries.forEach((entry, i) => {
+            const title = entry.title ? entry.title.$t : "ভিডিও";
             const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : '');
 
             let videoHtml = "";
@@ -275,24 +333,24 @@
             const mp4Match = content.match(/href=["']([^"']+\.mp4)["']/i) || content.match(/https?:\/\/[^\s"']+\.mp4/i);
 
             if (iframeMatch) {
-              videoHtml = `<iframe src="${iframeMatch[1]}" allowfullscreen frameborder="0"></iframe>`;
+              videoHtml = `<iframe id="vid-${i}" src="${iframeMatch[1]}" allowfullscreen allow="autoplay"></iframe>`;
             } else if (videoTagMatch) {
-              videoHtml = `<video controls playsinline preload="metadata"><source src="${videoTagMatch[1]}" type="video/mp4"></video>`;
+              videoHtml = `<video id="vid-${i}" controls playsinline preload="metadata"><source src="${videoTagMatch[1]}" type="video/mp4"></video>`;
             } else if (mp4Match) {
               const src = mp4Match[1] || mp4Match[0];
-              videoHtml = `<video controls playsinline preload="metadata"><source src="${src}" type="video/mp4"></video>`;
+              videoHtml = `<video id="vid-${i}" controls playsinline preload="metadata"><source src="${src}" type="video/mp4"></video>`;
             }
 
             if (videoHtml) {
-              allBloggerVideos.push({ title: title, html: videoHtml });
+              allBloggerVideos.push({ id: i, title: title, html: videoHtml });
             }
           });
 
           renderVideos(allBloggerVideos);
         })
         .catch(err => {
-          console.error(err);
-          container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">এখনো কোনো ভিডিও পাওয়া যায়নি। ব্লগারে অন্তত ১টি পোস্ট নিশ্চিত করুন!</p>`;
+          console.error("Feed error:", err);
+          container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">ভিডিও পেতে সমস্যা হচ্ছে, অনুগ্রহ করে রিফ্রেশ দিন!</p>`;
         });
     }
 
@@ -314,6 +372,10 @@
             </div>
             <div class="video-wrapper">
               ${v.html}
+              <div class="video-overlay-trigger" id="overlay-${v.id}" onclick="playVideoWithAd('${v.id}')">
+                <div class="play-btn-circle"><i class="fa-solid fa-play"></i></div>
+                <span style="font-size:11px; margin-top:8px; font-weight:bold; color:#f8fafc;">প্লে করতে ক্লিক করুন</span>
+              </div>
             </div>
           </div>
         `;
@@ -363,15 +425,11 @@
       document.getElementById('adBottomInput').value = ads.bottom || '';
     }
 
-    // শুধুমাত্র যদি এইচটিএমএল/জাভাস্ক্রিপ্ট ট্যাগ থাকে তবেই রেন্ডার করবে
     function executeAdScripts(container, htmlContent) {
       container.innerHTML = '';
       if(!htmlContent || !htmlContent.trim()) return;
 
-      // যদি ট্যাগে <script, <iframe, <ins, <a টাইপ কিছু না থাকে তবে টেক্সট রেন্ডার হবে না
-      if(!htmlContent.includes('<') && !htmlContent.includes('>')) {
-        return;
-      }
+      if(!htmlContent.includes('<') && !htmlContent.includes('>')) return;
 
       container.innerHTML = htmlContent;
       const scripts = container.getElementsByTagName('script');
