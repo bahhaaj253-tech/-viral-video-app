@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ফ্রি ভিডিও ও মিডিয়া অ্যাপ</title>
 
-  <!-- Monetag SDK Script (টপ অ্যাড থেকে সরাসরি হেড ট্যাগে যুক্ত) -->
+  <!-- Monetag SDK Script -->
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
-  
+
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <style>
     * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
     body {
@@ -27,7 +27,7 @@
     }
     .header-title { color: #38bdf8; font-size: 20px; margin: 8px 0 5px; font-weight: 800; }
     .badge-viral { background: linear-gradient(45deg, #ef4444, #f97316); color: white; padding: 3px 10px; font-size: 11px; border-radius: 20px; text-transform: uppercase; font-weight: bold; }
-    
+
     .announcement-bar {
       background: linear-gradient(90deg, #3b82f6, #8b5cf6);
       color: white;
@@ -54,6 +54,7 @@
       margin-bottom: 15px;
       box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
       animation: pulse 2s infinite;
+      cursor: pointer;
     }
 
     @keyframes pulse {
@@ -62,7 +63,6 @@
       100% { transform: scale(1); }
     }
 
-    /* Ad Container Styling */
     .ad-slot {
       margin: 12px 0;
       padding: 4px;
@@ -77,7 +77,7 @@
     }
 
     .card { background: #1e293b; border: 1px solid #334155; border-radius: 14px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); text-align: left; }
-    
+
     .search-box {
       width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-size: 13px; margin-bottom: 10px;
     }
@@ -90,9 +90,6 @@
     }
     .video-wrapper video, .video-wrapper iframe { width: 100%; height: 220px; border: none; }
 
-    .video-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-
-    /* Admin Panel Premium Styling */
     .admin-card {
       background: #1e293b;
       border: 1px solid #3b82f6;
@@ -148,16 +145,15 @@
       <span id="notice-text">স্বাগতম! ভিডিও দেখার জন্য প্লে বাটনে ক্লিক করুন।</span>
     </div>
 
-    <!-- AD SLOT 1: TOP BANNER -->
     <div class="ad-slot" id="ad-top-slot"></div>
 
     <span class="badge-viral">🔥 Free Video Stream App</span>
     <h2 class="header-title">ভিডিও মিনি অ্যাপ</h2>
 
-    <!-- AD SLOT 2: MIDDLE BANNER -->
     <div class="ad-slot" id="ad-middle-slot"></div>
 
-    <a id="top-direct-link-btn" href="https://omg10.com/4/11871371" target="_blank" class="direct-link-btn">
+    <!-- সোশ্যাল বার / অফার লিঙ্ক বাটন -->
+    <a id="top-direct-link-btn" onclick="handleOfferClick(event)" href="https://omg10.com/4/11848732" target="_blank" class="direct-link-btn">
       🎁 স্পেশাল অফার / বোনাস লিঙ্ক (ক্লিক করুন)
     </a>
 
@@ -170,11 +166,10 @@
       </div>
     </div>
 
-    <!-- AD SLOT 3: BOTTOM BANNER -->
     <div class="ad-slot" id="ad-bottom-slot"></div>
   </div>
 
-  <!-- এডমিন প্যানেল (অ্যাড কন্ট্রোল প্যানেল) -->
+  <!-- এডমিন প্যানেল -->
   <div id="admin-view" class="hidden">
     <div id="admin-login-box" class="admin-card" style="max-width:350px; margin: 30px auto; text-align:center;">
       <h3 style="color:#38bdf8; margin-top:0;"><i class="fa-solid fa-user-shield"></i> এডমিন প্যানেল লগইন</h3>
@@ -184,21 +179,20 @@
 
     <div id="admin-dashboard" class="admin-card hidden" style="max-width:500px; margin:0 auto;">
       <h3 style="color:#f59e0b; margin-top:0; text-align:center;"><i class="fa-solid fa-rectangle-ad"></i> অ্যাড সেটিং কন্ট্রোল প্যানেল</h3>
-      <p style="font-size:11px; color:#94a3b8; text-align:center; margin-bottom:15px;">নিচে আপনার Monetag / Adsterra লিঙ্ক ও কোডগুলো ইচ্ছেমতো পরিবর্তন করে সেভ করুন।</p>
 
       <div class="ad-group">
-        <label><i class="fa-solid fa-link"></i> ০. বোনাস বাটন ডাইরেক্ট লিঙ্ক (Direct SmartLink):</label>
-        <input type="text" id="adDirectLinkInput" placeholder="https://monetag_direct_link.com">
+        <label><i class="fa-solid fa-link"></i> ০. বোনাস বাটন ডাইরেক্ট লিঙ্ক (Direct Link):</label>
+        <input type="text" id="adDirectLinkInput" placeholder="https://omg10.com/4/11848732">
       </div>
 
       <div class="ad-group">
         <label><i class="fa-solid fa-heading"></i> ১. টপ ব্যানার অ্যাড (Top Ad Code):</label>
-        <textarea id="adTopInput" rows="3" placeholder="এখানে টপ অ্যাড কোড পেস্ট করুন..."></textarea>
+        <textarea id="adTopInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
       </div>
 
       <div class="ad-group">
         <label><i class="fa-solid fa-window-maximize"></i> ২. মিডল ব্যানার অ্যাড (Middle Ad Code):</label>
-        <textarea id="adMiddleInput" rows="3" placeholder="এখানে মিডল অ্যাড কোড পেস্ট করুন..."></textarea>
+        <textarea id="adMiddleInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
       </div>
 
       <div class="ad-group">
@@ -208,7 +202,7 @@
 
       <div class="ad-group">
         <label><i class="fa-solid fa-square-bottom"></i> ৪. বটম ব্যানার অ্যাড (Bottom Ad Code):</label>
-        <textarea id="adBottomInput" rows="3" placeholder="এখানে বটম অ্যাড কোড পেস্ট করুন..."></textarea>
+        <textarea id="adBottomInput" rows="3" placeholder="HTML / JS অ্যাড কোড পেস্ট করুন..."></textarea>
       </div>
 
       <button class="btn-submit" onclick="saveAdSettings()"><i class="fa-solid fa-floppy-disk"></i> অ্যাড কোড সেভ করুন</button>
@@ -223,6 +217,20 @@
 
     let allBloggerVideos = [];
 
+    // Monetag SDK Trigger Function
+    function triggerMonetagAd() {
+      if (typeof window.show_11848596 === 'function') {
+        window.show_11848596({ type: 'inApp', inAppSettings: { frequency: 2, interval: 30 } })
+          .catch(e => console.log('Monetag InApp Error/Skipped:', e));
+      }
+    }
+
+    function handleOfferClick(e) {
+      if (typeof window.show_11848596 === 'function') {
+        window.show_11848596({ type: 'pop' }).catch(err => console.log('Monetag Pop Error:', err));
+      }
+    }
+
     function checkAdminView() {
       if (window.location.search.includes('admin') || window.location.hash.includes('admin')) {
         document.getElementById('user-view').classList.add('hidden');
@@ -230,7 +238,6 @@
       }
     }
 
-    // CORS Proxy যুক্ত করে ব্লগার ফিড লোড করার চেষ্টা
     function fetchBloggerVideos() {
       const container = document.getElementById('video-container');
       const cleanUrl = BLOGGER_URL.replace('https://', '').replace('http://', '').replace('/', '');
@@ -247,7 +254,6 @@
             const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : '');
 
             let videoHtml = "";
-
             const iframeMatch = content.match(/<iframe[^>]*src=["']([^"']+)["']/i);
             const videoTagMatch = content.match(/<video[^>]*src=["']([^"']+)["']/i) || content.match(/<source[^>]*src=["']([^"']+)["']/i);
             const mp4Match = content.match(/href=["']([^"']+\.mp4)["']/i) || content.match(/https?:\/\/[^\s"']+\.mp4/i);
@@ -270,7 +276,7 @@
         })
         .catch(err => {
           console.error(err);
-          container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">এখনো কোনো ভিডিও পাওয়া যায়নি। ব্লগারে অন্তত ১টি ভিডিও পোস্ট নিশ্চিত করুন!</p>`;
+          container.innerHTML = `<p style="text-align:center; color:#94a3b8; font-size:13px; margin-top:15px;">এখনো কোনো ভিডিও পাওয়া যায়নি। ব্লগারে অন্তত ১টি পোস্ট নিশ্চিত করুন!</p>`;
         });
     }
 
@@ -328,7 +334,7 @@
 
     function loadAdInputs() {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
-      document.getElementById('adDirectLinkInput').value = ads.directLink || 'https://omg10.com/4/11871371';
+      document.getElementById('adDirectLinkInput').value = ads.directLink || 'https://omg10.com/4/11848732';
       document.getElementById('adTopInput').value = ads.top || '';
       document.getElementById('adMiddleInput').value = ads.middle || '';
       document.getElementById('adNativeInput').value = ads.native || '';
@@ -370,6 +376,7 @@
       checkAdminView();
       renderAds();
       fetchBloggerVideos();
+      setTimeout(triggerMonetagAd, 2000);
     };
   </script>
 </body>
