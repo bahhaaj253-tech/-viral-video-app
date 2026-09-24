@@ -31,7 +31,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* কনটেন্ট ও ভিডিও সিকিউরিটি (ডাউনলোড ও স্ক্রিনশট ব্লক) */
     * { 
       box-sizing: border-box; 
       -webkit-user-select: none; 
@@ -130,12 +129,12 @@
       object-fit: contain;
     }
 
-    /* ডাউনলোড লিংক সিকিউরিটি গার্ড (গুগল ড্রাইভের ওপেন বাটন ব্লক করা) */
+    /* ড্রাইভের পপ-আউট বাটন ব্লক করা */
     .drive-top-blocker {
       position: absolute;
       top: 0;
       right: 0;
-      width: 60px;
+      width: 70px;
       height: 50px;
       z-index: 3;
       background: transparent;
@@ -156,7 +155,7 @@
     .video-overlay-trigger {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.3);
+      background: rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -165,16 +164,15 @@
       z-index: 5;
     }
     .play-btn-circle {
-      width: 55px; height: 55px;
-      background: rgba(239, 68, 68, 0.9);
+      width: 58px; height: 58px;
+      background: rgba(239, 68, 68, 0.95);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; color: #fff;
-      box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+      font-size: 24px; color: #fff;
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.8);
       transition: transform 0.2s;
     }
 
-    /* Admin Styling */
     .admin-card {
       background: #1e293b;
       border: 1px solid #3b82f6;
@@ -265,7 +263,7 @@
 
     <div class="ad-slot" id="ad-middle-slot"></div>
 
-    <!-- ডাইরেক্ট লিংক / অফার বোতাম -->
+    <!-- বোনাস লিঙ্ক বাটন -->
     <a id="top-direct-link-btn" onclick="handleOfferClick(event)" href="https://omg10.com/4/11848732" target="_blank" class="direct-link-btn">
       🎁 স্পেশাল অফার / বোনাস লিঙ্ক (ক্লিক করুন)
     </a>
@@ -282,10 +280,7 @@
     <div class="ad-slot" id="ad-bottom-slot"></div>
   </div>
 
-  <!-- স্টিকি অ্যাড স্লট -->
   <div id="sticky-ad-container" class="ad-slot"></div>
-
-  <!-- পপ-আপ অ্যাড স্লট -->
   <div id="popup-ad-slot"></div>
 
   <!-- এডমিন প্যানেল -->
@@ -298,43 +293,37 @@
 
     <div id="admin-dashboard" class="admin-card hidden" style="max-width:500px; margin:0 auto;">
       
-      <!-- ভিজিটর কাউন্টার -->
       <div class="live-dashboard">
         <span style="font-size:13px; color:#cbd5e1;"><i class="fa-solid fa-users-viewfinder"></i> রিয়েল-টাইম এক্টিভ ভিজিটর</span>
         <div class="live-count" id="activeVisitorCount">1</div>
         <span style="font-size:10px; color:#94a3b8;">অনলাইন ইউজার সংখ্যা লাইভ ট্র্যাক হচ্ছে</span>
       </div>
 
-      <!-- ১. ভিডিও আপলোড সেকশন -->
       <h3 style="color:#10b981; margin-top:0; text-align:center;"><i class="fa-solid fa-video"></i> ভিডিও অ্যাড / ম্যানেজমেন্ট</h3>
       
       <div class="ad-group">
         <label><i class="fa-solid fa-heading"></i> ভিডিও টাইটেল / নাম:</label>
         <input type="text" id="newVidTitle" placeholder="যেমন: নতুন ভাইরাল ভিডিও ১">
 
-        <label style="margin-top:8px;"><i class="fa-solid fa-link"></i> Google Drive / MP4 Video Link / Embed Link:</label>
-        <input type="text" id="newVidUrl" placeholder="Google Drive Link বা Direct MP4 Link দিন">
-        
-        <span style="font-size:11px; color:#94a3b8; display:block; margin-bottom:8px;">
-          💡 <strong>পরামর্শ:</strong> দ্রুত প্লে হওয়া এবং ডাউনলোড সম্পূর্ণ ব্লক করতে Direct .mp4 ভিডিও লিংক ব্যবহার করুন।
-        </span>
+        <label style="margin-top:8px;"><i class="fa-solid fa-link"></i> Google Drive / MP4 Video Link:</label>
+        <input type="text" id="newVidUrl" placeholder="Google Drive Link বা Direct Link দিন">
 
         <button class="btn-submit" onclick="addVideoFromAdmin()"><i class="fa-solid fa-plus"></i> ভিডিও যুক্ত করুন</button>
       </div>
 
       <div class="ad-group">
-        <label><i class="fa-solid fa-list-check"></i> বর্তমান আপলোড করা ভিডিও তালিকা:</label>
+        <label><i class="fa-solid fa-list-check"></i> বর্তমান ভিডিও তালিকা:</label>
         <div id="admin-video-list" style="max-height: 180px; overflow-y: auto; margin-top: 6px;"></div>
       </div>
 
       <hr style="border-color:#334155; margin: 20px 0;">
 
-      <!-- ২. অ্যাড সেটিং কন্ট্রোল -->
       <h3 style="color:#f59e0b; margin-top:0; text-align:center;"><i class="fa-solid fa-rectangle-ad"></i> অ্যাড সেটিং কন্ট্রোল প্যানেল</h3>
 
       <div class="ad-group">
-        <label><i class="fa-solid fa-link"></i> ০. বোনাস বাটন ডাইরেক্ট লিঙ্ক (Direct Link):</label>
+        <label><i class="fa-solid fa-link"></i> ০. হাই-সিপিএম ডাইরেক্ট লিঙ্ক (Direct Link / Smartlink):</label>
         <input type="text" id="adDirectLinkInput" placeholder="https://omg10.com/4/11848732">
+        <span style="font-size:10px; color:#10b981;">💡 ভিডিও প্লে বাটনে চাপ দিলে এই লিঙ্কটি পপ-আপ অ্যাড হিসেবে খুলবে।</span>
       </div>
 
       <div class="ad-group">
@@ -375,7 +364,6 @@
   <script>
     let appVideos = [];
 
-    // লাইভ ভিজিটর ট্র্যাকিং
     function initVisitorTracker() {
       let baseCount = Math.floor(Math.random() * 8) + 5; 
       const visitorElem = document.getElementById('activeVisitorCount');
@@ -388,7 +376,6 @@
       }, 4000);
     }
 
-    // ডাউনলোড ও কিবোর্ড সিকিউরিটি
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'i' || e.key === 'j')) {
         e.preventDefault();
@@ -396,7 +383,6 @@
       if (e.keyCode === 123) { e.preventDefault(); }
     });
 
-    // Monetag Ad Trigger
     function triggerMonetagAd() {
       if (typeof window.show_11848596 === 'function') {
         window.show_11848596({
@@ -407,17 +393,27 @@
     }
 
     function handleOfferClick(e) {
-      if (typeof window.show_11848596 === 'function') {
-        window.show_11848596({ type: 'pop' }).catch(err => console.log(err));
-      }
+      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
+      const directUrl = ads.directLink || "https://omg10.com/4/11848732";
+      window.open(directUrl, '_blank');
     }
 
-    // Video Play with Ad Trigger
+    // High-CPM Play Function (প্লে চাপলেই ডাইরেক্ট লিঙ্কের অ্যাড ওপেন হবে)
     function playVideoWithAd(id) {
+      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
+      const directUrl = ads.directLink || "https://omg10.com/4/11848732";
+
+      // ১. ডাইরেক্ট লিঙ্ক পপ-আপ অ্যাড ওপেন
+      if (directUrl) {
+        window.open(directUrl, '_blank');
+      }
+
+      // ২. Monetag Ad Trigger
       if (typeof window.show_11848596 === 'function') {
         window.show_11848596({ type: 'inApp' }).catch(e => console.log(e));
       }
 
+      // ৩. ভিডিও চালু করা
       const overlay = document.getElementById(`overlay-${id}`);
       if(overlay) overlay.style.display = 'none';
 
@@ -449,7 +445,6 @@
 
     window.addEventListener('hashchange', checkAdminView);
 
-    // Google Drive / Direct URL Formatter
     function formatVideoSourceUrl(rawUrl) {
       let trimmed = rawUrl.trim();
       
@@ -469,7 +464,6 @@
       return { type: 'video', url: trimmed };
     }
 
-    // Render Videos
     function renderVideos(videos) {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       const container = document.getElementById('video-container');
@@ -487,10 +481,8 @@
 
         if (srcObj.type === 'iframe') {
           videoHtml = `<iframe id="vid-${v.id}" src="${srcObj.url}" allowfullscreen allow="autoplay"></iframe>`;
-          // ড্রাইভের ওপেন পপ-আপ বাটন লক করার জন্য ব্লকার
           blockerHtml = `<div class="drive-top-blocker"></div>`;
         } else {
-          // controlsList="nodownload" দিয়ে ডাইরেক্ট ভিডীওর ডাউনলোড বাটন হাইড
           videoHtml = `<video id="vid-${v.id}" controls controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" playsinline preload="metadata"><source src="${srcObj.url}" type="video/mp4"></video>`;
         }
 
@@ -539,12 +531,7 @@
         return;
       }
 
-      const newVid = {
-        id: Date.now(),
-        title: title,
-        url: url
-      };
-
+      const newVid = { id: Date.now(), title: title, url: url };
       appVideos.unshift(newVid);
       localStorage.setItem('app_custom_videos', JSON.stringify(appVideos));
 
@@ -643,7 +630,9 @@
     function renderAds() {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       
-      if(ads.directLink) document.getElementById('top-direct-link-btn').href = ads.directLink;
+      if(ads.directLink) {
+        document.getElementById('top-direct-link-btn').href = ads.directLink;
+      }
       
       if(document.getElementById('ad-top-slot')) executeAdScripts(document.getElementById('ad-top-slot'), ads.top || '');
       if(document.getElementById('ad-middle-slot')) executeAdScripts(document.getElementById('ad-middle-slot'), ads.middle || '');
