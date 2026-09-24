@@ -13,7 +13,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- ফেসবুক/সোশ্যাল মিডিয়ায় শেয়ার করার জন্য টাইটেল ও তথ্য -->
+  <!-- ফেসবুক/সোশ্যাল মিডিয়ায় শেয়ার করার তথ্য -->
   <title>🔥 এক্সক্লুসিভ ভাইরাল ভিডিও কালেকশন</title>
   <meta property="og:title" content="🔥 এক্সক্লুসিভ ভাইরাল ভিডিও দেখুন সম্পূর্ণ ফ্রিতে!">
   <meta property="og:description" content="দেরি না করে এখনই নিচের লিংকে ক্লিক করুন এবং পুরো ভিডিওটি উপভোগ করুন! 🔞">
@@ -112,7 +112,6 @@
     }
     .video-header { margin-bottom: 6px; }
     
-    /* নিখুঁত ১৬:৯ ফিক্সড রেসপন্সিভ সাইজ (ভিডিও কাটবে না) */
     .video-wrapper {
       position: relative; 
       width: 100%; 
@@ -131,9 +130,20 @@
       object-fit: contain;
     }
 
+    /* ডাউনলোড লিংক সিকিউরিটি গার্ড (গুগল ড্রাইভের ওপেন বাটন ব্লক করা) */
+    .drive-top-blocker {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60px;
+      height: 50px;
+      z-index: 3;
+      background: transparent;
+    }
+
     .video-watermark {
       position: absolute;
-      top: 10px; right: 10px;
+      top: 10px; left: 10px;
       background: rgba(0,0,0,0.6);
       color: rgba(255,255,255,0.7);
       padding: 2px 8px;
@@ -295,7 +305,7 @@
         <span style="font-size:10px; color:#94a3b8;">অনলাইন ইউজার সংখ্যা লাইভ ট্র্যাক হচ্ছে</span>
       </div>
 
-      <!-- ১. নতুন ভিডিও আপলোড সেকশন -->
+      <!-- ১. ভিডিও আপলোড সেকশন -->
       <h3 style="color:#10b981; margin-top:0; text-align:center;"><i class="fa-solid fa-video"></i> ভিডিও অ্যাড / ম্যানেজমেন্ট</h3>
       
       <div class="ad-group">
@@ -303,10 +313,10 @@
         <input type="text" id="newVidTitle" placeholder="যেমন: নতুন ভাইরাল ভিডিও ১">
 
         <label style="margin-top:8px;"><i class="fa-solid fa-link"></i> Google Drive / MP4 Video Link / Embed Link:</label>
-        <input type="text" id="newVidUrl" placeholder="Google Drive Link, Telegram File Link বা MP4 Link দিন">
+        <input type="text" id="newVidUrl" placeholder="Google Drive Link বা Direct MP4 Link দিন">
         
         <span style="font-size:11px; color:#94a3b8; display:block; margin-bottom:8px;">
-          💡 <strong>Google Drive লিঙ্ক সাপোর্ট:</strong> ড্রাইভ শেয়ারিং লিংক দিলে সিস্টেম স্বয়ংক্রিয়ভাবে ভিডিও চালু করবে।
+          💡 <strong>পরামর্শ:</strong> দ্রুত প্লে হওয়া এবং ডাউনলোড সম্পূর্ণ ব্লক করতে Direct .mp4 ভিডিও লিংক ব্যবহার করুন।
         </span>
 
         <button class="btn-submit" onclick="addVideoFromAdmin()"><i class="fa-solid fa-plus"></i> ভিডিও যুক্ত করুন</button>
@@ -378,7 +388,7 @@
       }, 4000);
     }
 
-    // ডাউনলোড ও সিকিউরিটি
+    // ডাউনলোড ও কিবোর্ড সিকিউরিটি
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'i' || e.key === 'j')) {
         e.preventDefault();
@@ -439,11 +449,10 @@
 
     window.addEventListener('hashchange', checkAdminView);
 
-    // Google Drive URL Formatter
+    // Google Drive / Direct URL Formatter
     function formatVideoSourceUrl(rawUrl) {
       let trimmed = rawUrl.trim();
       
-      // Google Drive Link Filter
       if (trimmed.includes('drive.google.com')) {
         let matches = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
         if (matches && matches[1]) {
@@ -452,13 +461,11 @@
         }
       }
       
-      // IFRAME / Embed Check
       if (trimmed.includes('iframe') || trimmed.includes('<iframe')) {
         let match = trimmed.match(/src=["']([^"']+)["']/i);
         if(match) return { type: 'iframe', url: match[1] };
       }
 
-      // Default Direct MP4 / Video Link
       return { type: 'video', url: trimmed };
     }
 
@@ -476,11 +483,15 @@
       videos.forEach((v, idx) => {
         let srcObj = formatVideoSourceUrl(v.url);
         let videoHtml = "";
+        let blockerHtml = "";
 
         if (srcObj.type === 'iframe') {
           videoHtml = `<iframe id="vid-${v.id}" src="${srcObj.url}" allowfullscreen allow="autoplay"></iframe>`;
+          // ড্রাইভের ওপেন পপ-আপ বাটন লক করার জন্য ব্লকার
+          blockerHtml = `<div class="drive-top-blocker"></div>`;
         } else {
-          videoHtml = `<video id="vid-${v.id}" controls controlsList="nodownload" oncontextmenu="return false;" playsinline preload="metadata"><source src="${srcObj.url}" type="video/mp4"></video>`;
+          // controlsList="nodownload" দিয়ে ডাইরেক্ট ভিডীওর ডাউনলোড বাটন হাইড
+          videoHtml = `<video id="vid-${v.id}" controls controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" playsinline preload="metadata"><source src="${srcObj.url}" type="video/mp4"></video>`;
         }
 
         container.innerHTML += `
@@ -489,6 +500,7 @@
               <span style="font-size:13px; font-weight:bold; color:#cbd5e1;">${v.title}</span>
             </div>
             <div class="video-wrapper">
+              ${blockerHtml}
               <div class="video-watermark">Protected Media</div>
               ${videoHtml}
               <div class="video-overlay-trigger" id="overlay-${v.id}" onclick="playVideoWithAd('${v.id}')">
@@ -499,7 +511,6 @@
           </div>
         `;
 
-        // In-feed Ad Insertion
         if ((idx + 1) % 2 === 0 && ads.native) {
           const adDivId = `native-ad-${idx}`;
           container.innerHTML += `<div class="ad-slot" id="${adDivId}"></div>`;
@@ -513,7 +524,6 @@
 
     function loadLocalVideos() {
       appVideos = JSON.parse(localStorage.getItem('app_custom_videos')) || [
-        // ডিফল্ট ডেমো ভিডিও
         { id: 1, title: "স্যাম্পল ভিডিও (Google Drive Demo)", url: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/view" }
       ];
       renderVideos(appVideos);
