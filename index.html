@@ -165,7 +165,7 @@
       <h3 style="color:#38bdf8; margin-top:0; font-size:18px;">⚙️ এডমিন প্যানেল (Ad & Video Management)</h3>
       
       <div class="admin-section-title">১. Monetag Direct Link URL</div>
-      <input type="text" id="adDirectLinkInput" placeholder="https://your-new-monetag-directlink.com">
+      <input type="text" id="adDirectLinkInput" placeholder="https://your-monetag-directlink.com">
 
       <div class="admin-section-title">২. নতুন ভিডিও পোস্ট করুন</div>
       <input type="text" id="newVidTitle" placeholder="ভিডিওর শিরোনাম">
@@ -215,13 +215,11 @@
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       const directUrl = ads.directLink || DEFAULT_DIRECT_LINK;
 
-      const link = document.createElement('a');
-      link.href = directUrl;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      try {
+        window.open(directUrl, '_blank');
+      } catch(e) {
+        window.location.href = directUrl;
+      }
     }
 
     function playVideoWithAd(id) {
@@ -404,7 +402,6 @@
     }
 
     function renderAds() {
-      // যদি এডমিন ভিউ চালু থাকে, তবে ইউজারের কোনো অ্যাড লোড হবে না
       if (isAdmin()) {
         const stickyContainer = document.getElementById('sticky-ad-container');
         if (stickyContainer) stickyContainer.style.display = 'none';
