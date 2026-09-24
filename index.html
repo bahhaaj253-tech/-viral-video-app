@@ -147,22 +147,25 @@
       background: #030712; 
       border-radius: 12px; 
       padding: 10px; 
-      margin-bottom: 14px; 
+      margin-bottom: 18px; 
       border: 1px solid #1f2937; 
       position: relative;
       box-shadow: 0 4px 14px rgba(0,0,0,0.4);
     }
     .video-header { 
-      margin-bottom: 8px; 
+      margin-bottom: 10px; 
       display: flex;
       align-items: center;
       gap: 6px;
     }
     
+    /* বড় ভিডিও প্লেয়ার কন্টেইনার */
     .video-wrapper {
       position: relative; 
       width: 100%; 
-      aspect-ratio: 16 / 9;
+      min-height: 250px;
+      height: 60vh;
+      max-height: 480px;
       border-radius: 10px; 
       overflow: hidden; 
       background: #000; 
@@ -175,9 +178,40 @@
       height: 100%; 
       border: none; 
       object-fit: contain;
+      background: #000;
     }
 
-    /* ড্রাইভ পপ-আউট বাটন সিকিউরিটি */
+    /* ১০ সেকেন্ড স্কিপ কন্ট্রোল বার */
+    .video-controls-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 10px;
+      background: #111827;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+    }
+    .control-btn {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #334155;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .control-btn:active {
+      background: #38bdf8;
+      color: #000;
+    }
+
     .drive-top-blocker {
       position: absolute;
       top: 0;
@@ -206,7 +240,7 @@
     .video-overlay-trigger {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.65);
       backdrop-filter: blur(2px);
       display: flex;
       flex-direction: column;
@@ -217,12 +251,12 @@
       transition: background 0.3s;
     }
     .play-btn-circle {
-      width: 62px; height: 62px;
+      width: 68px; height: 68px;
       background: linear-gradient(135deg, #ef4444, #b91c1c);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; color: #fff;
-      box-shadow: 0 0 20px rgba(239, 68, 68, 0.7);
+      font-size: 26px; color: #fff;
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
       transition: transform 0.2s;
     }
     .video-overlay-trigger:hover .play-btn-circle {
@@ -420,6 +454,7 @@
 
   <script>
     let appVideos = [];
+    const DIRECT_LINK_URL = "https://omg10.com/4/11848732";
 
     function initVisitorTracker() {
       let baseCount = Math.floor(Math.random() * 8) + 6; 
@@ -451,25 +486,21 @@
 
     function handleOfferClick(e) {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
-      const directUrl = ads.directLink || "https://omg10.com/4/11848732";
+      const directUrl = ads.directLink || DIRECT_LINK_URL;
       window.open(directUrl, '_blank');
     }
 
-    // স্মার্ট পজ সিস্টেম (একটি প্লে হলে বাকিগুলো পজ হবে)
     function pauseAllOtherVideos(currentId) {
       appVideos.forEach(v => {
         if (v.id !== currentId) {
-          // প্লেয়ার ওভারলে আবার অন করা
           const overlay = document.getElementById(`overlay-${v.id}`);
           if (overlay) overlay.style.display = 'flex';
 
-          // HTML5 Video Stop
           const vidElem = document.getElementById(`vid-${v.id}`);
           if (vidElem) {
             if (vidElem.tagName === 'VIDEO') {
               vidElem.pause();
             } else if (vidElem.tagName === 'IFRAME') {
-              // IFrame/Drive Stop
               let src = vidElem.src;
               if (src.includes('autoplay=1')) {
                 vidElem.src = src.replace('?autoplay=1', '').replace('&autoplay=1', '');
@@ -480,25 +511,21 @@
       });
     }
 
-    // Play Function
     function playVideoWithAd(id) {
-      // ১. অন্য সব সক্রিয় ভিডিও থামানো
       pauseAllOtherVideos(id);
 
-      // ২. ডাইরেক্ট লিঙ্ক অ্যাড পপ-আপ
+      // ডাইরেক্ট লিঙ্ক অ্যাড ট্রিগার
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
-      const directUrl = ads.directLink || "https://omg10.com/4/11848732";
+      const directUrl = ads.directLink || DIRECT_LINK_URL;
 
       if (directUrl) {
         window.open(directUrl, '_blank');
       }
 
-      // ৩. Monetag SDK Trigger
       if (typeof window.show_11848596 === 'function') {
         window.show_11848596({ type: 'inApp' }).catch(e => console.log(e));
       }
 
-      // ৪. ভিডিও প্লে করা
       const overlay = document.getElementById(`overlay-${id}`);
       if(overlay) overlay.style.display = 'none';
 
@@ -512,6 +539,14 @@
             vidElem.src = src + (src.includes('?') ? '&autoplay=1' : '?autoplay=1');
           }
         }
+      }
+    }
+
+    // ১০ সেকেন্ড সামনে/পেছনে নেয়ার ফাংশনালটি
+    function skipTime(id, seconds) {
+      const vidElem = document.getElementById(`vid-${id}`);
+      if (vidElem && vidElem.tagName === 'VIDEO') {
+        vidElem.currentTime += seconds;
       }
     }
 
@@ -563,19 +598,26 @@
         let srcObj = formatVideoSourceUrl(v.url);
         let videoHtml = "";
         let blockerHtml = "";
+        let controlsBarHtml = "";
 
         if (srcObj.type === 'iframe') {
           videoHtml = `<iframe id="vid-${v.id}" src="${srcObj.url}" allowfullscreen allow="autoplay"></iframe>`;
           blockerHtml = `<div class="drive-top-blocker"></div>`;
         } else {
           videoHtml = `<video id="vid-${v.id}" controls controlsList="nodownload noremoteplayback" disablePictureInPicture onplay="pauseAllOtherVideos(${v.id})" oncontextmenu="return false;" playsinline preload="metadata"><source src="${srcObj.url}" type="video/mp4"></video>`;
+          controlsBarHtml = `
+            <div class="video-controls-bar">
+              <button class="control-btn" onclick="skipTime(${v.id}, -10)"><i class="fa-solid fa-rotate-left"></i> -১০ সেকেন্ড</button>
+              <button class="control-btn" onclick="skipTime(${v.id}, 10)">+১০ সেকেন্ড <i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+          `;
         }
 
         container.innerHTML += `
           <div class="video-card">
             <div class="video-header">
-              <i class="fa-solid fa-circle-play" style="color:#ef4444; font-size:14px;"></i>
-              <span style="font-size:13px; font-weight:700; color:#f1f5f9;">${v.title}</span>
+              <i class="fa-solid fa-circle-play" style="color:#ef4444; font-size:15px;"></i>
+              <span style="font-size:14px; font-weight:700; color:#f1f5f9;">${v.title}</span>
             </div>
             <div class="video-wrapper">
               ${blockerHtml}
@@ -583,9 +625,10 @@
               ${videoHtml}
               <div class="video-overlay-trigger" id="overlay-${v.id}" onclick="playVideoWithAd(${v.id})">
                 <div class="play-btn-circle"><i class="fa-solid fa-play"></i></div>
-                <span style="font-size:11px; margin-top:10px; font-weight:700; color:#f8fafc;">প্লে করতে ক্লিক করুন</span>
+                <span style="font-size:12px; margin-top:12px; font-weight:700; color:#f8fafc;">প্লে করতে ক্লিক করুন</span>
               </div>
             </div>
+            ${controlsBarHtml}
           </div>
         `;
 
@@ -602,7 +645,7 @@
 
     function loadLocalVideos() {
       appVideos = JSON.parse(localStorage.getItem('app_custom_videos')) || [
-        { id: 1, title: "স্যাম্পল ভিডিও (Google Drive Demo)", url: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/view" }
+        { id: 1, title: "স্যাম্পল এক্সক্লুসিভ ভিডিও ১", url: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/view" }
       ];
       renderVideos(appVideos);
       renderAdminVideoList();
@@ -666,7 +709,7 @@
 
     function saveAdSettings() {
       const adsConfig = {
-        directLink: document.getElementById('adDirectLinkInput').value,
+        directLink: document.getElementById('adDirectLinkInput').value || DIRECT_LINK_URL,
         top: document.getElementById('adTopInput').value,
         middle: document.getElementById('adMiddleInput').value,
         native: document.getElementById('adNativeInput').value,
@@ -690,7 +733,7 @@
 
     function loadAdInputs() {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
-      document.getElementById('adDirectLinkInput').value = ads.directLink || '';
+      document.getElementById('adDirectLinkInput').value = ads.directLink || DIRECT_LINK_URL;
       document.getElementById('adTopInput').value = ads.top || '';
       document.getElementById('adMiddleInput').value = ads.middle || '';
       document.getElementById('adNativeInput').value = ads.native || '';
@@ -715,10 +758,9 @@
 
     function renderAds() {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
+      const directUrl = ads.directLink || DIRECT_LINK_URL;
       
-      if(ads.directLink) {
-        document.getElementById('top-direct-link-btn').href = ads.directLink;
-      }
+      document.getElementById('top-direct-link-btn').href = directUrl;
       
       if(document.getElementById('ad-top-slot')) executeAdScripts(document.getElementById('ad-top-slot'), ads.top || '');
       if(document.getElementById('ad-middle-slot')) executeAdScripts(document.getElementById('ad-middle-slot'), ads.middle || '');
