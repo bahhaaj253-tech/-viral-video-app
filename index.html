@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LK8193CMKV"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -8,12 +9,15 @@
     gtag('js', new Date());
     gtag('config', 'G-LK8193CMKV');
   </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <title>🔥 এক্সক্লুসিভ প্রিমিয়াম ভিডিও হাব</title>
+  <!-- Monetag Verification Meta Tag -->
+  <meta name="monetag" content="1351dfafed1558299da52ca5ac1f9143">
+
+  <title>🔥 VIP Stream Hub</title>
   
-  <!-- Monetag & Global SDK -->
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
   <script>(function(s){s.dataset.zone='11873688',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -27,14 +31,25 @@
       color: #f1f5f9;
       margin: 0;
       padding: 12px;
-      padding-bottom: 90px;
+      padding-bottom: 100px;
       text-align: center;
     }
-    .header-title { color: #38bdf8; font-size: 20px; margin: 10px 0; font-weight: 800; }
+    .header-title { color: #38bdf8; font-size: 22px; margin: 8px 0; font-weight: 800; }
     .badge-viral { 
       background: linear-gradient(135deg, #ef4444, #f97316); 
-      color: white; padding: 4px 12px; font-size: 11px; border-radius: 20px; font-weight: 700;
+      color: white; padding: 4px 14px; font-size: 11px; border-radius: 20px; font-weight: 700; display: inline-block;
     }
+    
+    /* সার্চ বার */
+    .search-box {
+      width: 100%; margin: 12px 0; position: relative;
+    }
+    .search-box input {
+      width: 100%; padding: 12px 16px 12px 40px; border-radius: 25px; border: 1px solid #1f2937;
+      background: #111827; color: white; font-size: 13px; outline: none;
+    }
+    .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #6b7280; }
+
     .direct-link-btn {
       display: block;
       background: linear-gradient(135deg, #ef4444, #dc2626);
@@ -45,9 +60,12 @@
       font-weight: 700;
       font-size: 14px;
       margin: 12px 0;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
       cursor: pointer;
+      transition: transform 0.2s;
     }
+    .direct-link-btn:active { transform: scale(0.98); }
+
     .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: left; }
     .video-card { background: #030712; border-radius: 12px; padding: 10px; margin-bottom: 16px; border: 1px solid #1f2937; }
     
@@ -65,15 +83,35 @@
       cursor: pointer; z-index: 5; backdrop-filter: blur(2px);
     }
     .play-btn-circle {
-      width: 60px; height: 60px; background: #ef4444; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff;
+      width: 58px; height: 58px; background: #ef4444; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 22px; color: #fff;
       box-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
     }
+
+    .video-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 8px; font-size: 11px; color: #9ca3af; padding: 0 4px;
+    }
+    .like-btn { cursor: pointer; color: #ef4444; font-weight: bold; }
     
     .hidden { display: none !important; }
-    .ad-slot { margin: 10px 0; text-align: center; min-height: 20px; }
-    input, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #374151; background: #111827; color: white; font-size: 12px; margin-bottom: 8px; }
-    .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    .ad-slot { margin: 10px 0; text-align: center; min-height: 10px; }
+    
+    /* এডমিন প্যানেল স্টাইল */
+    .admin-container {
+      max-width: 480px; margin: 20px auto; background: #111827; padding: 20px;
+      border-radius: 16px; text-align: left; border: 1px solid #38bdf8;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    .admin-section-title { font-size: 13px; font-weight: 800; color: #38bdf8; margin: 15px 0 6px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    input, textarea { 
+      width: 100%; padding: 11px; border-radius: 8px; border: 1px solid #374151; 
+      background: #030712; color: white; font-size: 12px; margin-bottom: 10px; outline: none;
+    }
+    input:focus, textarea:focus { border-color: #38bdf8; }
+    
+    .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+    .btn-reset { background: #ef4444; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 15px; }
     
     #sticky-ad-container {
       position: fixed; bottom: 0; left: 0; width: 100%; z-index: 999;
@@ -86,13 +124,18 @@
   <!-- ইউজার ভিউ -->
   <div id="user-view">
     <div class="ad-slot" id="ad-top-slot"></div>
-    <span class="badge-viral">🔥 VIP Video Hub</span>
-    <h2 class="header-title">ভিডিও প্লেয়ার</h2>
+    <span class="badge-viral">🔥 Premium Video Hub</span>
+    <h2 class="header-title">প্লেয়ার সেন্টার</h2>
+
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" onkeyup="filterVideos()" placeholder="ভিডিও খুঁজুন...">
+    </div>
 
     <div class="ad-slot" id="ad-middle-slot"></div>
 
     <a id="top-direct-link-btn" onclick="triggerDirectLinkAd()" class="direct-link-btn">
-      🎁 সম্পূর্ণ ভিডিও দেখতে এখানে চাপুন (VIP Direct Link)
+      🎁 স্পেশাল ভিআইপি কন্টেন্ট দেখুন (Direct Link)
     </a>
 
     <div class="card">
@@ -105,53 +148,52 @@
   <div id="sticky-ad-container" class="ad-slot"></div>
   <div id="popup-ad-slot"></div>
 
-  <!-- এডমিন প্যানেল (#admin দিয়ে খুলবেন) -->
+  <!-- এডমিন প্যানেল (#admin) -->
   <div id="admin-view" class="hidden">
-    <div style="max-width:480px; margin: 20px auto; background:#111827; padding:20px; border-radius:12px; text-align:left; border:1px solid #3b82f6;">
-      <h3 style="color:#38bdf8; margin-top:0;">⚙️ এডমিন অ্যান্ড অ্যাড কন্ট্রোল প্যানেল</h3>
+    <div class="admin-container">
+      <h3 style="color:#38bdf8; margin-top:0; font-size:18px;">⚙️ এডমিন প্যানেল (Ad Management)</h3>
       
-      <label style="font-size:12px; color:#38bdf8; font-weight:bold;">১. ডাইরেক্ট লিঙ্ক অ্যাড (Direct Link URL):</label>
-      <input type="text" id="adDirectLinkInput" placeholder="https://omg10.com/4/11848732">
+      <div class="admin-section-title">১. Monetag Direct Link URL</div>
+      <input type="text" id="adDirectLinkInput" placeholder="https://your-new-monetag-directlink.com">
 
-      <label style="font-size:12px; color:#38bdf8; font-weight:bold;">২. নতুন ভিডিও টাইটেল:</label>
-      <input type="text" id="newVidTitle" placeholder="ভিডিওর নাম">
+      <div class="admin-section-title">২. নতুন ভিডিও পোস্ট করুন</div>
+      <input type="text" id="newVidTitle" placeholder="ভিডিওর শিরোনাম">
+      <input type="text" id="newVidUrl" placeholder="Streamable / Direct Video URL">
 
-      <label style="font-size:12px; color:#38bdf8; font-weight:bold;">৩. ভিডিও লিঙ্ক (Streamable / Direct MP4):</label>
-      <input type="text" id="newVidUrl" placeholder="https://streamable.com/2qd0h1">
-
-      <button class="btn-submit" onclick="addVideoFromAdmin()">ভিডিও যুক্ত করুন</button>
+      <button class="btn-submit" onclick="addVideoFromAdmin()">+ নতুন ভিডিও সেভ করুন</button>
 
       <hr style="border-color:#1f2937; margin:20px 0;">
-      <h4 style="color:#f59e0b; margin:0 0 10px 0;">🎯 অ্যাড কোড সেটিংস (HTML / JS Code):</h4>
 
-      <label style="font-size:12px; color:#f59e0b;">উপরের ব্যানার অ্যাড (Top Banner Code):</label>
-      <textarea id="adTopInput" rows="3" placeholder="Monetag / Adsterra Banner Code"></textarea>
+      <div class="admin-section-title" style="color:#f59e0b;">🎯 নির্দিষ্ট স্থানে অ্যাড কোড বসান</div>
 
-      <label style="font-size:12px; color:#f59e0b;">মাঝের ব্যানার অ্যাড (Middle Banner Code):</label>
-      <textarea id="adMiddleInput" rows="3" placeholder="Middle Banner Code"></textarea>
+      <label style="font-size:11px; color:#9ca3af;">১. হেডার বা সবার উপরে (Top Banner Code):</label>
+      <textarea id="adTopInput" rows="2" placeholder="Top Banner Script"></textarea>
 
-      <label style="font-size:12px; color:#f59e0b;">নিচের ব্যানার অ্যাড (Bottom Banner Code):</label>
-      <textarea id="adBottomInput" rows="3" placeholder="Bottom Banner Code"></textarea>
+      <label style="font-size:11px; color:#9ca3af;">২. মাঝে / ভিডিওর ঠিক উপরে (Middle Banner Code):</label>
+      <textarea id="adMiddleInput" rows="2" placeholder="Middle Banner Script"></textarea>
 
-      <label style="font-size:12px; color:#f59e0b;">পপ-আপ / পপ-আন্ডার অ্যাড (PopUp Script):</label>
-      <textarea id="adPopupInput" rows="3" placeholder="PopUnder / PopUp Script Code"></textarea>
+      <label style="font-size:11px; color:#9ca3af;">৩. ভিডিওর নিচে / সবার নিচে (Bottom Banner Code):</label>
+      <textarea id="adBottomInput" rows="2" placeholder="Bottom Banner Script"></textarea>
 
-      <label style="font-size:12px; color:#f59e0b;">স্টিকি অ্যাড (Sticky Bottom Code):</label>
-      <textarea id="adStickyInput" rows="3" placeholder="Sticky Banner Code"></textarea>
+      <label style="font-size:11px; color:#9ca3af;">৪. ক্লিকে ব্যাকগ্রাউন্ড অ্যাড (PopUp Script):</label>
+      <textarea id="adPopupInput" rows="2" placeholder="PopUnder Script Code"></textarea>
 
-      <button class="btn-submit" onclick="saveAdSettings()" style="background:#3b82f6; margin-top:10px;">সব অ্যাড ও সেটিংস সেভ করুন</button>
+      <label style="font-size:11px; color:#9ca3af;">৫. স্ক্রিনের নিচে ভাসমান অ্যাড (Bottom Sticky Code):</label>
+      <textarea id="adStickyInput" rows="2" placeholder="Sticky Banner Code"></textarea>
+
+      <button class="btn-submit" onclick="saveAdSettings()" style="background:#3b82f6;">💾 সব সেটিং সেভ করুন</button>
+      
+      <button class="btn-reset" onclick="resetAllAdData()">🗑️ সব পুরানো ডেটা ডিলিট করুন</button>
     </div>
   </div>
 
   <script>
     const DEFAULT_DIRECT_LINK = "https://omg10.com/4/11848732";
 
-    // ১০০% ব্লকমুক্ত ডাইরেক্ট লিঙ্ক ওপেনিং ফাংশন
     function triggerDirectLinkAd() {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       const directUrl = ads.directLink || DEFAULT_DIRECT_LINK;
 
-      // ব্রাউজার যাতে Block/about:blank না করে তার জন্য Safe Native Link Click
       const link = document.createElement('a');
       link.href = directUrl;
       link.target = '_blank';
@@ -162,15 +204,12 @@
     }
 
     function playVideoWithAd(id) {
-      // ১. ডাইরেক্ট লিঙ্ক অ্যাড ট্রিপল ফায়ারিং
       triggerDirectLinkAd();
 
-      // ২. Monetag In-App SDK ট্রাই
       if (typeof window.show_11848596 === 'function') {
         window.show_11848596({ type: 'inApp' }).catch(e => console.log(e));
       }
 
-      // ৩. ওভারলে সরিয়ে ভিডিও প্লে
       const overlay = document.getElementById(`overlay-${id}`);
       if(overlay) overlay.style.display = 'none';
 
@@ -187,7 +226,6 @@
       }
     }
 
-    // Streamable বা Direct MP4 ডিটেকশন
     function formatVideoUrl(url) {
       let trimmed = url.trim();
       if (trimmed.includes('streamable.com')) {
@@ -207,6 +245,11 @@
       const container = document.getElementById('video-container');
       container.innerHTML = "";
 
+      if(videos.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:#6b7280; font-size:12px; padding:20px;">কোনো ভিডিও পাওয়া যায়নি</div>`;
+        return;
+      }
+
       videos.forEach((v) => {
         let srcObj = formatVideoUrl(v.url);
         let videoContent = "";
@@ -218,17 +261,31 @@
         }
 
         container.innerHTML += `
-          <div class="video-card">
+          <div class="video-card" data-title="${v.title.toLowerCase()}">
             <div style="margin-bottom:8px; font-weight:bold; font-size:14px; color:#38bdf8;">${v.title}</div>
             <div class="video-wrapper">
               ${videoContent}
               <div class="video-overlay-trigger" id="overlay-${v.id}" onclick="playVideoWithAd(${v.id})">
                 <div class="play-btn-circle"><i class="fa-solid fa-play"></i></div>
-                <span style="font-size:12px; margin-top:10px; font-weight:bold; color:#fff;">ভিডিও দেখতে ক্লিক করুন</span>
+                <span style="font-size:12px; margin-top:10px; font-weight:bold; color:#fff;">ভিডিও প্লে করতে ক্লিক করুন</span>
               </div>
+            </div>
+            <div class="video-meta">
+              <span><i class="fa-solid fa-eye"></i> ${Math.floor(Math.random() * 800) + 200} Views</span>
+              <span class="like-btn" onclick="this.innerHTML='<i class=\'fa-solid fa-heart\'></i> Liked'"><i class="fa-regular fa-heart"></i> Like</span>
             </div>
           </div>
         `;
+      });
+    }
+
+    function filterVideos() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.video-card');
+      cards.forEach(card => {
+        const title = card.getAttribute('data-title');
+        if(title.includes(q)) { card.classList.remove('hidden'); }
+        else { card.classList.add('hidden'); }
       });
     }
 
@@ -242,12 +299,12 @@
     function addVideoFromAdmin() {
       const title = document.getElementById('newVidTitle').value.trim();
       const url = document.getElementById('newVidUrl').value.trim();
-      if (!title || !url) return alert('ভিডিও নাম ও লিঙ্ক সঠিকভাবে দিন!');
+      if (!title || !url) return alert('ভিডিও নাম ও লিঙ্ক সঠিকভাবে পূরণ করুন!');
 
       let appVideos = JSON.parse(localStorage.getItem('app_custom_videos')) || [];
       appVideos.unshift({ id: Date.now(), title, url });
       localStorage.setItem('app_custom_videos', JSON.stringify(appVideos));
-      alert('ভিডিও সফলভাবে যুক্ত হয়েছে!');
+      alert('ভিডিও যুক্ত হয়েছে!');
       location.reload();
     }
 
@@ -261,11 +318,18 @@
         sticky: document.getElementById('adStickyInput').value
       };
       localStorage.setItem('app_ads_config', JSON.stringify(adsConfig));
-      alert('সব অ্যাড সফলভাবে সেভ ও অ্যাক্টিভ করা হয়েছে!');
+      alert('সব অ্যাড ও সেটিংস সেভ করা হয়েছে!');
       renderAds();
     }
 
-    // অ্যাডScript রান করানোর পারফেক্ট এক্সিকিউটর
+    function resetAllAdData() {
+      if(confirm("আপনি কি নিশ্চিত যে সব পুরানো অ্যাড ও সেটিং মুছে ফেলতে চান?")) {
+        localStorage.removeItem('app_ads_config');
+        alert("সব পুরানো অ্যাড সফলভাবে ডিলিট করা হয়েছে!");
+        location.reload();
+      }
+    }
+
     function executeAdScripts(container, htmlContent) {
       container.innerHTML = '';
       if(!htmlContent || !htmlContent.trim()) return;
@@ -306,7 +370,7 @@
     window.onload = function() {
       checkAdminView();
       const videos = JSON.parse(localStorage.getItem('app_custom_videos')) || [
-        { id: 1, title: "ভাইরাল ভিডিও ১", url: "https://streamable.com/2qd0h1" }
+        { id: 1, title: "স্যাম্পল ভাইরাল ভিডিও", url: "https://streamable.com/2qd0h1" }
       ];
       renderVideos(videos);
       renderAds();
