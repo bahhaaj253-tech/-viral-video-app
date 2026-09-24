@@ -113,6 +113,17 @@
     .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
     .btn-reset { background: #ef4444; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 15px; }
     
+    /* এডমিন প্যানেলের ভিডিও ম্যানেজমেন্ট লিস্ট */
+    .admin-video-item {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #030712; border: 1px solid #1f2937; padding: 10px;
+      border-radius: 8px; margin-bottom: 8px; font-size: 12px;
+    }
+    .btn-delete-vid {
+      background: #ef4444; color: white; border: none; padding: 6px 12px;
+      border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer;
+    }
+
     #sticky-ad-container {
       position: fixed; bottom: 0; left: 0; width: 100%; z-index: 999;
       background: rgba(9, 13, 22, 0.95); backdrop-filter: blur(8px);
@@ -151,16 +162,22 @@
   <!-- এডমিন প্যানেল (#admin) -->
   <div id="admin-view" class="hidden">
     <div class="admin-container">
-      <h3 style="color:#38bdf8; margin-top:0; font-size:18px;">⚙️ এডমিন প্যানেল (Ad Management)</h3>
+      <h3 style="color:#38bdf8; margin-top:0; font-size:18px;">⚙️ এডমিন প্যানেল (Ad & Video Management)</h3>
       
       <div class="admin-section-title">১. Monetag Direct Link URL</div>
       <input type="text" id="adDirectLinkInput" placeholder="https://your-new-monetag-directlink.com">
 
       <div class="admin-section-title">২. নতুন ভিডিও পোস্ট করুন</div>
       <input type="text" id="newVidTitle" placeholder="ভিডিওর শিরোনাম">
-      <input type="text" id="newVidUrl" placeholder="Streamable / Direct Video URL">
+      <input type="text" id="newVidUrl" placeholder="Direct MP4 / Streamable URL">
 
       <button class="btn-submit" onclick="addVideoFromAdmin()">+ নতুন ভিডিও সেভ করুন</button>
+
+      <hr style="border-color:#1f2937; margin:20px 0;">
+
+      <!-- ভিডিও ম্যানেজমেন্ট / ডিলিট সেকশন -->
+      <div class="admin-section-title" style="color:#ef4444;">🎬 বর্তমান ভিডিও সমূহ (ডিলিট করুন)</div>
+      <div id="admin-video-list" style="max-height:200px; overflow-y:auto; margin-bottom:15px;"></div>
 
       <hr style="border-color:#1f2937; margin:20px 0;">
 
@@ -189,6 +206,10 @@
 
   <script>
     const DEFAULT_DIRECT_LINK = "https://omg10.com/4/11848732";
+
+    function isAdmin() {
+      return window.location.search.includes('admin') || window.location.hash.includes('admin');
+    }
 
     function triggerDirectLinkAd() {
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
@@ -279,6 +300,37 @@
       });
     }
 
+    function renderAdminVideoList() {
+      const listContainer = document.getElementById('admin-video-list');
+      if(!listContainer) return;
+      const videos = JSON.parse(localStorage.getItem('app_custom_videos')) || [];
+      
+      listContainer.innerHTML = "";
+      if(videos.length === 0) {
+        listContainer.innerHTML = `<div style="color:#6b7280; font-size:11px;">বর্তমানে কোনো পোস্ট করা ভিডিও নেই।</div>`;
+        return;
+      }
+
+      videos.forEach((v) => {
+        listContainer.innerHTML += `
+          <div class="admin-video-item">
+            <span style="font-weight:bold; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">${v.title}</span>
+            <button class="btn-delete-vid" onclick="deleteVideo(${v.id})">🗑️ ডিলিট</button>
+          </div>
+        `;
+      });
+    }
+
+    function deleteVideo(id) {
+      if(confirm("আপনি কি নিশ্চিত যে এই ভিডিওটি মুছে ফেলতে চান?")) {
+        let videos = JSON.parse(localStorage.getItem('app_custom_videos')) || [];
+        videos = videos.filter(v => v.id !== id);
+        localStorage.setItem('app_custom_videos', JSON.stringify(videos));
+        renderAdminVideoList();
+        renderVideos(videos);
+      }
+    }
+
     function filterVideos() {
       const q = document.getElementById('searchInput').value.toLowerCase();
       const cards = document.querySelectorAll('.video-card');
@@ -290,9 +342,10 @@
     }
 
     function checkAdminView() {
-      if (window.location.search.includes('admin') || window.location.hash.includes('admin')) {
+      if (isAdmin()) {
         document.getElementById('user-view').classList.add('hidden');
         document.getElementById('admin-view').classList.remove('hidden');
+        renderAdminVideoList();
       }
     }
 
@@ -304,8 +357,11 @@
       let appVideos = JSON.parse(localStorage.getItem('app_custom_videos')) || [];
       appVideos.unshift({ id: Date.now(), title, url });
       localStorage.setItem('app_custom_videos', JSON.stringify(appVideos));
-      alert('ভিডিও যুক্ত হয়েছে!');
-      location.reload();
+      alert('নতুন ভিডিও যুক্ত হয়েছে!');
+      document.getElementById('newVidTitle').value = "";
+      document.getElementById('newVidUrl').value = "";
+      renderAdminVideoList();
+      renderVideos(appVideos);
     }
 
     function saveAdSettings() {
@@ -319,7 +375,6 @@
       };
       localStorage.setItem('app_ads_config', JSON.stringify(adsConfig));
       alert('সব অ্যাড ও সেটিংস সেভ করা হয়েছে!');
-      renderAds();
     }
 
     function resetAllAdData() {
@@ -349,6 +404,13 @@
     }
 
     function renderAds() {
+      // যদি এডমিন ভিউ চালু থাকে, তবে ইউজারের কোনো অ্যাড লোড হবে না
+      if (isAdmin()) {
+        const stickyContainer = document.getElementById('sticky-ad-container');
+        if (stickyContainer) stickyContainer.style.display = 'none';
+        return;
+      }
+
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       
       if(document.getElementById('ad-top-slot')) executeAdScripts(document.getElementById('ad-top-slot'), ads.top || '');
@@ -356,15 +418,6 @@
       if(document.getElementById('ad-bottom-slot')) executeAdScripts(document.getElementById('ad-bottom-slot'), ads.bottom || '');
       if(document.getElementById('popup-ad-slot')) executeAdScripts(document.getElementById('popup-ad-slot'), ads.popup || '');
       if(document.getElementById('sticky-ad-container')) executeAdScripts(document.getElementById('sticky-ad-container'), ads.sticky || '');
-      
-      if(document.getElementById('adDirectLinkInput')) {
-        document.getElementById('adDirectLinkInput').value = ads.directLink || DEFAULT_DIRECT_LINK;
-        document.getElementById('adTopInput').value = ads.top || '';
-        document.getElementById('adMiddleInput').value = ads.middle || '';
-        document.getElementById('adBottomInput').value = ads.bottom || '';
-        document.getElementById('adPopupInput').value = ads.popup || '';
-        document.getElementById('adStickyInput').value = ads.sticky || '';
-      }
     }
 
     window.onload = function() {
@@ -374,6 +427,16 @@
       ];
       renderVideos(videos);
       renderAds();
+
+      if(isAdmin() && document.getElementById('adDirectLinkInput')) {
+        const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
+        document.getElementById('adDirectLinkInput').value = ads.directLink || DEFAULT_DIRECT_LINK;
+        document.getElementById('adTopInput').value = ads.top || '';
+        document.getElementById('adMiddleInput').value = ads.middle || '';
+        document.getElementById('adBottomInput').value = ads.bottom || '';
+        document.getElementById('adPopupInput').value = ads.popup || '';
+        document.getElementById('adStickyInput').value = ads.sticky || '';
+      }
     };
   </script>
 </body>
