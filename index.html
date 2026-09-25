@@ -7,7 +7,7 @@
     <!-- ExoClick Verification Meta Tag -->
     <meta name="6a97888e-site-verification" content="ee8486c0ac86735a657b5ada041072ef">
     
-    <title>🔥 VIP Stream Hub</title>
+    <title>🔥 VIP Adult Hub 18+</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -16,139 +16,345 @@
         * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
-            background: #090b10;
-            color: #f5f5f5;
+            background: #08020d;
+            color: #f3f4f6;
             margin: 0;
             padding: 0;
-            padding-bottom: 70px;
+            padding-bottom: 80px;
             text-align: center;
         }
-        .header-title { color: #38bdf8; font-size: 22px; margin: 0; font-weight: 800; }
-        .badge-viral {
-            background: linear-gradient(135deg, #ef4444, #f97316);
-            color: white; padding: 4px 14px; font-size: 11px; border-radius: 20px; font-weight: 700; display: inline-block;
+        
+        /* Adult Theme Top Header */
+        .top-navbar {
+            background: linear-gradient(180deg, #180524 0%, #08020d 100%);
+            padding: 15px 10px;
+            border-bottom: 2px solid #ff0055;
+            box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3);
         }
-        .direct-link-btn {
-            display: block; background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white; text-decoration: none; padding: 14px; border-radius: 12px;
-            font-weight: 700; font-size: 14px; margin: 12px 0; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
-            cursor: pointer;
+        .header-title {
+            color: #ff0055;
+            font-size: 24px;
+            margin: 5px 0;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
         }
-        .video-card { background: #0d1117; border-radius: 12px; padding: 10px; margin-bottom: 16px; border: 1px solid #1f2937; }
-        .video-wrapper { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: #000; }
-        .video-wrapper iframe, .video-wrapper video { width: 100%; height: 100%; border: none; display: block; }
-        .video-overlay-trigger {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 5; backdrop-filter: blur(2px);
-        }
-        .play-btn-circle {
-            width: 50px; height: 50px; background: #ef4444; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 22px; color: #fff;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.8);
+        .badge-18plus {
+            background: #ff0055;
+            color: #fff;
+            padding: 3px 10px;
+            font-size: 11px;
+            border-radius: 4px;
+            font-weight: 800;
+            display: inline-block;
+            box-shadow: 0 0 8px #ff0055;
         }
         
-        /* Ad Slots Specific Placement Styling */
-        .ad-container { margin: 12px 0; text-align: center; width: 100%; overflow: hidden; min-height: 10px; }
-        .sticky-ad-bottom {
-            position: fixed; bottom: 0; left: 0; width: 100%; z-index: 999;
-            background: rgba(9, 11, 16, 0.95); text-align: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        /* VIP Telegram Join Button */
+        .direct-link-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #e11d48, #9333ea);
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 15px;
+            margin: 15px 10px;
+            box-shadow: 0 4px 20px rgba(225, 29, 72, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
 
-        /* Admin Panel Dashboard Styling */
+        /* Video Card Styling */
+        .video-card {
+            background: #12061c;
+            border-radius: 14px;
+            padding: 12px;
+            margin: 15px 10px;
+            border: 1px solid #2a0e3d;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+            text-align: left;
+        }
+        .video-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #e5e7eb;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+            border: 1px solid #ff005533;
+        }
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        .video-overlay-trigger {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            backdrop-filter: blur(3px);
+        }
+        .play-btn-circle {
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(135deg, #ff0055, #c026d3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #fff;
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.9);
+            padding-left: 4px;
+        }
+        
+        /* Ad Containers */
+        .ad-container { margin: 15px 0; text-align: center; width: 100%; overflow: hidden; min-height: 10px; }
+        .sticky-ad-bottom {
+            position: fixed; bottom: 0; left: 0; width: 100%; z-index: 999;
+            background: rgba(8, 2, 13, 0.95); text-align: center; box-shadow: 0 -4px 15px rgba(0,0,0,0.8);
+            border-top: 1px solid #ff005544;
+        }
+
+        /* Full Screen Isolated Admin Panel */
         #adminPanel {
-            display: none; background: #0f172a; border: 2px solid #38bdf8;
-            padding: 16px; border-radius: 12px; margin: 15px; text-align: left; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #0d0414;
+            z-index: 99999;
+            overflow-y: auto;
+            padding: 20px 15px;
+            text-align: left;
+            box-sizing: border-box;
         }
-        #adminPanel h3 { color: #38bdf8; margin: 0 0 10px 0; font-size: 16px; }
-        #adminPanel label { font-size: 12px; color: #f3f4f6; font-weight: bold; display: block; margin-top: 10px; }
-        #adminPanel textarea {
-            width: 100%; background: #1e293b; border: 1px solid #334155;
-            color: #38bdf8; padding: 8px; border-radius: 6px; font-family: monospace; font-size: 11px; box-sizing: border-box;
+        #adminPanel h2 { color: #ff0055; margin-top: 0; border-bottom: 2px solid #ff0055; padding-bottom: 8px; font-size: 20px; }
+        .admin-section {
+            background: #180826;
+            border: 1px solid #3b135c;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
-        #adminPanel button {
-            background: #22c55e; color: white; border: none; padding: 12px;
+        .admin-section h3 { color: #c026d3; margin: 0 0 12px 0; font-size: 16px; }
+        #adminPanel label { font-size: 12px; color: #d1d5db; font-weight: bold; display: block; margin-top: 10px; }
+        #adminPanel input, #adminPanel textarea {
+            width: 100%; background: #0b0312; border: 1px solid #581c87;
+            color: #38bdf8; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; margin-top: 4px; box-sizing: border-box;
+        }
+        .btn-action {
+            background: linear-gradient(135deg, #16a34a, #15803d); color: white; border: none; padding: 12px;
             border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 14px;
+        }
+        .btn-delete {
+            background: #dc2626; color: white; border: none; padding: 6px 12px;
+            border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 8px;
+        }
+        .close-admin-btn {
+            background: #475569; color: white; border: none; padding: 10px;
+            border-radius: 8px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <!-- Hidden Ad Container for Popunder Script -->
+    <!-- Hidden Container for Popunder Script -->
     <div id="popunder-slot"></div>
 
-    <!-- Admin Panel Control Box -->
+    <!-- Isolated Full-Screen Admin Panel -->
     <div id="adminPanel">
-        <h3>⚙️ Precise Ad Placement Manager</h3>
+        <h2>⚙️ Admin Control Panel</h2>
+        <button class="close-admin-btn" onclick="closeAdmin()">❌ Close Admin View & Preview Site</button>
         
-        <label>1. Top Banner Ad (হেডারে দেখাবে):</label>
-        <textarea id="topAdInput" rows="2" placeholder="Paste Header Ad Code"></textarea>
+        <!-- Video Upload Section -->
+        <div class="admin-section" style="margin-top: 15px;">
+            <h3>📹 Upload / Add New Video</h3>
+            <label>ভিডিও টাইটেল (Video Title):</label>
+            <input type="text" id="newVideoTitle" placeholder="যেমন: Exclusive Hot Clip 🔞">
+            
+            <label>ভিডিও লিংক (MP4 Direct Video URL):</label>
+            <input type="text" id="newVideoUrl" placeholder="https://example.com/video.mp4">
+            
+            <button class="btn-action" onclick="addNewVideo()">➕ Add Video to Site</button>
+        </div>
 
-        <label>2. Middle In-Between Ad (ভিডিও ২টির মাঝখানে দেখাবে):</label>
-        <textarea id="middleAdInput" rows="2" placeholder="Paste In-Between Ad Code"></textarea>
+        <!-- Manage Existing Videos -->
+        <div class="admin-section">
+            <h3>📂 Manage Posted Videos</h3>
+            <div id="adminVideoList"></div>
+        </div>
 
-        <label>3. Bottom Banner Ad (পেজের শেষে দেখাবে):</label>
-        <textarea id="bottomAdInput" rows="2" placeholder="Paste Bottom Ad Code"></textarea>
+        <!-- Ad Placement Section -->
+        <div class="admin-section">
+            <h3>💰 Precise Ad Placement Manager</h3>
+            
+            <label>1. Top Banner Ad (হেডারে দেখাবে):</label>
+            <textarea id="topAdInput" rows="2" placeholder="Paste Header Ad Code"></textarea>
 
-        <label>4. Popunder / Direct Link Script (ক্লিক অ্যাড):</label>
-        <textarea id="popunderAdInput" rows="2" placeholder="Paste Popunder Script Here"></textarea>
+            <label>2. Middle In-Between Ad (ভিডিওর মাঝখানে দেখাবে):</label>
+            <textarea id="middleAdInput" rows="2" placeholder="Paste In-Between Ad Code"></textarea>
 
-        <label>5. Sticky Bottom Ad (স্ক্রিনের নিচে ভেসে থাকবে):</label>
-        <textarea id="stickyAdInput" rows="2" placeholder="Paste Sticky Footer Ad Code"></textarea>
+            <label>3. Bottom Banner Ad (পেজের শেষে দেখাবে):</label>
+            <textarea id="bottomAdInput" rows="2" placeholder="Paste Bottom Ad Code"></textarea>
 
-        <button onclick="saveAds()">Save All Ads Excatly in Place</button>
+            <label>4. Popunder / Direct Link Script (ক্লিক অ্যাড):</label>
+            <textarea id="popunderAdInput" rows="2" placeholder="Paste Popunder Script Here"></textarea>
+
+            <label>5. Sticky Bottom Ad (স্ক্রিনের নিচে ভেসে থাকবে):</label>
+            <textarea id="stickyAdInput" rows="2" placeholder="Paste Sticky Footer Ad Code"></textarea>
+
+            <button class="btn-action" onclick="saveAds()">💾 Save All Ads</button>
+        </div>
     </div>
 
-    <div style="padding: 15px;">
-        <span class="badge-viral">VIP VIP STREAM</span>
-        <h1 class="header-title">🔥 VIP Stream Hub</h1>
+    <!-- Main Visitor View -->
+    <div class="top-navbar">
+        <span class="badge-18plus">🔞 18+ ADULT CONTENT</span>
+        <h1 class="header-title">🔥 VIP STREAM HUB</h1>
+    </div>
 
-        <!-- 1. TOP AD SLOT -->
+    <div style="padding: 0 5px;">
+        <!-- TOP AD SLOT -->
         <div id="top-ad-slot" class="ad-container"></div>
 
         <a href="https://t.me/your_channel" class="direct-link-btn" target="_blank">
-            <i class="fab fa-telegram-plane"></i> VIP টেলিগ্রাম চ্যানেলে জয়েন করুন
+            <i class="fab fa-telegram-plane"></i> VIP টেলিগ্রাম প্রাইভেট চ্যানেলে জয়েন করুন
         </a>
 
-        <!-- Video 1 -->
-        <div class="video-card">
-            <h3 style="font-size: 14px; margin-bottom: 8px;">ওরে ভাই কি করা করে 🥵🔞</h3>
-            <div class="video-wrapper">
-                <div class="video-overlay-trigger" onclick="playVideo(this)">
-                    <div class="play-btn-circle"><i class="fas fa-play"></i></div>
-                    <span style="margin-top: 8px; font-weight: bold; font-size: 13px;">ভিডিও প্লে করতে ক্লিক করুন</span>
-                </div>
-                <video controls preload="metadata">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                </video>
-            </div>
-        </div>
+        <!-- Dynamic Videos Container -->
+        <div id="videoContainer"></div>
 
-        <!-- 2. MIDDLE AD SLOT -->
-        <div id="middle-ad-slot" class="ad-container"></div>
-
-        <!-- Video 2 -->
-        <div class="video-card">
-            <h3 style="font-size: 14px; margin-bottom: 8px;">সেরা ভিডিও 🥵🔞</h3>
-            <div class="video-wrapper">
-                <div class="video-overlay-trigger" onclick="playVideo(this)">
-                    <div class="play-btn-circle"><i class="fas fa-play"></i></div>
-                    <span style="margin-top: 8px; font-weight: bold; font-size: 13px;">ভিডিও প্লে করতে ক্লিক করুন</span>
-                </div>
-                <video controls preload="metadata">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                </video>
-            </div>
-        </div>
-
-        <!-- 3. BOTTOM AD SLOT -->
+        <!-- BOTTOM AD SLOT -->
         <div id="bottom-ad-slot" class="ad-container"></div>
     </div>
 
-    <!-- 5. STICKY BOTTOM AD SLOT -->
+    <!-- STICKY BOTTOM AD SLOT -->
     <div id="sticky-ad-slot" class="sticky-ad-bottom"></div>
 
     <script>
+        // Default Sample Videos
+        const defaultVideos = [
+            { id: 1, title: "🔥 Exclusive VIP Clip 01 🔞", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+            { id: 2, title: "💦 Hot Viral Stream 02 🔞", url: "https://www.w3schools.com/html/mov_bbb.mp4" }
+        ];
+
+        function getVideos() {
+            const saved = localStorage.getItem('site_videos');
+            return saved ? JSON.parse(saved) : defaultVideos;
+        }
+
+        function saveVideos(videos) {
+            localStorage.setItem('site_videos', JSON.stringify(videos));
+            renderVideos();
+            renderAdminVideoList();
+        }
+
+        function renderVideos() {
+            const videos = getVideos();
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = '';
+
+            videos.forEach((vid, index) => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="video-title"><i class="fas fa-fire" style="color:#ff0055;"></i> ${vid.title}</div>
+                    <div class="video-wrapper">
+                        <div class="video-overlay-trigger" onclick="playVideo(this)">
+                            <div class="play-btn-circle"><i class="fas fa-play"></i></div>
+                            <span style="margin-top: 10px; font-weight: bold; font-size: 13px; color: #fff;">ভিডিও প্লে করতে ক্লিক করুন</span>
+                        </div>
+                        <video controls preload="metadata">
+                            <source src="${vid.url}" type="video/mp4">
+                        </video>
+                    </div>
+                `;
+                container.appendChild(card);
+
+                // Insert Middle Ad Slot after the first video
+                if (index === 0) {
+                    const middleAd = document.createElement('div');
+                    middleAd.id = 'middle-ad-slot';
+                    middleAd.className = 'ad-container';
+                    container.appendChild(middleAd);
+                }
+            });
+
+            // Reload middle ad content after dynamic render
+            setAdContent('middle-ad-slot', localStorage.getItem('middleAd'));
+        }
+
+        function renderAdminVideoList() {
+            const videos = getVideos();
+            const listContainer = document.getElementById('adminVideoList');
+            if(!listContainer) return;
+            
+            listContainer.innerHTML = '';
+            videos.forEach(vid => {
+                const item = document.createElement('div');
+                item.style.cssText = "background:#0b0312; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #3b135c;";
+                item.innerHTML = `
+                    <div style="font-weight:bold; font-size:13px; color:#f3f4f6;">${vid.title}</div>
+                    <div style="font-size:11px; color:#9ca3af; word-break:break-all;">${vid.url}</div>
+                    <button class="btn-delete" onclick="deleteVideo(${vid.id})">🗑️ Delete Video</button>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function addNewVideo() {
+            const title = document.getElementById('newVideoTitle').value.trim();
+            const url = document.getElementById('newVideoUrl').value.trim();
+
+            if (!title || !url) {
+                alert('অনুগ্রহ করে ভিডিওর টাইটেল এবং ইউআরএল লিংক দিন!');
+                return;
+            }
+
+            const videos = getVideos();
+            videos.unshift({ id: Date.now(), title, url });
+            saveVideos(videos);
+
+            document.getElementById('newVideoTitle').value = '';
+            document.getElementById('newVideoUrl').value = '';
+            alert('নতুন ভিডিও সফলভাবে যুক্ত হয়েছে!');
+        }
+
+        function deleteVideo(id) {
+            if (confirm("আপনি কি নিশ্চিত এই ভিডিওটি মুছে ফেলতে চান?")) {
+                let videos = getVideos();
+                videos = videos.filter(v => v.id !== id);
+                saveVideos(videos);
+            }
+        }
+
         function playVideo(element) {
             element.style.display = 'none';
             const video = element.nextElementSibling;
@@ -190,8 +396,12 @@
             localStorage.setItem('popunderAd', document.getElementById('popunderAdInput').value);
             localStorage.setItem('stickyAd', document.getElementById('stickyAdInput').value);
 
-            alert('সবগুলো অ্যাড নিজ নিজ স্থানে সফলভাবে সেভ হয়েছে!');
-            location.reload();
+            alert('সবগুলো অ্যাড নিজ নিজ পজিশনে সেভ হয়েছে!');
+            loadAds();
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').style.display = 'none';
         }
 
         // Secret Password Protect Admin Link (#admin)
@@ -199,12 +409,16 @@
             const pin = prompt("Admin Password দিন:");
             if (pin === "1234") {
                 document.getElementById('adminPanel').style.display = 'block';
+                renderAdminVideoList();
             } else {
                 alert("ভুল পাসওয়ার্ড!");
             }
         }
 
-        window.onload = loadAds;
+        window.onload = function() {
+            renderVideos();
+            loadAds();
+        };
     </script>
 </body>
 </html>
