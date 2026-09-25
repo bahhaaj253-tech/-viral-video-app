@@ -49,3 +49,6 @@ app.post('/api/upload-catbox', upload.single('file'), async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+app.get('/ee8486c0ac86735a657b5ada041072ef.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'ee8486c0ac86735a657b5ada041072ef.html'));
+});
