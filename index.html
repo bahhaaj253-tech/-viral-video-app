@@ -16,6 +16,9 @@
   <!-- Monetag Verification Meta Tag -->
   <meta name="monetag" content="1351dfafed1558299da52ca5ac1f9143">
 
+  <!-- ExoClick Verification Meta Tag -->
+  <meta name='6a97888e-site-verification' content='ee8486c0ac86735e657b5ada041072ef'>
+
   <title>🔥 VIP Stream Hub</title>
   
   <script src='//libtl.com/sdk.js' data-zone='11848596' data-sdk='show_11848596'></script>
@@ -96,7 +99,7 @@
     .hidden { display: none !important; }
     .ad-slot { margin: 10px 0; text-align: center; min-height: 10px; }
 
-    /* --- হাই সিপিএম টাইমার অ্যাড মোডাল (HIGH CPM TIMER MODAL) --- */
+    /* --- ExoClick High-CPM Timer Overlay Modal --- */
     #ad-timer-modal {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(0,0,0,0.95); z-index: 10000;
@@ -120,7 +123,7 @@
     }
     .ad-modal-content iframe { width: 100%; height: 100%; border: none; }
     
-    /* এডমিন প্যানেল স্টাইল */
+    /* Admin Panel */
     .admin-container {
       max-width: 480px; margin: 20px auto; background: #111827; padding: 20px;
       border-radius: 16px; text-align: left; border: 1px solid #38bdf8;
@@ -154,7 +157,7 @@
 </head>
 <body oncontextmenu="return false;">
 
-  <!-- ইউজার ভিউ -->
+  <!-- User View -->
   <div id="user-view">
     <div class="ad-slot" id="ad-top-slot"></div>
     <span class="badge-viral">🔥 Premium Video Hub</span>
@@ -178,7 +181,7 @@
     <div class="ad-slot" id="ad-bottom-slot"></div>
   </div>
 
-  <!-- হাই സിപിএম টাইমার অ্যাড মোডাল -->
+  <!-- ExoClick Timer Overlay Modal -->
   <div id="ad-timer-modal" class="hidden">
     <div id="timer-box" class="timer-badge">অ্যাড শেষ হতে বাকি: <span id="timer-sec">7</span>s</div>
     <button id="skip-ad-btn" class="skip-btn hidden" onclick="closeTimerAdAndPlay()">Skip Ad ⏭️</button>
@@ -192,13 +195,13 @@
   <div id="sticky-ad-container" class="ad-slot"></div>
   <div id="popup-ad-slot"></div>
 
-  <!-- এডমিন প্যানেল (#admin) -->
+  <!-- Admin Panel (#admin) -->
   <div id="admin-view" class="hidden">
     <div class="admin-container">
-      <h3 style="color:#38bdf8; margin-top:0; font-size:18px;">⚙️ এডমিন প্যানেল (Ad & Video Management)</h3>
+      <h3 style="color:#38bdf8; margin-top:0; font-size:18px;">⚙️ এডমিন প্যানেল (ExoClick & Video Ad Management)</h3>
       
-      <div class="admin-section-title">১. Monetag Direct Link URL</div>
-      <input type="text" id="adDirectLinkInput" placeholder="https://your-monetag-directlink.com">
+      <div class="admin-section-title">১. ExoClick / Monetag Direct Link URL</div>
+      <input type="text" id="adDirectLinkInput" placeholder="https://your-exoclick-directlink.com">
 
       <div class="admin-section-title">২. নতুন ভিডিও পোস্ট করুন</div>
       <input type="text" id="newVidTitle" placeholder="ভিডিওর শিরোনাম">
@@ -213,7 +216,7 @@
 
       <hr style="border-color:#1f2937; margin:20px 0;">
 
-      <div class="admin-section-title" style="color:#f59e0b;">🎯 নির্দিষ্ট স্থানে অ্যাড কোড বসান</div>
+      <div class="admin-section-title" style="color:#f59e0b;">🎯 ExoClick Ad Codes (নির্দিষ্ট স্থানে বসান)</div>
 
       <label style="font-size:11px; color:#9ca3af;">১. হেডার বা সবার উপরে (Top Banner Code):</label>
       <textarea id="adTopInput" rows="2" placeholder="Top Banner Script"></textarea>
@@ -224,10 +227,10 @@
       <label style="font-size:11px; color:#9ca3af;">৩. ভিডিওর নিচে / সবার নিচে (Bottom Banner Code):</label>
       <textarea id="adBottomInput" rows="2" placeholder="Bottom Banner Script"></textarea>
 
-      <label style="font-size:11px; color:#9ca3af;">৪. ক্লিকে ব্যাকগ্রাউন্ড অ্যাড (PopUp Script):</label>
+      <label style="font-size:11px; color:#9ca3af;">৪. ক্লিকে ব্যাকগ্রাউন্ড অ্যাড (ExoClick Popunder Script):</label>
       <textarea id="adPopupInput" rows="2" placeholder="PopUnder Script Code"></textarea>
 
-      <label style="font-size:11px; color:#9ca3af;">৫. স্ক্রিনের নিচে ভাসমান অ্যাড (Bottom Sticky Code):</label>
+      <label style="font-size:11px; color:#9ca3af;">৫. স্ক্রিনের নিচে ভাসমান অ্যাড (Bottom Sticky Banner Code):</label>
       <textarea id="adStickyInput" rows="2" placeholder="Sticky Banner Code"></textarea>
 
       <button class="btn-submit" onclick="saveAdSettings()" style="background:#3b82f6;">💾 সব সেটিং সেভ করুন</button>
@@ -256,16 +259,13 @@
       }
     }
 
-    // টাইমার অ্যাড দেখানো এবং ভিডিও শুরু করার ফাংশন
     function playVideoWithAd(id) {
       pendingVideoId = id;
       const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
       const directUrl = ads.directLink || DEFAULT_DIRECT_LINK;
 
-      // ১. পপআপ উইন্ডোতে ডাইরেক্ট লিংক ওপেন
       triggerDirectLinkAd();
 
-      // ২. টাইমার মোডাল চালু করা
       const modal = document.getElementById('ad-timer-modal');
       const iframe = document.getElementById('ad-iframe-target');
       const timerBox = document.getElementById('timer-box');
@@ -277,7 +277,7 @@
       timerBox.classList.remove('hidden');
       skipBtn.classList.add('hidden');
 
-      let secondsLeft = 7; // ৭ সেকেন্ডের টাইমার
+      let secondsLeft = 7;
       timerSec.innerText = secondsLeft;
 
       clearInterval(timerInterval);
@@ -288,12 +288,11 @@
         if (secondsLeft <= 0) {
           clearInterval(timerInterval);
           timerBox.classList.add('hidden');
-          skipBtn.classList.remove('hidden'); // টাইমার শেষে স্কিপ বাটন দেখাবে
+          skipBtn.classList.remove('hidden');
         }
       }, 1000);
     }
 
-    // স্কিপ বাটনে ক্লিক করলে টাইমার অ্যাড বন্ধ হয়ে আসল ভিডিও চলবে
     function closeTimerAdAndPlay() {
       document.getElementById('ad-timer-modal').classList.add('hidden');
       document.getElementById('ad-iframe-target').src = "about:blank";
