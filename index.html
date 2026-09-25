@@ -11,84 +11,99 @@
     <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" type="text/css"/>
     <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 
-    <!-- Dynamic Monetag Popunder Placeholder -->
+    <!-- Dynamic Popunder Script Container -->
     <div id="dynamicPopunderScript"></div>
 
     <style>
         * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #08020d; color: #f3f4f6; margin: 0; padding: 0; padding-bottom: 90px;
+            background: #050108; color: #f3f4f6; margin: 0; padding: 0; padding-bottom: 90px;
             text-align: center; overflow-x: hidden; -webkit-font-smoothing: antialiased;
         }
         .top-navbar {
-            background: linear-gradient(180deg, #180524 0%, #08020d 100%);
+            background: linear-gradient(180deg, #180524 0%, #050108 100%);
             padding: 15px 10px; border-bottom: 2px solid #ff0055;
-            box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3);
+            box-shadow: 0 4px 20px rgba(255, 0, 85, 0.4);
         }
         .header-title {
             color: #ff0055; font-size: 24px; margin: 5px 0; font-weight: 900;
-            text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
+            text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 12px rgba(255, 0, 85, 0.7);
         }
         .badge-18plus {
-            background: #ff0055; color: #fff; padding: 3px 10px; font-size: 11px;
-            border-radius: 4px; font-weight: 800; display: inline-block; box-shadow: 0 0 8px #ff0055;
+            background: linear-gradient(135deg, #ff0055, #9333ea); color: #fff; padding: 4px 12px; font-size: 11px;
+            border-radius: 20px; font-weight: 800; display: inline-block; box-shadow: 0 0 10px rgba(255,0,85,0.5);
         }
         .direct-link-btn {
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            background: linear-gradient(135deg, #e11d48, #9333ea); color: white;
-            text-decoration: none; padding: 14px; border-radius: 12px; font-weight: 800;
-            font-size: 15px; margin: 15px 10px; box-shadow: 0 4px 20px rgba(225, 29, 72, 0.5);
+            background: linear-gradient(135deg, #ff0055, #7e22ce); color: white;
+            text-decoration: none; padding: 15px; border-radius: 14px; font-weight: 800;
+            font-size: 15px; margin: 15px 10px; box-shadow: 0 6px 25px rgba(255, 0, 85, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.2); transition: transform 0.2s ease;
         }
         .direct-link-btn:active { transform: scale(0.98); }
 
+        /* Video Card & UI */
         .video-card {
-            background: #12061c; border-radius: 14px; padding: 12px; margin: 15px 10px;
-            border: 1px solid #2a0e3d; box-shadow: 0 6px 16px rgba(0,0,0,0.6); text-align: left;
+            background: linear-gradient(145deg, #10041a, #0b0212); border-radius: 16px; padding: 12px; margin: 18px 10px;
+            border: 1px solid #3b1057; box-shadow: 0 8px 25px rgba(0,0,0,0.7); text-align: left;
         }
-        .video-title { font-size: 16px; font-weight: 700; color: #e5e7eb; margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; }
-        
+        .video-header-info {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+        }
+        .video-title { font-size: 15px; font-weight: 700; color: #f9fafb; display: flex; align-items: center; gap: 8px; }
+        .hd-badge { background: #3b82f6; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+
         .video-wrapper {
-            position: relative; width: 100%; border-radius: 10px; overflow: hidden;
-            background: #000; border: 1px solid #ff005533; min-height: 240px;
+            position: relative; width: 100%; border-radius: 12px; overflow: hidden;
+            background: #000; border: 1px solid rgba(255,0,85,0.3); min-height: 230px;
         }
         .video-wrapper video { width: 100% !important; height: 100% !important; display: block; object-fit: contain; }
 
+        /* Overlay UI */
         .video-overlay-trigger {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; cursor: pointer; z-index: 99;
-            backdrop-filter: blur(4px); transition: opacity 0.2s ease;
+            background: radial-gradient(circle, rgba(15,3,25,0.7) 0%, rgba(5,1,8,0.9) 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 99; backdrop-filter: blur(5px); transition: all 0.3s ease;
         }
-        .play-btn-circle {
-            width: 70px; height: 70px; background: linear-gradient(135deg, #ff0055, #c026d3);
+        .play-btn-box {
+            display: flex; align-items: center; gap: 12px; background: rgba(255, 0, 85, 0.15);
+            border: 2px solid #ff0055; padding: 10px 22px; border-radius: 50px;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.6); animation: pulseGlow 2s infinite;
+        }
+        .play-icon-circle {
+            width: 45px; height: 45px; background: linear-gradient(135deg, #ff0055, #9333ea);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 28px; color: #fff; box-shadow: 0 0 25px rgba(255, 0, 85, 0.9);
-            padding-left: 5px; animation: pulse 1.5s infinite;
+            font-size: 18px; color: #fff; padding-left: 3px;
         }
-        @keyframes pulse {
+        .play-text-content { text-align: left; }
+        .play-main-text { font-size: 14px; font-weight: 800; color: #fff; display: block; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .play-sub-text { font-size: 11px; font-weight: 600; color: #f472b6; display: block; }
+
+        @keyframes pulseGlow {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 0, 85, 0); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(255, 0, 85, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); }
         }
         
-        .ad-container { margin: 15px 0; text-align: center; width: 100%; overflow: hidden; min-height: 90px; display: flex; align-items: center; justify-content: center; background: #0c0314; border-radius: 8px; border: 1px dashed #3b135c; }
+        .ad-container { margin: 15px 0; text-align: center; width: 100%; overflow: hidden; min-height: 90px; display: flex; align-items: center; justify-content: center; background: #0c0314; border-radius: 12px; border: 1px dashed #3b135c; }
         .sticky-ad-bottom {
             position: fixed; bottom: 0; left: 0; width: 100%; z-index: 999;
-            background: rgba(8, 2, 13, 0.95); text-align: center; box-shadow: 0 -4px 15px rgba(0,0,0,0.8);
-            border-top: 1px solid #ff005544; backdrop-filter: blur(5px); min-height: 50px;
+            background: rgba(5, 1, 8, 0.95); text-align: center; box-shadow: 0 -4px 20px rgba(0,0,0,0.9);
+            border-top: 1px solid rgba(255,0,85,0.3); backdrop-filter: blur(8px); min-height: 50px;
         }
 
+        /* Admin Panel Styles */
         #adminPanel {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0d0414; z-index: 99999; overflow-y: auto; padding: 20px 15px; text-align: left;
+            background: #08020d; z-index: 99999; overflow-y: auto; padding: 20px 15px; text-align: left;
         }
         #adminPanel h2 { color: #ff0055; margin-top: 0; border-bottom: 2px solid #ff0055; padding-bottom: 8px; font-size: 20px; }
-        .admin-section { background: #180826; border: 1px solid #3b135c; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
-        #adminPanel label { font-size: 12px; color: #d1d5db; font-weight: bold; display: block; margin-top: 10px; }
+        .admin-section { background: #130521; border: 1px solid #3b135c; padding: 15px; border-radius: 14px; margin-bottom: 20px; }
+        #adminPanel label { font-size: 12px; color: #cbd5e1; font-weight: bold; display: block; margin-top: 10px; }
         #adminPanel input, #adminPanel textarea {
-            width: 100%; background: #0b0312; border: 1px solid #581c87;
+            width: 100%; background: #050108; border: 1px solid #6b21a8;
             color: #38bdf8; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 12px; margin-top: 4px;
         }
         #adminPanel textarea { height: 70px; resize: vertical; }
@@ -101,42 +116,43 @@
 
     <!-- Isolated Admin Panel -->
     <div id="adminPanel">
-        <h2>⚙️ Admin Control Panel & Ad Setup</h2>
-        <button class="close-admin-btn" onclick="closeAdmin()">❌ Close Admin View & Preview Site</button>
+        <h2>⚙️ Admin Panel & Direct Link Setup</h2>
+        <button class="close-admin-btn" onclick="closeAdmin()">❌ Close Admin Panel</button>
         
         <div class="admin-section" style="margin-top: 15px;">
-            <h3>📢 Global Site Ads Setup (Monetag)</h3>
+            <h3>🔗 Default & Custom Direct Link Setup</h3>
+            
+            <label>ভিডিও ক্লিক করলে যে ডাইরেক্ট লিংক ওপেন হবে:</label>
+            <input type="text" id="cfgDirectLink" value="https://omg10.com/4/11848732" placeholder="https://...">
+
             <label>Popunder Script Code:</label>
             <textarea id="cfgPopunder" placeholder="<script>...</script>"></textarea>
 
             <label>Top Banner Ad Code:</label>
-            <textarea id="cfgTopBanner" placeholder="<script>...</script> یا HTML কোড"></textarea>
+            <textarea id="cfgTopBanner" placeholder="<script>...</script>"></textarea>
 
             <label>Bottom Banner Ad Code:</label>
-            <textarea id="cfgBottomBanner" placeholder="<script>...</script> یا HTML কোড"></textarea>
+            <textarea id="cfgBottomBanner" placeholder="<script>...</script>"></textarea>
 
             <label>Sticky Bottom Ad Code:</label>
-            <textarea id="cfgSticky" placeholder="<script>...</script> یا HTML কোড"></textarea>
+            <textarea id="cfgSticky" placeholder="<script>...</script>"></textarea>
 
-            <button class="btn-action" onclick="saveGlobalAds()">💾 Save Ad Settings</button>
+            <button class="btn-action" onclick="saveGlobalAds()">💾 Save Settings</button>
         </div>
 
         <div class="admin-section">
-            <h3>📹 Add New Video</h3>
-            <label>ভিডিও টাইটেল (Video Title):</label>
+            <h3>📹 Add New Video (শুধু টাইটেল এবং ভিডিও লিংক)</h3>
+            <label>ভিডিও টাইটেল:</label>
             <input type="text" id="newVideoTitle" placeholder="যেমন: Exclusive Hot Clip 🔞">
             
-            <label>ভিডিও লিংক (MP4 Direct Video URL):</label>
+            <label>ভিডিও MP4 লিংক:</label>
             <input type="text" id="newVideoUrl" placeholder="https://example.com/video.mp4">
-
-            <label>VAST Video Ad URL (Optional):</label>
-            <input type="text" id="newVideoAdUrl" placeholder="https://...vast.php?..." >
             
             <button class="btn-action" onclick="addNewVideo()">➕ Add Video</button>
         </div>
 
         <div class="admin-section">
-            <h3>📂 Manage Posted Videos</h3>
+            <h3>📂 Manage Videos</h3>
             <div id="adminVideoList"></div>
         </div>
     </div>
@@ -148,7 +164,7 @@
     </div>
 
     <div style="padding: 0 5px;">
-        <!-- Top Banner Ad Space -->
+        <!-- Top Banner Ad Area -->
         <div class="ad-container" id="topBannerArea"></div>
 
         <a href="https://t.me/hajhwijw" class="direct-link-btn" target="_blank">
@@ -158,47 +174,50 @@
         <!-- Dynamic Videos Area -->
         <div id="videoContainer"></div>
 
-        <!-- Bottom Banner Ad Space -->
+        <!-- Bottom Banner Ad Area -->
         <div class="ad-container" id="bottomBannerArea"></div>
     </div>
 
-    <!-- Sticky Bottom Ad Space -->
+    <!-- Sticky Bottom Ad Area -->
     <div class="sticky-ad-bottom" id="stickyArea"></div>
 
     <script>
         const defaultVideos = [
-            { id: 101, title: "🔥 Exclusive VIP Clip 01 🔞", url: "https://vjs.zencdn.net/v/oceans.mp4", adUrl: "" },
-            { id: 102, title: "💦 Hot Viral Stream 02 🔞", url: "https://vjs.zencdn.net/v/oceans.mp4", adUrl: "" }
+            { id: 101, title: "🔥 Exclusive VIP Clip 01 🔞", url: "https://vjs.zencdn.net/v/oceans.mp4" },
+            { id: 102, title: "💦 Hot Viral Stream 02 🔞", url: "https://vjs.zencdn.net/v/oceans.mp4" }
         ];
 
         let fluidPlayerInstances = {};
 
         function getAdsConfig() {
-            const saved = localStorage.getItem('site_ads_config');
-            return saved ? JSON.parse(saved) : { popunder: '', topBanner: '', bottomBanner: '', sticky: '' };
+            const saved = localStorage.getItem('site_ads_config_v3');
+            // ডিফল্টভাবে আপনার দেওয়া লিংকটি এখানে সেট করা রইল
+            if (!saved) {
+                return { directLink: 'https://omg10.com/4/11848732', popunder: '', topBanner: '', bottomBanner: '', sticky: '' };
+            }
+            return JSON.parse(saved);
         }
 
         function saveGlobalAds() {
             const config = {
+                directLink: document.getElementById('cfgDirectLink').value.trim() || 'https://omg10.com/4/11848732',
                 popunder: document.getElementById('cfgPopunder').value,
                 topBanner: document.getElementById('cfgTopBanner').value,
                 bottomBanner: document.getElementById('cfgBottomBanner').value,
                 sticky: document.getElementById('cfgSticky').value
             };
-            localStorage.setItem('site_ads_config', JSON.stringify(config));
-            alert('অ্যাড সেটিংস সফলভাবে সেভ হয়েছে!');
+            localStorage.setItem('site_ads_config_v3', JSON.stringify(config));
+            alert('সফলভাবে সেভ হয়েছে!');
             loadAdsToPage();
         }
 
         function loadAdsToPage() {
             const config = getAdsConfig();
             
-            // Popunder
             const popDiv = document.getElementById('dynamicPopunderScript');
             popDiv.innerHTML = config.popunder;
             runScriptsInElement(popDiv);
 
-            // Top Banner
             const topDiv = document.getElementById('topBannerArea');
             if(config.topBanner.trim() !== '') {
                 topDiv.innerHTML = config.topBanner;
@@ -207,7 +226,6 @@
                 topDiv.innerHTML = '<span style="color:#6b7280; font-size:12px;">[ Top Banner Ad ]</span>';
             }
 
-            // Bottom Banner
             const botDiv = document.getElementById('bottomBannerArea');
             if(config.bottomBanner.trim() !== '') {
                 botDiv.innerHTML = config.bottomBanner;
@@ -216,7 +234,6 @@
                 botDiv.innerHTML = '<span style="color:#6b7280; font-size:12px;">[ Bottom Banner Ad ]</span>';
             }
 
-            // Sticky Bottom
             const stickyDiv = document.getElementById('stickyArea');
             if(config.sticky.trim() !== '') {
                 stickyDiv.innerHTML = config.sticky;
@@ -242,12 +259,12 @@
         }
 
         function getVideos() {
-            const saved = localStorage.getItem('site_videos_custom');
+            const saved = localStorage.getItem('site_videos_custom_v3');
             return saved ? JSON.parse(saved) : defaultVideos;
         }
 
         function saveVideos(videos) {
-            localStorage.setItem('site_videos_custom', JSON.stringify(videos));
+            localStorage.setItem('site_videos_custom_v3', JSON.stringify(videos));
             renderVideos();
             renderAdminVideoList();
         }
@@ -264,11 +281,19 @@
                 const card = document.createElement('div');
                 card.className = 'video-card';
                 card.innerHTML = `
-                    <div class="video-title"><i class="fas fa-fire" style="color:#ff0055;"></i> ${vid.title}</div>
+                    <div class="video-header-info">
+                        <div class="video-title"><i class="fas fa-fire" style="color:#ff0055;"></i> ${vid.title}</div>
+                        <span class="hd-badge">HD</span>
+                    </div>
                     <div class="video-wrapper">
                         <div class="video-overlay-trigger" id="overlay-${uniqueId}" onclick="handleVideoClick(${uniqueId}, '${videoId}')">
-                            <div class="play-btn-circle"><i class="fas fa-play"></i></div>
-                            <span style="margin-top: 12px; font-weight: 800; font-size: 14px; color: #fff; text-shadow: 0 0 6px #000;">ভিডিও দেখতে এখানে ট্যাপ করুন</span>
+                            <div class="play-btn-box">
+                                <div class="play-icon-circle"><i class="fas fa-play"></i></div>
+                                <div class="play-text-content">
+                                    <span class="play-main-text">প্লে করতে ট্যাপ করুন</span>
+                                    <span class="play-sub-text">Stream in HD 🔞</span>
+                                </div>
+                            </div>
                         </div>
                         <video id="${videoId}" controls preload="metadata" playsinline>
                             <source src="${vid.url}" type="video/mp4">
@@ -279,7 +304,7 @@
 
                 setTimeout(() => {
                     if (typeof fluidPlayer === 'function') {
-                        let playerConfig = {
+                        fluidPlayerInstances[uniqueId] = fluidPlayer(videoId, {
                             "layoutControls": {
                                 "controlBar": { "autoHideTimeout": 3, "animated": true, "autoHide": true },
                                 "autoPlay": false,
@@ -291,23 +316,7 @@
                                 "playButtonShowing": true,
                                 "fillToContainer": true
                             }
-                        };
-
-                        if (vid.adUrl && vid.adUrl.trim() !== '') {
-                            playerConfig.vastOptions = {
-                                "adList": [
-                                    {
-                                        "roll": "preRoll",
-                                        "vastTag": vid.adUrl
-                                    }
-                                ],
-                                "skipButtonCaption": "Skip ad in [TIMER]",
-                                "skipButtonClickCaption": "Skip Ad",
-                                "adText": "Advertisement"
-                            };
-                        }
-
-                        fluidPlayerInstances[uniqueId] = fluidPlayer(videoId, playerConfig);
+                        });
 
                         const vidEl = document.getElementById(videoId);
                         if(vidEl) {
@@ -328,6 +337,13 @@
         }
 
         function handleVideoClick(uniqueId, videoId) {
+            // অটোমেটিক ডাইরেক্ট লিংক ওপেন হবে
+            const config = getAdsConfig();
+            const directLinkToOpen = config.directLink || 'https://omg10.com/4/11848732';
+            
+            window.open(directLinkToOpen, '_blank');
+
+            // ভিডিও প্লে করার জন্য ওভারলে হাইড করা
             const overlay = document.getElementById(`overlay-${uniqueId}`);
             if(overlay) {
                 overlay.style.opacity = '0';
@@ -350,11 +366,10 @@
             listContainer.innerHTML = '';
             videos.forEach(vid => {
                 const item = document.createElement('div');
-                item.style.cssText = "background:#0b0312; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #3b135c;";
+                item.style.cssText = "background:#050108; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #3b135c;";
                 item.innerHTML = `
                     <div style="font-weight:bold; font-size:13px; color:#f3f4f6;">${vid.title}</div>
                     <div style="font-size:11px; color:#38bdf8; word-break:break-all;">📹 ${vid.url}</div>
-                    <div style="font-size:11px; color:#a855f7; word-break:break-all;">📢 VAST Tag: ${vid.adUrl || 'None'}</div>
                     <button class="btn-delete" onclick="deleteVideo(${vid.id})">🗑️ Delete Video</button>
                 `;
                 listContainer.appendChild(item);
@@ -364,25 +379,23 @@
         function addNewVideo() {
             const title = document.getElementById('newVideoTitle').value.trim();
             const url = document.getElementById('newVideoUrl').value.trim();
-            const adUrl = document.getElementById('newVideoAdUrl').value.trim();
 
             if (!title || !url) {
-                alert('অনুগ্রহ করে ভিডিওর টাইটেল এবং ভিডিও লিংক দিন!');
+                alert('টাইটেল এবং ভিডিও লিংক দিন!');
                 return;
             }
 
             const videos = getVideos();
-            videos.unshift({ id: Date.now(), title, url, adUrl });
+            videos.unshift({ id: Date.now(), title, url });
             saveVideos(videos);
 
             document.getElementById('newVideoTitle').value = '';
             document.getElementById('newVideoUrl').value = '';
-            document.getElementById('newVideoAdUrl').value = '';
-            alert('নতুন ভিডিও সফলভাবে যুক্ত হয়েছে!');
+            alert('সফলভাবে যোগ হয়েছে!');
         }
 
         function deleteVideo(id) {
-            if (confirm("আপনি কি নিশ্চিত এই ভিডিওটি মুছে ফেলতে চান?")) {
+            if (confirm("মুছে ফেলতে চান?")) {
                 let videos = getVideos();
                 videos = videos.filter(v => v.id !== id);
                 saveVideos(videos);
@@ -393,17 +406,16 @@
             document.getElementById('adminPanel').style.display = 'none';
         }
 
-        // Check Admin Login via URL Hash #admin
         if (window.location.hash === '#admin') {
-            const pin = prompt("Admin Password দিন:");
+            const pin = prompt("Admin Password:");
             if (pin === "1234") {
                 document.getElementById('adminPanel').style.display = 'block';
-                // Load existing config into inputs
                 const cfg = getAdsConfig();
-                document.getElementById('cfgPopunder').value = cfg.popunder;
-                document.getElementById('cfgTopBanner').value = cfg.topBanner;
-                document.getElementById('cfgBottomBanner').value = cfg.bottomBanner;
-                document.getElementById('cfgSticky').value = cfg.sticky;
+                document.getElementById('cfgDirectLink').value = cfg.directLink || 'https://omg10.com/4/11848732';
+                document.getElementById('cfgPopunder').value = cfg.popunder || '';
+                document.getElementById('cfgTopBanner').value = cfg.topBanner || '';
+                document.getElementById('cfgBottomBanner').value = cfg.bottomBanner || '';
+                document.getElementById('cfgSticky').value = cfg.sticky || '';
                 renderAdminVideoList();
             } else {
                 alert("ভুল পাসওয়ার্ড!");
