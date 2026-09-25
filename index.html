@@ -40,7 +40,6 @@
       color: white; padding: 4px 14px; font-size: 11px; border-radius: 20px; font-weight: 700; display: inline-block;
     }
     
-    /* সার্চ বার */
     .search-box {
       width: 100%; margin: 12px 0; position: relative;
     }
@@ -96,6 +95,30 @@
     
     .hidden { display: none !important; }
     .ad-slot { margin: 10px 0; text-align: center; min-height: 10px; }
+
+    /* --- হাই সিপিএম টাইমার অ্যাড মোডাল (HIGH CPM TIMER MODAL) --- */
+    #ad-timer-modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.95); z-index: 10000;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      color: #fff; text-align: center; padding: 15px;
+    }
+    .timer-badge {
+      position: absolute; top: 15px; right: 15px;
+      background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px;
+      font-size: 14px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3);
+    }
+    .skip-btn {
+      position: absolute; top: 15px; right: 15px;
+      background: #ef4444; color: #fff; padding: 8px 18px; border-radius: 20px;
+      font-size: 13px; font-weight: bold; cursor: pointer; border: none;
+      box-shadow: 0 0 10px rgba(239,68,68,0.5);
+    }
+    .ad-modal-content {
+      width: 100%; max-width: 400px; height: 75vh; background: #111827;
+      border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #1f2937;
+    }
+    .ad-modal-content iframe { width: 100%; height: 100%; border: none; }
     
     /* এডমিন প্যানেল স্টাইল */
     .admin-container {
@@ -113,7 +136,6 @@
     .btn-submit { background: #10b981; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
     .btn-reset { background: #ef4444; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 15px; }
     
-    /* এডমিন প্যানেলের ভিডিও ম্যানেজমেন্ট লিস্ট */
     .admin-video-item {
       display: flex; justify-content: space-between; align-items: center;
       background: #030712; border: 1px solid #1f2937; padding: 10px;
@@ -156,6 +178,17 @@
     <div class="ad-slot" id="ad-bottom-slot"></div>
   </div>
 
+  <!-- হাই സിപിএম টাইমার অ্যাড মোডাল -->
+  <div id="ad-timer-modal" class="hidden">
+    <div id="timer-box" class="timer-badge">অ্যাড শেষ হতে বাকি: <span id="timer-sec">7</span>s</div>
+    <button id="skip-ad-btn" class="skip-btn hidden" onclick="closeTimerAdAndPlay()">Skip Ad ⏭️</button>
+    <p style="font-size:12px; color:#9ca3af; margin-bottom:10px;">ভিডিও প্লে হওয়ার আগে স্পনসরড অ্যাড দেখুন</p>
+    
+    <div class="ad-modal-content">
+      <iframe id="ad-iframe-target" src="about:blank"></iframe>
+    </div>
+  </div>
+
   <div id="sticky-ad-container" class="ad-slot"></div>
   <div id="popup-ad-slot"></div>
 
@@ -175,7 +208,6 @@
 
       <hr style="border-color:#1f2937; margin:20px 0;">
 
-      <!-- ভিডিও ম্যানেজমেন্ট / ডিলিট সেকশন -->
       <div class="admin-section-title" style="color:#ef4444;">🎬 বর্তমান ভিডিও সমূহ (ডিলিট করুন)</div>
       <div id="admin-video-list" style="max-height:200px; overflow-y:auto; margin-bottom:15px;"></div>
 
@@ -206,6 +238,8 @@
 
   <script>
     const DEFAULT_DIRECT_LINK = "https://omg10.com/4/11848732";
+    let pendingVideoId = null;
+    let timerInterval = null;
 
     function isAdmin() {
       return window.location.search.includes('admin') || window.location.hash.includes('admin');
@@ -222,26 +256,64 @@
       }
     }
 
+    // টাইমার অ্যাড দেখানো এবং ভিডিও শুরু করার ফাংশন
     function playVideoWithAd(id) {
+      pendingVideoId = id;
+      const ads = JSON.parse(localStorage.getItem('app_ads_config')) || {};
+      const directUrl = ads.directLink || DEFAULT_DIRECT_LINK;
+
+      // ১. পপআপ উইন্ডোতে ডাইরেক্ট লিংক ওপেন
       triggerDirectLinkAd();
 
-      if (typeof window.show_11848596 === 'function') {
-        window.show_11848596({ type: 'inApp' }).catch(e => console.log(e));
-      }
+      // ২. টাইমার মোডাল চালু করা
+      const modal = document.getElementById('ad-timer-modal');
+      const iframe = document.getElementById('ad-iframe-target');
+      const timerBox = document.getElementById('timer-box');
+      const skipBtn = document.getElementById('skip-ad-btn');
+      const timerSec = document.getElementById('timer-sec');
 
-      const overlay = document.getElementById(`overlay-${id}`);
-      if(overlay) overlay.style.display = 'none';
+      iframe.src = directUrl;
+      modal.classList.remove('hidden');
+      timerBox.classList.remove('hidden');
+      skipBtn.classList.add('hidden');
 
-      const vidElem = document.getElementById(`vid-${id}`);
-      if(vidElem) {
-        if(vidElem.tagName === 'IFRAME') {
-          let src = vidElem.src;
-          if(!src.includes('autoplay=1')) {
-            vidElem.src = src + (src.includes('?') ? '&autoplay=1' : '?autoplay=1');
-          }
-        } else if(vidElem.tagName === 'VIDEO') {
-          vidElem.play();
+      let secondsLeft = 7; // ৭ সেকেন্ডের টাইমার
+      timerSec.innerText = secondsLeft;
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        secondsLeft--;
+        timerSec.innerText = secondsLeft;
+
+        if (secondsLeft <= 0) {
+          clearInterval(timerInterval);
+          timerBox.classList.add('hidden');
+          skipBtn.classList.remove('hidden'); // টাইমার শেষে স্কিপ বাটন দেখাবে
         }
+      }, 1000);
+    }
+
+    // স্কিপ বাটনে ক্লিক করলে টাইমার অ্যাড বন্ধ হয়ে আসল ভিডিও চলবে
+    function closeTimerAdAndPlay() {
+      document.getElementById('ad-timer-modal').classList.add('hidden');
+      document.getElementById('ad-iframe-target').src = "about:blank";
+
+      if(pendingVideoId) {
+        const overlay = document.getElementById(`overlay-${pendingVideoId}`);
+        if(overlay) overlay.style.display = 'none';
+
+        const vidElem = document.getElementById(`vid-${pendingVideoId}`);
+        if(vidElem) {
+          if(vidElem.tagName === 'IFRAME') {
+            let src = vidElem.src;
+            if(!src.includes('autoplay=1')) {
+              vidElem.src = src + (src.includes('?') ? '&autoplay=1' : '?autoplay=1');
+            }
+          } else if(vidElem.tagName === 'VIDEO') {
+            vidElem.play();
+          }
+        }
+        pendingVideoId = null;
       }
     }
 
