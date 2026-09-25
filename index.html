@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" type="text/css"/>
     <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js" defer></script>
 
-    <!-- ExoClick Ad Engine Scripts (Async for Fast Page Load) -->
+    <!-- ExoClick Ad Engine Scripts -->
     <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
     <script async type="application/javascript" src="https://a.pemsrv.com/ad-provider.js"></script>
     
@@ -107,14 +107,11 @@
             margin: 15px 10px;
             box-shadow: 0 4px 20px rgba(225, 29, 72, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease;
             will-change: transform;
         }
-        .direct-link-btn:active {
-            transform: scale(0.98);
-        }
+        .direct-link-btn:active { transform: scale(0.98); }
 
-        /* 🔥 স্মুথ ভিডিও কার্ড ও প্লেয়ার লেআউট */
         .video-card {
             background: #12061c;
             border-radius: 14px;
@@ -144,7 +141,7 @@
             background: #000;
             border: 1px solid #ff005533;
             min-height: 240px;
-            transform: translateZ(0); /* Hardware Acceleration for fast video rendering */
+            transform: translateZ(0);
         }
         .video-wrapper video {
             width: 100% !important;
@@ -180,9 +177,7 @@
             padding-left: 5px;
             transition: transform 0.2s ease;
         }
-        .video-overlay-trigger:active .play-btn-circle {
-            transform: scale(0.9);
-        }
+        .video-overlay-trigger:active .play-btn-circle { transform: scale(0.9); }
         
         .ad-container { margin: 15px 0; text-align: center; width: 100%; overflow: hidden; min-height: 250px; }
         .sticky-ad-bottom {
@@ -245,8 +240,11 @@
             
             <label>ভিডিও লিংক (MP4 Direct Video URL):</label>
             <input type="text" id="newVideoUrl" placeholder="https://example.com/video.mp4">
+
+            <label>VAST Ad Link (Optional - ফাঁকা রাখলে ডিফল্ট অ্যাড চলবে):</label>
+            <input type="text" id="newVideoAdUrl" placeholder="https://s.magsrv.com/v1/vast.php?idz=6040308">
             
-            <button class="btn-action" onclick="addNewVideo()">➕ Add Video to Site</button>
+            <button class="btn-action" onclick="addNewVideo()">➕ Add Video & Setup Ad</button>
         </div>
 
         <div class="admin-section">
@@ -295,9 +293,11 @@
     </div>
 
     <script>
+        const defaultAdTag = "https://s.magsrv.com/v1/vast.php?idz=6040308";
+
         const defaultVideos = [
-            { id: 1, title: "🔥 Exclusive VIP Clip 01 🔞", url: "https://vjs.zencdn.net/v/oceans.mp4" },
-            { id: 2, title: "💦 Hot Viral Stream 02 🔞", url: "https://vjs.zencdn.net/v/oceans.mp4" }
+            { id: 1, title: "🔥 Exclusive VIP Clip 01 🔞", url: "https://vjs.zencdn.net/v/oceans.mp4", adUrl: defaultAdTag },
+            { id: 2, title: "💦 Hot Viral Stream 02 🔞", url: "https://vjs.zencdn.net/v/oceans.mp4", adUrl: defaultAdTag }
         ];
 
         let fluidPlayerInstances = {};
@@ -337,7 +337,9 @@
                 `;
                 container.appendChild(card);
 
-                // 🔥 স্মুথ ইন-স্ট্রীম অ্যাড লোডিং ফিক্স
+                // 🔥 ডাইনামিক বা কাস্টম অ্যাড ট্যাগ দিয়ে ভিডিও প্লেয়ার চালু করা
+                const vastTagUrl = vid.adUrl && vid.adUrl.trim() !== '' ? vid.adUrl : defaultAdTag;
+
                 const initPlayer = () => {
                     if (typeof fluidPlayer === 'function') {
                         fluidPlayerInstances[videoId] = fluidPlayer(videoId, {
@@ -356,7 +358,7 @@
                                 "adList": [
                                     {
                                         "roll": "preRoll",
-                                        "vastTag": "https://s.magsrv.com/v1/vast.php?idz=6040308"
+                                        "vastTag": vastTagUrl
                                     }
                                 ],
                                 "skipButtonCaption": "Skip ad in [TIMER]",
@@ -384,7 +386,8 @@
                 item.style.cssText = "background:#0b0312; padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid #3b135c;";
                 item.innerHTML = `
                     <div style="font-weight:bold; font-size:13px; color:#f3f4f6;">${vid.title}</div>
-                    <div style="font-size:11px; color:#9ca3af; word-break:break-all;">${vid.url}</div>
+                    <div style="font-size:11px; color:#38bdf8; word-break:break-all;">📹 ${vid.url}</div>
+                    <div style="font-size:11px; color:#a855f7; word-break:break-all;">📢 Ad Tag: ${vid.adUrl || defaultAdTag}</div>
                     <button class="btn-delete" onclick="deleteVideo(${vid.id})">🗑️ Delete Video</button>
                 `;
                 listContainer.appendChild(item);
@@ -394,19 +397,21 @@
         function addNewVideo() {
             const title = document.getElementById('newVideoTitle').value.trim();
             const url = document.getElementById('newVideoUrl').value.trim();
+            const adUrl = document.getElementById('newVideoAdUrl').value.trim();
 
             if (!title || !url) {
-                alert('অনুগ্রহ করে ভিডিওর টাইটেল এবং ইউআরএল লিংক দিন!');
+                alert('অনুগ্রহ করে ভিডিওর টাইটেল এবং ভিডিও লিংক দিন!');
                 return;
             }
 
             const videos = getVideos();
-            videos.unshift({ id: Date.now(), title, url });
+            videos.unshift({ id: Date.now(), title, url, adUrl });
             saveVideos(videos);
 
             document.getElementById('newVideoTitle').value = '';
             document.getElementById('newVideoUrl').value = '';
-            alert('নতুন ভিডিও সফলভাবে যুক্ত হয়েছে এবং অ্যাড সেটআপ অটোমেটিক হয়ে গেছে!');
+            document.getElementById('newVideoAdUrl').value = '';
+            alert('নতুন ভিডিও এবং অ্যাড সফলভাবে যুক্ত হয়েছে!');
         }
 
         function deleteVideo(id) {
