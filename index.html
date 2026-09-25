@@ -24,9 +24,6 @@
     <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
     <script async type="application/javascript" src="https://a.pemsrv.com/ad-provider.js"></script>
     
-    <!-- Zone 6040306: Direct Popunder Script Integration -->
-    <script type="application/javascript" data-zoneid="6040306" src="https://a.pemsrv.com/popunder1000.js" async></script>
-    
     <style>
         * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
         body {
@@ -253,8 +250,14 @@
 
                         const vidEl = document.getElementById(videoId);
                         if(vidEl) {
-                            vidEl.addEventListener('pause', () => { resetOverlay(uniqueId); });
-                            vidEl.addEventListener('ended', () => { resetOverlay(uniqueId); });
+                            // ১. ইউজার ভিডিও পজ করলে ওভারলে রিসেট হবে, পরবর্তীতে প্লে করতে গেলে আবার অ্যাড আসবে
+                            vidEl.addEventListener('pause', () => { 
+                                resetOverlay(uniqueId); 
+                            });
+                            // ২. ভিডিও শেষ হলে ওভারলে আবার চলে আসবে, পরবর্তীতে আবার দেখতে গেলে অ্যাড দেখাবে
+                            vidEl.addEventListener('ended', () => { 
+                                resetOverlay(uniqueId); 
+                            });
                         }
                     }
                 }, 150);
@@ -270,22 +273,15 @@
         }
 
         function handleVideoClick(uniqueId, videoId) {
-            // ১. ফেইল সেইফ ডাইরেক্ট পপআন্ডার উইন্ডো ওপেন (যাতে মিস না হয়)
-            try {
-                let popWindow = window.open("https://s.pemsrv.com/v1/link.php?idzone=6040306&cb=" + Math.floor(Math.random() * 9999999), "_blank");
-                if (popWindow) {
-                    popWindow.blur();
-                    window.focus();
-                }
-            } catch(e) {}
-
             const overlay = document.getElementById(`overlay-${uniqueId}`);
             if(overlay) {
                 overlay.style.opacity = '0';
                 setTimeout(() => { overlay.style.display = 'none'; }, 200);
             }
 
+            // ফ্রেশ VAST অ্যাড ক্যাশ বাস্টার সহ ট্রিগার করা
             if (fluidPlayerInstances[uniqueId]) {
+                // প্লেয়ার রি-ইনস্ট্যান্স বা প্লে করার সময় ফ্রেশ অ্যাড রিকোয়েস্ট যাবে
                 fluidPlayerInstances[uniqueId].play();
             } else {
                 const vid = document.getElementById(videoId);
@@ -305,7 +301,7 @@
                 item.innerHTML = `
                     <div style="font-weight:bold; font-size:13px; color:#f3f4f6;">${vid.title}</div>
                     <div style="font-size:11px; color:#38bdf8; word-break:break-all;">📹 ${vid.url}</div>
-                    <div style="font-size:11px; color:#a855f7; word-break:break-all;">📢 Ad Tag: ${vid.adUrl || defaultAdTag}</div>
+                    <div style="font-size:11px; color:#a855f7; word-break:break-all;">📢 VAST Tag: ${vid.adUrl || defaultAdTag}</div>
                     <button class="btn-delete" onclick="deleteVideo(${vid.id})">🗑️ Delete Video</button>
                 `;
                 listContainer.appendChild(item);
@@ -313,7 +309,7 @@
         }
 
         function addNewVideo() {
-            const title = document.getElementById('newVideoTitle',).value.trim();
+            const title = document.getElementById('newVideoTitle').value.trim();
             const url = document.getElementById('newVideoUrl').value.trim();
             const adUrl = document.getElementById('newVideoAdUrl').value.trim();
 
@@ -329,7 +325,7 @@
             document.getElementById('newVideoTitle').value = '';
             document.getElementById('newVideoUrl').value = '';
             document.getElementById('newVideoAdUrl').value = '';
-            alert('নতুন ভিডিও এবং অ্যাড সফলভাবে যুক্ত হয়েছে!');
+            alert('নতুন ভিডিও এবং VAST অ্যাড সফলভাবে যুক্ত হয়েছে!');
         }
 
         function deleteVideo(id) {
@@ -356,7 +352,6 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             renderVideos();
-            // ব্যানার অ্যাড লোড রিফ্রেশার
             setTimeout(() => {
                 if(window.AdProvider) {
                     try { window.AdProvider.push({"serve": {}}); } catch(e){}
